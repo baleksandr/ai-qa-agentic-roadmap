@@ -1,0 +1,443 @@
+{
+  "topicId": "fundamentals",
+  "sourceArchivePath": "content/fundamentals/ai-llm-fundamentals.source.txt",
+  "chapterTitle": "AI / LLM Fundamentals",
+  "chapterSubtitle": "Базовий словник курсу: 20 понять у порядку вивчення (1 → 20). Розгорніть пункт — повне пояснення, схеми та зв’язок з QA.",
+  "sections": [
+    {
+      "id": "glossary-01",
+      "title": "1. AI — Artificial Intelligence",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Широка область систем, які виконують задачі, що потребують інтелектуальної поведінки: сприйняття, прогнозування, генерації, планування або прийняття рішень.",
+          "termEn": "Artificial Intelligence",
+          "termUk": "Штучний інтелект"
+        },
+        {
+          "type": "paragraph",
+          "text": "**AI —** не одна технологія, а парасолька: rule-based системи, пошук, планування, класичне ML і сучасні generative моделі.\n\nДля QA важливо не плутати «AI у продукті» з «одним LLM-викликом»: за інтерфейсом часто стоїть pipeline з правил, API, даних і моделі."
+        },
+        {
+          "type": "diagram",
+          "title": "Де в цій карті живе LLM",
+          "lines": "AI\n├── rule-based / search / planning\n└── Machine Learning\n    └── Deep Learning\n        └── Generative AI\n            └── LLM (один клас моделей)"
+        },
+        {
+          "type": "keyIdea",
+          "text": "LLM — не синонім усього AI. Це один клас моделей усередині ширшого поля."
+        }
+      ]
+    },
+    {
+      "id": "glossary-02",
+      "title": "2. ML — Machine Learning",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Підхід, де поведінка системи формується з даних під час навчання, а не лише вручну прописаними правилами.",
+          "termEn": "Machine Learning",
+          "termUk": "Машинне навчання"
+        },
+        {
+          "type": "paragraph",
+          "text": "Замість «якщо X — то Y» для кожного випадку, модель узагальнює закономірності з прикладів. Якість залежить від даних, метрик і того, наскільки production-сценарії схожі на навчальні. Для тестувальника ML-сервіс — це ще й регресія моделі після retrain і зміна розподілу даних."
+        },
+        {
+          "type": "qaExample",
+          "text": "Класифікатор тікетів «bug vs question» може бути ML-моделлю, LLM може допомагати з текстом, але рішення про deploy і evals — інженерна дисципліна, не магія prompt."
+        }
+      ]
+    },
+    {
+      "id": "glossary-03",
+      "title": "3. Deep Learning / Neural Networks",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Багатошарові нейронні мережі, на яких побудовано багато сучасних моделей, включно з LLM.",
+          "termEn": "Deep Learning",
+          "termUk": "Глибинне навчання"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Deep learning —** частина ML, де «фічі» і перетворення вхідних даних навчаються разом із задачею.\n\n**LLM —** дуже велика мережа, навчена передбачати токени, ви не контролюєте внутрішні шари на inference, лише context і параметри генерації."
+        }
+      ]
+    },
+    {
+      "id": "glossary-04",
+      "title": "4. Model",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Навчена математична система з параметрами. Отримує вхідні дані та обчислює вихід.",
+          "termEn": "Model",
+          "termUk": "Модель"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Модель —** конкретні навчені ваги з назвою й версією (сімейство великих, середніх або малих моделей одного вендора).\n\nБільша модель зазвичай здатніша на складні задачі, але повільніша й дорожча, мала — швидка й дешева для вузьких задач (класифікація, екстракція).\n\nУ проді версія моделі — частина конфігурації: вендор може оновити alias на нову версію, і поведінка продукту зміниться без коміту в репозиторії. Тести й моніторинг фіксують конкретний model id."
+        }
+      ]
+    },
+    {
+      "id": "glossary-05",
+      "title": "5. Training vs Inference",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Training (навчання) змінює параметри моделі, inference (виконання моделі) використовує вже навчені параметри для відповіді.",
+          "termEn": "Training vs Inference",
+          "termUk": "Навчання і виконання"
+        },
+        {
+          "type": "flow",
+          "title": "Два різні режими",
+          "lines": "Training:\n  дані → оптимізація → нові параметри моделі\n\nInference:\n  фіксовані параметри + ваш context → output"
+        },
+        {
+          "type": "paragraph",
+          "text": "Коли ви просите IDE згенерувати Playwright-тест, ви не «навчаєте» модель — ви лише формуєте inference context.\n\n**Fine-tuning —** окремий процес training на ваших даних, це не те саме, що змінити system prompt."
+        }
+      ]
+    },
+    {
+      "id": "glossary-06",
+      "title": "6. LLM — Large Language Model",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Модель для роботи з послідовностями токенів. На inference оцінює наступні токени на основі контексту.",
+          "termEn": "Large Language Model",
+          "termUk": "Велика мовна модель"
+        },
+        {
+          "type": "paragraph",
+          "text": "**LLM (large language model) —** нейромережа, навчена на великому корпусі тексту передбачати наступний токен. Вона не «знає» факти як база даних і не виконує код: на кожному кроці видає розподіл ймовірностей наступного токена, з якого обирається один.\n\n**Сила —** гнучке розуміння тексту й коду, **слабкість —** правдоподібна, але хибна відповідь.\n\nНадійність з’являється разом із context, tools, validation, permissions і evals."
+        },
+        {
+          "type": "qaExample",
+          "text": "Запит «напиши тест логіну» перетворюється на токени, модель крок за кроком генерує import, test(), goto, locator, expect — залежно від уже переданого POM, вимог і помилок у context."
+        }
+      ]
+    },
+    {
+      "id": "glossary-07",
+      "title": "7. Transformer",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Архітектурна основа сучасних LLM, ключова ідея для нашого рівня — модель обробляє зв’язки між токенами в контексті.",
+          "termEn": "Transformer",
+          "termUk": "Трансформер"
+        },
+        {
+          "type": "paragraph",
+          "text": "Не потрібно пам’ятати формули attention: достатньо mental model «кожен токен дивиться на інші токени в межах context window». Тому порядок і складність prompt мають значення, а дуже довгий шумний context погіршує якість (у т.ч. ефект lost in the middle)."
+        }
+      ]
+    },
+    {
+      "id": "glossary-08",
+      "title": "8. Token / Tokenization",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Токен — одиниця, з якою працює модель, tokenization (токенізація) перетворює текст на послідовність token IDs.",
+          "termEn": "Token / Tokenization",
+          "termUk": "Токен і токенізація"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Токен —** одиниця, якою модель читає й пише текст: частина слова, слово, розділовий знак.\n\nДля англійської в середньому 1 токен ≈ 4 символи або ¾ слова, українська й код зазвичай «дорожчі», бо розбиваються на більше токенів. Модель не бачить літер, тому погано рахує літери в слові й робить точну арифметику без tools."
+        },
+        {
+          "type": "code",
+          "language": "text",
+          "content": "\"Playwright automation\"\n  → tokenizer\n  → [id₁, id₂, id₃, …]\n  → embeddings → обчислення моделі"
+        }
+      ]
+    },
+    {
+      "id": "glossary-09",
+      "title": "9. Context Window",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Максимальний обсяг контексту, який модель може врахувати в одному виклику.",
+          "termEn": "Context Window",
+          "termUk": "Контекстне вікно"
+        },
+        {
+          "type": "diagram",
+          "title": "Що зазвичай входить у один виклик",
+          "lines": "Context =\n  system / developer instructions\n+ історія діалогу\n+ поточна задача\n+ документи / RAG\n+ код і приклади\n+ tool definitions\n+ tool results\n+ місце під відповідь (output tokens)"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Контекстне вікно —** максимальна кількість токенів, які модель бачить за один запит: system prompt, історія діалогу, вкладені документи, результати tools і сама відповідь. Усе, що не влізло, модель просто не знає.\n\nДовгий контекст не безкоштовний: дорожчий, повільніший, а якість часто падає для інформації «посередині» (lost in the middle). Дублікати й зайві tool schemas з’їдають ліміт без користі — context engineering тримає максимум корисного сигналу на токен."
+        },
+        {
+          "type": "keyIdea",
+          "text": "**Контекст (побутово) —** усе, що ми передали моделі в запиті. Модель без внутрішнього стану: «пам’ять» діалогу — це клієнт, який щоразу надсилає всю історію заново."
+        }
+      ]
+    },
+    {
+      "id": "glossary-10",
+      "title": "10. Prompt / Messages",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Інструкції та дані, які application передає моделі: system, user, assistant, tool results та інший контекст.",
+          "termEn": "Prompt / Messages",
+          "termUk": "Промпт і повідомлення"
+        },
+        {
+          "type": "paragraph",
+          "text": "Сучасні API зазвичай приймають масив messages з ролями, а не один рядок «prompt».\n\n**System/developer —** правила й формат.\n\n**User —** задача.\n\n**Assistant —** попередні відповіді.\n\n**Tool —** результати викликів.\n\nДля QA це контракт: що саме потрапляє в кожен виклик і чи не витікають секрети в логи."
+        },
+        {
+          "type": "list",
+          "items": [
+            "system / developer — політики, формат, межі",
+            "user — запит, тікет, фрагмент коду",
+            "assistant — історія відповідей моделі",
+            "tool — structured results після виконання функцій"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glossary-11",
+      "title": "11. Next-token prediction",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Базова mental model генерації: модель оцінює ймовірності наступного токена, обирає його, додає до контексту й повторює цикл.",
+          "termEn": "Next-token prediction",
+          "termUk": "Передбачення наступного токена"
+        },
+        {
+          "type": "flow",
+          "lines": "Context (tokens)\n↓\nРозподіл ймовірностей на наступний токен\n↓\nSampling (temperature, top_p, …)\n↓\nОбраний токен → додати в context\n↓\nПовторити до stop / max_tokens"
+        },
+        {
+          "type": "paragraph",
+          "text": "Звідси hallucination: модель оптимізована на правдоподібне продовження, а не на перевірку факту в «базі істини». Тести мають перевіряти результат задачі, а не лише красивий текст."
+        }
+      ]
+    },
+    {
+      "id": "glossary-12",
+      "title": "12. Temperature / Sampling",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Механізми вибору токена з розподілу ймовірностей, впливають на варіативність, але не перетворюють модель на джерело істини.",
+          "termEn": "Temperature / Sampling",
+          "termUk": "Температура та sampling"
+        },
+        {
+          "type": "heading",
+          "level": 4,
+          "text": "Параметри генерації"
+        },
+        {
+          "type": "list",
+          "items": [
+            "temperature — «випадковість» вибору токена, 0 — майже детермінований вибір найімовірнішого, вища — різноманітніше й менш передбачувано",
+            "top_p (nucleus sampling) — обирати лише з токенів, чия сумарна ймовірність ≤ p",
+            "max_tokens — ліміт довжини відповіді, при перевищенні відповідь обривається (finish_reason = length)",
+            "stop sequences — рядки, на яких генерація зупиняється",
+            "seed — підтримується не всіма вендорами і не гарантує повної відтворюваності"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Для automation часто комбінують низьку temperature із structured output і валідацією (schema, парсер, тести).\n\n**Важливо:** навіть при temperature 0 відповідь може відрізнятися між запусками (паралельні обчислення на GPU, оновлення моделі, batching). Тест не повинен припускати побайтову рівність виводу."
+        }
+      ]
+    },
+    {
+      "id": "glossary-13",
+      "title": "13. Reasoning / Thinking",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Додаткове обчислення/міркування для складної задачі. Це не те саме, що agent: reasoning може існувати без tools і зовнішніх actions.",
+          "termEn": "Reasoning / Thinking",
+          "termUk": "Міркування"
+        },
+        {
+          "type": "paragraph",
+          "text": "Reasoning-моделі можуть витрачати більше internal steps перед фінальною відповіддю. Для продукту важливі спостережувані речі: фінальна відповідь, tool calls, traces, метрики — а не покладатися на сирий chain-of-thought як контракт API."
+        },
+        {
+          "type": "keyIdea",
+          "text": "Agent = модель + loop + tools + state + permissions. Reasoning може бути лише всередині одного виклику моделі."
+        }
+      ]
+    },
+    {
+      "id": "glossary-14",
+      "title": "14. Hallucination",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Правдоподібна, але непідтверджена або неправильна відповідь. Причина — модель генерує ймовірний output, а не виконує запит до «бази істини».",
+          "termEn": "Hallucination",
+          "termUk": "Галюцинація"
+        },
+        {
+          "type": "paragraph",
+          "text": "У QA це вигаданий selector, endpoint, метод API або business rule. Типові причини: немає факту в context, конфлікт джерел, модель «домальовує» pattern. Output вважаємо недовіреним, поки немає evidence."
+        },
+        {
+          "type": "flow",
+          "title": "Зменшення ризику",
+          "lines": "Generated text / plan\n↓\nSchema & type validation\n↓\nВимоги / docs / код у repo\n↓\nLint, compile, тести\n↓\nTool results + review"
+        }
+      ]
+    },
+    {
+      "id": "glossary-15",
+      "title": "15. Deterministic vs Probabilistic",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Звичайний код за однакових умов очікувано дає той самий результат, LLM-output може варіюватися, тому потрібні validation та evals.",
+          "termEn": "Deterministic vs Probabilistic",
+          "termUk": "Детермінізм і ймовірність"
+        },
+        {
+          "type": "paragraph",
+          "text": "**Tokenizer, парсер JSON, permission check, запис у БД, виконання tool-функції —** deterministic software.\n\n**Вибір змісту відповіді або «який tool викликати» —** може робити LLM. Критичні гарантії не повинні спиратися лише на модель."
+        },
+        {
+          "type": "list",
+          "title": "Що варто міряти в тестах",
+          "items": [
+            "task success, factual correctness, format compliance — не лише exact string match.",
+            "tool selection, safety, latency, token usage.",
+            "стабільність на reference examples і регресія після зміни model id."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glossary-16",
+      "title": "16. Structured Output",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Machine-readable output за схемою, наприклад JSON. Дає application можливість надійніше парсити результат моделі.",
+          "termEn": "Structured Output",
+          "termUk": "Структурований вивід"
+        },
+        {
+          "type": "paragraph",
+          "text": "JSON mode, response schema, constrained decoding — різні механізми однієї ідеї: менше «вільного тексту», більше контракту для коду. Парсинг успішний ≠ семантика вірна: потрібні перевірки полів, бізнес-правил і тести на крайні випадки."
+        }
+      ]
+    },
+    {
+      "id": "glossary-17",
+      "title": "17. Model API",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "HTTP/API-шар, через який application надсилає messages/context/tools до model provider та отримує model output.",
+          "termEn": "Model API",
+          "termUk": "API моделі"
+        },
+        {
+          "type": "paragraph",
+          "text": "Клієнт збирає messages, опційно tool definitions, викликає endpoint, обробляє streaming, помилки (429, 5xx), usage (tokens). Для QA — контрактні тести API, ідемпотентність retry, коректність логування без PII, поведінка при rate limit і таймаутах."
+        },
+        {
+          "type": "flow",
+          "lines": "Application\n↓\nModel API (HTTP)\n↓\nProvider runtime\n↓\nTokens / tool_calls / finish_reason\n↓\nВаша валідація та дії"
+        }
+      ]
+    },
+    {
+      "id": "glossary-18",
+      "title": "18. Tokens / Cost / Latency",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Кількість input/output tokens впливає на вартість і час відповіді, production AI — це також performance і cost engineering.",
+          "termEn": "Tokens / Cost / Latency",
+          "termUk": "Токени, вартість і затримка"
+        },
+        {
+          "type": "paragraph",
+          "text": "API-моделі тарифікуються за токенами: окремо input (усе, що надіслали) і output (згенерована відповідь). Output зазвичай у кілька разів дорожчий за input.\n\nВартість запиту ≈ input_tokens × ціна_input + output_tokens × ціна_output."
+        },
+        {
+          "type": "paragraph",
+          "text": "**Кредити —** абстрактна одиниця оплати: попередньо купований баланс (prepaid) або «умовні бали» підписки, у які сервіс конвертує токени, запити чи хвилини агента. Коли кредити закінчуються, сервіс повертає помилку або вимикає функцію.\n\nДля QA це окремий клас сценаріїв: що бачить користувач при нульовому балансі, чи не списуються кредити за провалений запит, чи коректний лічильник."
+        },
+        {
+          "type": "list",
+          "title": "Що ще впливає на вартість і швидкість",
+          "items": [
+            "Довжина контексту: кожен крок діалогу чи агента повторно надсилає історію, вартість росте швидше, ніж лінійно",
+            "Prompt caching: повторюваний префікс (system prompt, документи) кешується і коштує дешевше та швидше",
+            "Rate limits: ліміти запитів і токенів на хвилину, відповідь 429 — повторити з exponential backoff",
+            "Latency: час до першого токена (TTFT) і загальний час, streaming робить відповідь «живою» до завершення генерації",
+            "Агенти: один запит користувача може породити десятки викликів моделі — потрібен бюджет і ліміт кроків"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "glossary-19",
+      "title": "19. Model landscape",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "LLM, SLM, VLM, MLM, MoE, SAM, LCM — різні класи/архітектури, MCP, RAG, Harness та Agent не є типами моделей.",
+          "termEn": "Model landscape",
+          "termUk": "Ландшафт моделей"
+        },
+        {
+          "type": "diagram",
+          "title": "Model vs architecture vs agentic stack",
+          "lines": "MODEL / FAMILY\n├── LLM — текст / reasoning\n├── SLM — компактна мовна модель\n├── VLM — vision + language\n├── MLM — masked language modeling\n├── MoE — routing експертів у моделі\n├── SAM — segmentation (спеціалізована)\n└── LCM — image generation family\n\nНЕ моделі:\n  RAG, MCP, Harness, Agent — runtime / patterns навколо моделі"
+        },
+        {
+          "type": "paragraph",
+          "text": "На співбесіді й у дизайні систем розділяйте: що є вагами моделі, що — архітектурою (MoE), а що — application layer (harness, tools, memory). Інфографіки «8 типів AI» часто змішують ці рівні — у курсі ми тримаємо чітку taxonomy."
+        }
+      ]
+    },
+    {
+      "id": "glossary-20",
+      "title": "20. Transition to Agentic AI",
+      "blocks": [
+        {
+          "type": "term",
+          "body": "Коли до моделі додаємо tools, state, memory, loop, permissions та execution control, отримуємо основу agentic system.",
+          "termEn": "Transition to Agentic AI",
+          "termUk": "Перехід до Agentic AI"
+        },
+        {
+          "type": "diagram",
+          "title": "Мінімальний agentic stack",
+          "lines": "LLM (або VLM/SLM)\n+\nHarness (оркестрація)\n+\nTools (дії в світі)\n+\nState / memory (що зберігаємо між кроками)\n+\nLoop (plan → act → observe)\n+\nPermissions & policies"
+        },
+        {
+          "type": "paragraph",
+          "text": "Далі на карті курсу — concepts і labs: tool calling, memory, planning, evals, безпека. Fundamentals закриває спільну мову, щоб ці теми не змішувались із «типом моделі»."
+        },
+        {
+          "type": "keyIdea",
+          "text": "Один виклик чату — ще не агент. Агент — контрольований цикл рішень і дій з перевірками на кожному кроці."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# Архів джерела (звірка) — Fundamentals §1.1–§1.2
+# Витяг з Deep Study Guide v10 (еквівалент DOCX). Не показується в UI.
+
+1.1 Що таке AI, ML, Deep Learning і Generative AI
+Artificial Intelligence (AI) — парасольковий термін для систем, які виконують задачі, де потрібні розпізнавання закономірностей, прогнозування, генерація, планування або підтримка рішень. Machine Learning — підхід, де поведінка системи формується з даних, а не лише з вручну прописаних правил. Deep Learning — ML на багатошарових нейронних мережах. Generative AI — моделі, що генерують новий контент: текст, код, зображення, аудіо тощо.
+
+AI
+├── rule-based / search / planning systems
+└── Machine Learning
+    └── Deep Learning
+        └── Generative AI
+            └── Large Language Models (LLMs)
+
+Ключова ідея: LLM — не синонім усього AI. Це один клас моделей усередині ширшого поля.
+Питання: What is AI?
+Interview answer (EN): AI is a broad field of systems that perform tasks involving perception, prediction, generation, planning or decision support. LLMs are one class of generative AI models focused on token sequences.
+
+1.2 Що таке LLM
+Large Language Model — нейронна модель, навчена працювати з послідовностями токенів. Спрощено: вона отримує вже відомий контекст і оцінює ймовірності можливих наступних токенів. Потім один токен обирається, додається до контексту, і процес повторюється.
+
+Prompt / context → Tokenization → Token IDs → Transformer layers → Probability distribution over next token → Select token → Append to context → Repeat
+
+Ключова ідея: Корисна mental model: LLM — probabilistic engine над контекстом. Надійність системи з’являється не лише з моделі, а з context, tools, validation, permissions та evals.
+
+1.2.1 Навіщо взагалі виникли LLM
+[… повний текст у structured JSON та docs/_pdf-extract.txt …]
