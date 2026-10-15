@@ -34,10 +34,28 @@ Workflow `.github/workflows/deploy-github-pages.yml` збирає проєкт �
 
 1. Репозиторій → **Settings** → **Pages**
 2. **Build and deployment** → **Source:** **GitHub Actions** (не «Deploy from a branch»)
-3. Змержити зміни в гілку **`main`** — workflow запуститься на push
-4. Після успішного run: **Actions** → workflow **Deploy GitHub Pages** → зелений job **deploy** → посилання на сайт
+3. Push у гілку **`main`** запускає workflow **Deploy GitHub Pages**
+4. Після успішного run: **Actions** → зелений job **deploy** → посилання на сайт
 
 Перший деплой може зайняти 1–3 хвилини після завершення Actions.
+
+### Помилка: `Branch "main" is not allowed to deploy to github-pages`
+
+Це **правила середовища** (Environment), не збірка. Job **build** зазвичай зелений, падає **deploy**.
+
+1. **Settings** → **Environments** → **github-pages** (якщо немає — спочатку один раз запустіть workflow, GitHub створить середовище)
+2. **Deployment branches** → оберіть **All branches**  
+   або **Selected branches** → **Add branch** → `main`
+3. Якщо увімкнено **Required reviewers** — для особистого репо вимкніть або підтвердіть deployment у **Actions** (кнопка **Review deployments**)
+4. **Save**
+5. **Actions** → останній failed run → **Re-run all jobs**  
+   або **Deploy GitHub Pages** → **Run workflow** → гілка `main`
+
+Попередження про Node.js 20 / Ubuntu у логах — інформаційні, на deploy не впливають (у workflow уже `node-version: '22'`).
+
+### Default branch
+
+**Settings** → **General** → **Default branch** → **`main`**, щоб PR і Pages узгоджувались з деплоєм.
 
 ## Чеклист після публікації
 
