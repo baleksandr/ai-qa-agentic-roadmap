@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+.env
+.env.*
+!.env.example
+
+# Source binaries (migrate locally; site uses content/)
+source/**/*.pdf
+source/**/*.docx
+source/**/*.DOCX
+source/**/*.PDF
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

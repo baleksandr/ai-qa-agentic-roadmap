@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { AgentArchitecturePage } from './pages/AgentArchitecturePage';
 import { HomePage } from './pages/HomePage';
 import { RoutePage } from './pages/RoutePage';
@@ -8,7 +8,7 @@ import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/agent-architecture" element={<AgentArchitecturePage />} />
@@ -16,7 +16,7 @@ function App() {
         <Route path="/topic/:topicId" element={<TopicPage />} />
         <Route path="/topic/:topicId/study" element={<TopicStudyPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

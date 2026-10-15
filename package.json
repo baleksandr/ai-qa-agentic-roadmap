@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --base /ai-qa-agentic-roadmap/",
     "lint": "oxlint",
-    "preview": "vite preview",
+    "preview": "vite preview --base /ai-qa-agentic-roadmap/",
     "docx:inventory": "node scripts/docx-inventory-full.mjs",
     "source:migrate": "node scripts/migrate-from-source.mjs"
   },

@@ -54,20 +54,18 @@ node scripts/generate-stubs.mjs
 
 Чотири стани зберігаються в `localStorage` (ключ `ai-qa-agentic-roadmap-progress-v1`). Стани «можу пояснити» / «можу реалізувати» обираються вручну на сторінці теми.
 
-## Публікація на GitHub
+## Публікація (GitHub Pages)
+
+Сайт: **https://baleksandr.github.io/ai-qa-agentic-roadmap/**
+
+Деталі (HashRouter, Actions, Settings → Pages): [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md).
 
 ```powershell
-git init -b main
-git add -A
-git commit -m "Initial roadmap app scaffold"
+npm run build
+npm run preview
 ```
 
-Створіть порожній репозиторій на [github.com/baleksandr](https://github.com/baleksandr), потім:
-
-```powershell
-git remote add origin https://github.com/baleksandr/ai-qa-agentic-roadmap.git
-git push -u origin main
-```
+Деплой запускається автоматично після push у гілку **`main`** (workflow `Deploy GitHub Pages`).
 
 ## Ліцензія
 
