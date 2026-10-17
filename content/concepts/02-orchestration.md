@@ -1,125 +1,125 @@
 # Concept 02 — Orchestration
 
-> **migrationStatus (з DOCX):** `partial`  
-> **Джерело:** PART II — Concept 2 (pdf)  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
+> **migrationStatus:** `partial` — Study Mode: 8 розділів, самодостатній текст (пакет 1 PART II).
 
 ## Review Mode
 
-Orchestration: керує порядком кроків, виконавцями, паралельністю, retries, approvals і переходами між частинами workflow. Concept 1 — Memory & State ↓ [Concept 2 — Orchestration] <-- ЗАРАЗ ВИВЧАЄМО ↓ Concept 3 — RAG
+**Проблема:** кілька агентів, CI, Jira і людина без спільного «диригента» запускаються в хаотичному порядку — review до коду, два writer на один файл.
+
+**Ідея orchestration (оркестрація):** шар **коду**, який визначає готовність кроків, виконавця, retries, human gates і перехід по workflow. LLM може планувати *всередині* кроку, але **не** замінює scheduler і черги.
+
+**Для QA:** тестуйте порядок подій, idempotency при retry, відсутність deadlock і duplicate side effects у trace.
 
 ## Study Mode
 
-Concept 2. Orchestration — оркестрація
-### QUICK VIEW — Orchestration: керує порядком кроків, виконавцями, паралельністю, retries, approvals
-і переходами між частинами workflow.
-Concept 1 — Memory & State
-↓
-[Concept 2 — Orchestration] <-- ЗАРАЗ ВИВЧАЄМО
-↓
-Concept 3 — RAG
-### 0. Яку проблему ми взагалі намагаємося вирішити?
-Є Coding Agent, QA Agent, Review Agent, Jira, GitHub і CI. Якщо кожен компонент діє коли захоче,
-отримуємо хаос: reviewer запускається до появи коду, QA пише tests до уточнення requirement, два агенти
-одночасно змінюють один файл.
-Потрібен рівень, який керує порядком кроків, залежностями, паралельністю, retries, approvals і
-переходами між станами.
-Goal: implement ticket
-↓
-??? хто визначає порядок?
-├─ Coding Agent
-├─ QA Agent
-├─ Review Agent
-├─ CI
-└─ Human approval
-### 1. Головна ідея простими словами
-Ключова думка
-Orchestration (оркестрація) — це керування workflow: хто виконує крок, коли він стартує, що є
-precondition, що робити після failure і чи потрібне human approval.
-### 2. З яких компонентів це складається?
-• Workflow graph / state machine
-• Scheduler / dispatcher
-• Task queue
-• Policies and routing rules
-• Retry/timeout logic
-• Human approval gates
-• Shared state / event bus
-### 3. Що фізично передається між компонентами?
-Передаються task objects, event messages, status updates, tool results, artifacts і routing metadata. Це часто
-JSON або повідомлення в queue/event bus.
-### 4. Що відбувається під капотом — крок за кроком
-### 12. 1) User goal перетворюється на workflow або plan.
+### Навіщо потрібна orchestration?
 
-### 13. 2) Orchestrator дивиться на state і визначає ready tasks.
-### 14. 3) Вибирає виконавця: agent/tool/human.
-### 15. 4) Передає task + context.
-### 16. 5) Отримує result/status.
-### 17. 6) Оновлює state і переходить по графу.
-### 18. 7) При error застосовує retry/fallback/escalation policy.
-### 5. Де тут LLM, а де звичайний deterministic code?
-LLM відповідає за probabilistic interpretation/decision/generation там, де потрібне розуміння природної
-мови або вибір наступної дії. Усе, що стосується реального I/O, зберігання, permissions, network calls,
-retries, schema validation, queues, databases і policy enforcement, виконується звичайним програмним
-кодом та інфраструктурою. Межа між цими двома світами — одна з найважливіших mental models у
-всьому курсі.
-### 6. Повний простий приклад
-Implement ABC-123: read Jira → code → tests → CI → review. Якщо CI failed через flake, orchestrator може один
-раз rerun. Якщо failure product-related — route назад Coding Agent. Якщо зміна production config — чекати
-human approval.
-### 7. Де це може впасти? — failure modes
-• Deadlock між задачами
-• Infinite loop/retry storm
-• Два виконавці працюють над одним resource
-• Неправильний routing
-• Lost event / duplicate event
-### 8. Security — що важливо захистити?
-• Approval для destructive actions
-• Least privilege для кожного agent
-• Tenant isolation
-• Audit trail хто ініціював крок
-### 9. Як це тестувати як QA/SDET?
-• Happy workflow
-• Branch/fallback paths
-• Retry count
-• Timeout
-• Duplicate messages
-• Out-of-order events
-• Approval denied/timeout
-• Crash/recovery
-### 10. Observability — що потрібно бачити в production?
-Trace повинен показувати workflowId, taskId, parent/child spans, executor, transitions, retry reason, latency
-кожного кроку.
+У продукті одночасно живуть Coding Agent, QA Investigation Agent, Review Agent, CI pipeline і людина з approve. Кожен вміє робити свою частину, але **ніхто з них за замовчуванням не знає глобальний порядок** для тікета ABC-123.
 
-### 11. Production considerations
-У production важливо думати не лише про happy path, а про versioning, backward compatibility, latency,
-cost, retries, idempotency, rate limits, concurrency, degradation/fallback, data retention, deployment,
-monitoring і incident response. Конкретна вага цих факторів залежить від цієї концепції, але production-
-система завжди повинна мати контрольовану поведінку при часткових збоях.
-### 12. Як ця концепція пов’язана з іншими?
-Ця концепція не існує ізольовано. Попередній логічний крок: Concept 1 — Memory & State. Наступний:
-Concept 3 — RAG. Під час навчання завжди повертайся до глобальної карти: модель, harness,
-state/memory, tools/MCP, RAG, A2A, guardrails, evals та observability — це шари однієї системи.
-### 13. Коротка відповідь на співбесіді
-**Interview answer**
-Orchestration coordinates the workflow around agents and tools: ordering, dependencies, routing, retries,
-approvals and state transitions. It is usually deterministic control logic around probabilistic model decisions.
-### 14. “АААА, ось воно як!” — що треба запам’ятати
-Не зубри визначення. Спробуй без документа намалювати flow від входу до виходу і для кожної стрілки
-відповісти: хто це виконує, що саме передається, де зберігається state, де працює LLM, а де звичайний
-код. Якщо можеш це відновити — концепція реально засвоєна.
+Без orchestration після падіння `login_spec` може статися так: CI ще збирає артефакти, а investigation agent уже намагається створити Jira; reviewer коментує старий diff; два процеси пишуть у один config. Потрібен рівень, який тримає **граф робіт**: що готово, що blocked, хто наступний, що робити після failure.
 
-### QA-приклад
+| Термін | Простими словами |
+|--------|------------------|
+| **Orchestration** | Керування workflow: порядок, залежності, паралельність, retries, approvals |
+| **Workflow graph** | Вузли (кроки) і ребра (умови переходу) |
+| **Human gate** | Крок не йде далі без явної дії людини |
 
-Див. відповідний підрозділ «повний приклад» у Study Mode (якщо є в джерелі).
+*Примітка:* у книзі Pachaar & Chawla немає окремої глави «Orchestration»; модель нижче — **каркас курсу V10**, узгоджений з patterns/deployment у книзі за потреби.
 
-### Failure modes / security / testing / observability / production
+### Де це в investigation після login_spec?
 
-Див. розділи failure / security / testing / observability / production у Study Mode.
+*Навчальний приклад.*
 
-### Запитання для самоперевірки
+Подія: failed `login_spec` на nightly. Orchestrator (код) отримує goal «розслідувати regression» і розкладає на задачі:
 
-Відновіть flow без документа (див. блок «АААА» або hands-on у джерелі).
+1. Дочекатися артефактів CI (blocked, поки немає report path).  
+2. Запустити QA Investigation Agent (tool-heavy run).  
+3. Якщо висновок «потрібен product fix» — маршрут до Coding Agent; якщо «flake» — обмежений retry CI.  
+4. Якщо пропозиція змінити production config — **human gate** перед виконанням.
 
-### Коротка відповідь для співбесіди
+Orchestration **не** робить embedding і **не** парсить PDF — це RAG. Вона **не** виконує tool call — це harness усередині агента. Вона відповідає: **коли** стартує investigation run і **що** дозволено після його результату.
 
-Див. **Interview answer** у Study Mode.
+CI ready → investigation task → (branch) fix / retry / escalate → human gate?
+
+### З чого складається механізм?
+
+| Компонент | Роль |
+|-----------|------|
+| Workflow graph / state machine | Модель кроків і переходів |
+| Scheduler / dispatcher | Вибирає ready tasks |
+| Task queue | Черга подій і завдань |
+| Routing rules | Хто виконує крок: agent, tool, human |
+| Retry / timeout policy | Поведінка при помилках |
+| Approval gates | Блокування до approve |
+| Shared state / event bus | Статуси між сервісами |
+
+### Послідовність під капотом
+
+**Крок 1.** User goal → workflow instance (код).  
+**Вхід:** «Investigate login_spec failure»; **вихід:** `workflowId`, початковий вузол.
+
+**Крок 2.** Orchestrator дивиться state graph, знаходить ready tasks (код).  
+**Вихід:** список task з preconditions.
+
+**Крок 3.** Призначає виконавця: agent id / external job / human (код).  
+**Вихід:** task envelope + context pointer (не весь wiki).
+
+**Крок 4.** Отримує result / event (код).  
+**Вхід:** `success|failure|needs_approval`.
+
+**Крок 5.** Оновлює workflow state, переходить по ребру (код).  
+**При failure:** retry policy або escalation — **детерміновані правила**, не «модель вирішила».
+
+### Де код, а де LLM?
+
+| Що | Хто |
+|----|-----|
+| Черги, таймери, retry count, routing matrix | Код orchestrator |
+| Human approval UI | Людина + код |
+| План усередині одного agent run | LLM + harness (інша концепція) |
+| Визначення «чи пройшов CI» | CI / код, не LLM |
+
+### Де може зламатися?
+
+#### Deadlock
+
+Два кроки чекають один на одного. **QA:** статичний аналіз графа або simulation — немає циклу без progress.
+
+#### Retry storm
+
+Flaky CI → нескінченні rerun. **Очікування:** max attempts + backoff у trace.
+
+#### Duplicate event
+
+Один і той же `ci_finished` оброблено двічі → два investigation run. **Harness:** idempotent consumer, `eventId`.
+
+#### Wrong routing
+
+Product failure пішла на «ignore». **QA:** golden workflows + assert наступного вузла в trace orchestrator.
+
+### Як QA це тестує?
+
+| Перевірка | Дія | Очікування | Доказ |
+|-----------|-----|------------|-------|
+| Порядок | Симулювати CI slow | Investigation стартує після `artifacts_ready` | ordered events у bus |
+| Gate | Висновок «prod config» | Run blocked до approve | audit `approvedBy` |
+| Retry | Flake flag | Рівно N CI rerun | counter у state |
+| Isolation | Паралельні тікети | Окремі workflow instance | `workflowId` |
+
+### Production
+
+Моніторинг: час у вузлі, кількість retries, stuck workflows, SLA human gates. Версіонування графа workflow при deploy — щоб старі run не ламалися на новій схемі.
+
+### Запам’ятати та співбесіда
+
+| Теза | Коротко |
+|------|---------|
+| Orchestration | **Порядок і правила** між агентами та сервісами |
+| Не LLM | Scheduler і policy — код |
+| Investigation | Старт/гілки після `login_spec` — приклад вузлів workflow |
+
+:::study-sources
+- *AI Engineering*, 2025 — design patterns, deployment (орієнтири; окремого concept orchestration у книзі немає).
+- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 2 — workflow, retries, approvals (архів курсу).
+- Навчальний сценарій: nightly `login_spec`, гілки fix/retry/escalate — умовні дані.
+:::study-sources-end

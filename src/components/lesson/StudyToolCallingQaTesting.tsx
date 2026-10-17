@@ -5,7 +5,6 @@ import {
   TOOL_CALLING_QA_LEVELS,
   TOOL_CALLING_QA_NO_AUTOMATED_TESTS_NOTE,
 } from '../../data/study/tool-calling-qa-testing';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
@@ -33,7 +32,7 @@ export function StudyToolCallingQaTesting({ introUk }: Props) {
         key: c.id,
         titleUk: c.titleUk,
         teaserUk: `${c.subtitleUk} · ${c.navTeaserUk}`,
-        badgeUk: 'QA',
+        actorUk: 'QA',
       })),
     [],
   );
@@ -63,10 +62,6 @@ export function StudyToolCallingQaTesting({ introUk }: Props) {
           ))}
         </ol>
       </section>
-
-      <StudyInteractionHint>
-        Оберіть категорію ліворуч — поруч покроковий план тесту (setup → дія → очікування).
-      </StudyInteractionHint>
 
       <StudyStepDetailLayout
         navAriaLabel="Категорії QA tool calling"

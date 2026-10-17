@@ -14,6 +14,12 @@
 | `src/lib/studyArrowFlow.ts` | Коли `→` = схема vs проза |
 | `src/lib/studyClarityPanel.ts` | `clarityProcessPanel` / `clarityDataPanel` → markdown секцій |
 | `src/lib/studyPanelMarkdown.ts` | `isStudyPanelSectionLabel`, мітки для `studyPanelLabels` |
+| `src/lib/studyKeyPhraseMarkdown.ts` | `:::study-key-phrase` → `StudyLearnerKeyPhraseLine` |
+| `src/components/lesson/StudyLearnerKeyPhraseLine.tsx` | Спільний UI фрази + пояснення |
+| `src/components/lesson/StudyMarkdownSegments.tsx` | Markdown + key-phrase блоки |
+| `src/components/lesson/StudyProcessCompareSection.tsx` | Порівняння двох процесів (картки + панель) |
+| `src/data/study/fundamentals-training-inference-compare.ts` | §5 Training vs Inference |
+| `src/data/study/fundamentals-model-aspects.ts` | §4 Model — три картки |
 | `src/lib/studyPanelContent.ts` | `studyPanelMarkdown()` — склейка `**label** body` |
 | `src/data/study/rag-teaching-thread.ts` | Навчальний INC-442 / login_spec / index-v12 |
 | `src/data/study/rag-pipeline-panel-content.ts` | Єдині тексти clarity-панелей RAG pipeline |
@@ -21,7 +27,8 @@
 | `src/components/lesson/StudyMarkdownWithFlows.tsx` | Markdown + auto ribbon |
 | `src/components/MarkdownBody.tsx` | `studyTables`, `studyPanelLabels` |
 | `src/components/lesson/StudyPanelTerms.tsx` | Блок «Терміни» внизу бокової панелі |
-| `src/components/lesson/StudyInteractionHint.tsx` | Підказка «Оберіть … — праворуч» над split-layout |
+| `src/components/lesson/StudyPageCardsHint.tsx` | Єдина UI-підказка на Study-сторінку (`studyPageInteractive.ts`) |
+| `src/components/lesson/StudyInteractionHint.tsx` | Смуга «Підказка» (лише через `StudyPageCardsHint`) |
 | `src/components/lesson/StudyStepDetailLayout.tsx` | Еталон grid: nav 220–280px + панель |
 | `src/components/lesson/StudyPipelineStepNav.tsx` | Єдині ліві картки (pipeline) |
 | `src/data/study/tool-calling-runtime-steps.ts` | §2 кроки 1–5 (дослівно з markdown) |
@@ -45,6 +52,14 @@
 | `src/data/study/tool-calling-section-aside.ts` | Контекст Tool Calling по розділах |
 | `src/data/study/study-lesson-aside.registry.ts` | `hasStudyLessonAside`, meta атласу |
 | `src/components/lesson/StudyLessonAside.tsx` | Права колонка (прогрес + контекст) |
+| `src/data/review/review-mode-by-topic.ts` | Review Mode (пріоритет над md) |
+| `src/components/ReviewMarkdownBody.tsx` | Рендер `:::review-phases/steps/compare` |
+| `src/lib/reviewMarkdownBlocks.ts` | Парсер review-блоків |
+| `src/styles/review-mode.css` | Стилі Review / бічної панелі |
+| `src/styles/learning-map-layout.css` | Доп. layout навчальної карти |
+| `src/styles/study-learner-flow-layout.css` | Компактні схеми StudyLearnerFlowTrack / outcomes |
+| `src/components/lesson/StudyLearnerFlowTrack.tsx` | Довгі ланцюги → 2 ряди + mobile timeline |
+| `docs/PART_II_STUDY_ROLLOUT_PROGRESS.md` | Трекінг PART II: зроблено / бракує / verify; пакети 3–4 |
 | `docs/COURSE_CLARITY_AUDIT.md` | Аудит ясності всього курсу (статус по темах) |
 | `docs/STUDY_LESSON_RAG_TEMPLATE.md` | Еталон структури уроку (від RAG) |
 | `src/data/study/lesson-enrichment.registry.ts` | Статус збагучення по topicId |

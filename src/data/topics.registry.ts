@@ -101,6 +101,19 @@ export const TOPICS: TopicMeta[] = [
     'lab-9',
   ], ['concept-17', 'concept-18']),
   {
+    id: 'qa-interview',
+    kind: 'reference',
+    title: 'QA Interview Questions',
+    shortTitle: 'Питання для QA-співбесіди',
+    groupId: 'reference',
+    learningOrder: 98,
+    prerequisites: [],
+    contentPath: 'content/qa-interview/qa-interview-bank.md',
+    migrationStatus: 'partial',
+    migrationNotes: 'Банк питань у Study Mode; категорії в qa-interview-bank.ts.',
+    relatedTopicIds: ['fundamentals', 'concept-14', 'concept-03'],
+  },
+  {
     id: 'reference-library',
     kind: 'reference',
     title: 'Reference Library',
@@ -153,7 +166,7 @@ export const ROADMAP_GROUPS: RoadmapGroup[] = [
     title: 'AI / LLM Fundamentals',
     subtitle: 'Старт: базові моделі та термінологія',
     topicIds: ['fundamentals'],
-    flowEdges: [{ from: 'fundamentals', to: 'concept-10' }],
+    flowEdges: [{ from: 'fundamentals', to: 'concept-14' }],
   },
   {
     id: 'agent-core',
@@ -235,7 +248,7 @@ export const ROADMAP_GROUPS: RoadmapGroup[] = [
   {
     id: 'reference',
     title: 'Reference Library',
-    topicIds: ['reference-library'],
+    topicIds: ['qa-interview', 'reference-library'],
     flowEdges: [],
   },
 ];

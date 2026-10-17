@@ -1,0 +1,100 @@
+/* Підсумок після інтерактивного блоку — статичні картки, узгоджено з lesson-callout / «Запам’ятати» */
+
+.study-after-interactive-summary {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.study-after-interactive-summary-heading {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7ee8d8;
+}
+
+.study-after-interactive-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Парні підсумкові картки: дві рівні колонки на всю ширину блоку */
+@media (min-width: 640px) {
+  .study-after-interactive-summary-grid--pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem 0.85rem;
+    align-items: start;
+  }
+}
+
+.study-after-interactive-summary-card {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(118, 138, 220, 0.32);
+  border-left: 4px solid rgba(61, 214, 195, 0.55);
+  background: rgba(14, 22, 38, 0.72);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  min-width: 0;
+  height: auto;
+  align-self: start;
+}
+
+.study-after-interactive-summary-card-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #c8daf8;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.study-after-interactive-summary-card-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #d4deef;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.study-after-interactive-summary-card-note {
+  margin: 0.45rem 0 0;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(118, 138, 220, 0.2);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.study-after-interactive-summary-footnote {
+  margin: 0.55rem 0 0;
+  padding: 0.55rem 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 9px;
+  border: 1px solid rgba(118, 138, 220, 0.22);
+  border-left: 3px solid rgba(91, 140, 255, 0.45);
+  background: rgba(12, 18, 32, 0.55);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.study-teaching-cards > .study-after-interactive-summary {
+  margin-top: 1.1rem;
+  width: 100%;
+}

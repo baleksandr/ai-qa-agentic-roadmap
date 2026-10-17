@@ -1,0 +1,901 @@
+/* Підписи блоків у навчальних панелях (Fundamentals + studyPanelLabels) */
+
+.study-learner-panel {
+  margin: 0;
+  padding: 0;
+}
+
+.study-learner-panel-block {
+  margin: 0 0 0.65rem;
+  padding: 0.45rem 0.55rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(12, 18, 32, 0.65);
+  border-left: 3px solid rgba(126, 232, 216, 0.45);
+}
+
+.study-learner-panel-block:last-child {
+  margin-bottom: 0;
+}
+
+.study-learner-panel-remember {
+  margin-top: 0.65rem;
+  padding: 0.45rem 0.55rem 0.5rem;
+  border-radius: 8px;
+  border-left: 3px solid rgba(94, 224, 168, 0.45);
+  background: rgba(12, 24, 22, 0.45);
+}
+
+.study-learner-panel-label {
+  margin: 0 0 0.28rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7ee8d8;
+}
+
+.study-learner-panel-value {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #dce4f8;
+  font-weight: 400;
+}
+
+.study-learner-panel-value-p,
+.study-rag-story-intro-text-p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.study-learner-panel-value .study-inline-code {
+  font-size: 0.88em;
+}
+
+/* Структурні секції панелі (теза, мінікартки, ланцюг понять, механізм → перевірка) */
+
+.study-learner-panel-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.study-learner-panel-thesis {
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* «Назва + пояснення»: inline-потік (пояснення переноситься всередині абзаца), не flex-wrap цілим блоком */
+.study-learner-labeled-line,
+.study-learner-check-line {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.study-learner-labeled-head {
+  white-space: nowrap;
+}
+
+.study-learner-labeled-line .study-term-accent,
+.study-learner-labeled-line .study-learner-label-sep,
+.study-learner-labeled-line .study-learner-explanation {
+  display: inline;
+}
+
+.study-learner-labeled-line .study-learner-label-sep {
+  white-space: pre;
+}
+
+.study-learner-labeled-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.5rem;
+}
+
+.study-learner-panel-prose > .study-learner-labeled-stack:first-child {
+  margin-top: 0;
+}
+
+.study-learner-panel-prose .study-learner-labeled-stack + .study-learner-labeled-stack,
+.study-learner-panel-value-p + .study-learner-labeled-stack {
+  margin-top: 0.55rem;
+}
+
+.study-learner-labeled-stack .study-learner-labeled-line {
+  margin: 0;
+}
+
+@container (max-width: 22rem) {
+  .study-learner-panel-mini-card .study-learner-labeled-line {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .study-learner-panel-mini-card .study-learner-labeled-head {
+    white-space: normal;
+  }
+
+  .study-learner-panel-mini-card .study-learner-label-sep {
+    display: none;
+  }
+}
+
+.study-learner-panel-caption {
+  margin: 0 0 0.5rem;
+}
+
+.study-learner-panel-focus-card {
+  width: 100%;
+  max-width: none;
+  padding: 0.6rem 0.7rem 0.65rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-learner-panel-focus-card .study-learner-labeled-stack {
+  gap: 0.72rem;
+  margin-top: 0;
+}
+
+.study-learner-panel-focus-card .study-learner-labeled-line {
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.study-learner-panel-block--course-link {
+  margin-top: 0.75rem;
+  border-left-color: rgba(140, 165, 255, 0.55);
+}
+
+.study-learner-panel-course-lesson-link-wrap {
+  margin: 0;
+}
+
+.study-learner-panel-course-lesson-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #dce8ff;
+  text-decoration: none;
+  border: 1px solid rgba(118, 138, 220, 0.45);
+  background: rgba(32, 42, 72, 0.85);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.study-learner-panel-course-lesson-link:hover {
+  color: #f2f6ff;
+  border-color: rgba(148, 168, 248, 0.65);
+  background: rgba(40, 52, 88, 0.92);
+}
+
+.study-learner-panel-course-lesson-link:focus-visible {
+  outline: 2px solid var(--accent, #6ec8ff);
+  outline-offset: 2px;
+}
+
+.study-learner-term-pair-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.study-learner-term-pair-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+
+@media (min-width: 560px) {
+  .study-learner-term-pair-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.study-learner-term-pair-card {
+  margin: 0;
+  padding: 0.55rem 0.65rem 0.6rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.22);
+  background: rgba(20, 26, 44, 0.75);
+  min-width: 0;
+}
+
+.study-learner-term-pair-card-term {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.study-learner-term-pair-card-fullname {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #a8b8d4;
+}
+
+.study-learner-term-pair-card-body {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.study-learner-term-pair-conclusion {
+  margin: 0;
+  padding: 0.55rem 0.65rem 0.6rem;
+  border-radius: 9px;
+  border: 1px solid rgba(118, 138, 220, 0.32);
+  border-left: 3px solid rgba(140, 165, 255, 0.75);
+  background: rgba(22, 30, 52, 0.72);
+}
+
+.study-learner-term-pair-conclusion-label {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7ee8d8;
+}
+
+.study-learner-term-pair-conclusion-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: #dce4f8;
+}
+
+.study-learner-panel-mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.study-learner-panel-mini-card {
+  container-type: inline-size;
+  margin: 0;
+  padding: 0.45rem 0.5rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(8, 14, 28, 0.55);
+  border: 1px solid rgba(126, 232, 216, 0.18);
+}
+
+/* Ланцюг кроків у панелі (→ / ↓, компактний кіберпанк) */
+.study-learner-panel-mini-wrap--flow {
+  container-type: inline-size;
+}
+
+.study-learner-panel-mini-list--flow {
+  gap: 0.2rem;
+  align-items: stretch;
+}
+
+.study-learner-panel-mini-card--flow-step {
+  position: relative;
+  padding: 0.32rem 0.42rem;
+  border-color: rgba(232, 120, 180, 0.22);
+  background: linear-gradient(145deg, rgba(18, 10, 32, 0.65) 0%, rgba(8, 14, 28, 0.82) 100%);
+  box-shadow: 0 0 0 1px rgba(126, 232, 216, 0.05) inset;
+}
+
+.study-panel-flow-step-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.35rem;
+  font-size: 0.84rem;
+  line-height: 1.38;
+}
+
+.study-panel-flow-step-badge {
+  flex-shrink: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(126, 232, 216, 0.95);
+  padding: 0.08rem 0.32rem;
+  border-radius: 4px;
+  background: rgba(126, 232, 216, 0.1);
+  border: 1px solid rgba(126, 232, 216, 0.22);
+}
+
+.study-panel-flow-step-text {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+
+.study-learner-panel-mini-list--flow .study-learner-panel-mini-card--flow-step:not(:last-child)::after {
+  content: '↓';
+  display: block;
+  text-align: center;
+  margin: 0.12rem 0 0.05rem;
+  font-size: 0.78rem;
+  line-height: 1;
+  color: rgba(232, 120, 180, 0.75);
+  text-shadow: 0 0 8px rgba(232, 120, 180, 0.35);
+}
+
+@container (min-width: 34rem) {
+  .study-learner-panel-mini-list--flow {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.35rem 0.55rem;
+  }
+
+  .study-learner-panel-mini-card--flow-step {
+    flex: 1 1 calc(25% - 0.75rem);
+    min-width: 6.75rem;
+    max-width: 100%;
+  }
+
+  .study-learner-panel-mini-list--flow .study-learner-panel-mini-card--flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -0.48rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    margin: 0;
+    font-size: 0.7rem;
+    z-index: 1;
+    text-shadow: 0 0 6px rgba(232, 120, 180, 0.4);
+  }
+
+  .study-panel-flow-step-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.12rem;
+  }
+
+  .study-panel-flow-step-text {
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+}
+
+.study-learner-panel-flow-footnote {
+  margin: 0.4rem 0 0;
+  padding: 0.32rem 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  border-radius: 5px;
+  border-left: 2px solid rgba(126, 232, 216, 0.5);
+  background: rgba(8, 14, 28, 0.4);
+}
+
+.study-learner-panel-taxonomy-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.study-learner-panel-taxonomy-item {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.study-learner-panel-footnote {
+  margin: 0.55rem 0 0;
+}
+
+.study-learner-panel-check-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.study-learner-panel-check-row {
+  container-type: inline-size;
+  margin: 0;
+  padding: 0.45rem 0.5rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(8, 14, 28, 0.55);
+  border: 1px solid rgba(126, 232, 216, 0.18);
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.study-learner-panel-check-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.study-rag-qa-panel-body .study-panel-section-label,
+.markdown-body-study-panel .study-panel-section-label {
+  color: #7ee8d8;
+  font-weight: 700;
+}
+
+/* Вкладений процес у правій панелі (StudyStepDetailLayout + StudyPipelineStepNav) */
+.study-learner-panel-block--step-pick {
+  margin-top: 0.35rem;
+}
+
+.study-learner-panel-value--flush {
+  margin: 0;
+  padding: 0;
+}
+
+.study-learner-panel-step-pick-lead {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.48;
+}
+
+.study-learner-panel-step-pick-heading {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7ee8d8;
+}
+
+.study-learner-panel-step-pick-hint {
+  margin: 0 0 0.5rem;
+  max-width: none;
+  font-size: 0.88rem;
+}
+
+.study-learner-panel-step-pick-layout {
+  margin-top: 0;
+}
+
+.study-learner-panel-step-pick-layout .study-step-detail-layout {
+  margin-top: 0;
+  gap: 0.75rem 1rem;
+}
+
+/* Картки в ряд зверху, пояснення обраної — на всю ширину під ними */
+.study-learner-panel-step-pick-layout--row-above-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.study-learner-panel-step-pick-layout--row-above-panel .study-learner-panel-step-pick-row-nav {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+
+.study-learner-panel-step-pick-layout--row-above-panel .study-rag-pipeline-steps-col {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.study-learner-panel-step-pick-layout--row-above-panel .study-rag-pipeline-steps-col > li {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+}
+
+.study-learner-panel-step-pick-layout--row-above-panel .study-rag-pipeline-steps-col .study-flow-stage-card {
+  width: 100%;
+  height: 100%;
+}
+
+.study-learner-panel-step-pick-layout--row-above-panel .study-learner-panel-step-pick-row-panel {
+  width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(118, 138, 220, 0.22);
+  background: rgba(8, 12, 24, 0.45);
+}
+
+.study-learner-panel-step-pick-layout .study-step-detail-nav {
+  max-width: none;
+}
+
+.study-learner-panel-step-pick-layout .study-flow-stage-card--pipeline .study-flow-stage-title {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.study-learner-panel-step-pick-layout .study-flow-stage-card--pipeline .study-flow-stage-teaser {
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.study-learner-panel-step-pick-panel-title {
+  margin: 0.15rem 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #e8eef8;
+}
+
+.study-learner-panel-step-pick-actor {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+}
+
+.study-learner-panel-step-pick-panel-body {
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.study-learner-panel-step-pick-conclusion {
+  margin-top: 0.65rem;
+  width: 100%;
+}
+
+.study-learner-panel-step-pick-example {
+  margin-top: 0.65rem;
+}
+
+.study-learner-panel-step-pick-example .study-learner-panel-label {
+  margin-bottom: 0.3rem;
+}
+
+.study-learner-panel-step-pick-layout .study-concept-nav-group-title {
+  margin-bottom: 0.4rem;
+}
+
+.study-learner-panel-qa-evidence {
+  margin-top: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(126, 232, 216, 0.28);
+  border-left-width: 4px;
+  border-left-color: rgba(232, 120, 180, 0.65);
+  background: linear-gradient(155deg, rgba(18, 10, 32, 0.55) 0%, rgba(8, 14, 28, 0.75) 100%);
+}
+
+.study-learner-panel-qa-evidence-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: #e8eef8;
+}
+
+.study-learner-panel-qa-evidence .study-learner-labeled-stack {
+  font-size: 0.9rem;
+  line-height: 1.48;
+}
+
+/* Підблок «QA-перевірка» (окремо від рожевого вибору картки) */
+.study-learner-panel-qa-check {
+  margin-top: 0.7rem;
+  padding: 0.55rem 0.65rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(232, 200, 120, 0.28);
+  border-left: 3px solid rgba(232, 200, 120, 0.82);
+  background: rgba(18, 14, 8, 0.42);
+}
+
+.study-learner-panel-qa-check-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #e8c878;
+}
+
+.study-learner-panel-qa-check-body {
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: #e8eef8;
+}
+
+.study-learner-panel-qa-check-body .study-text-emphasis {
+  color: inherit;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .study-learner-panel-step-pick-layout .study-step-detail-panel {
+    margin-top: 0.35rem;
+  }
+
+  .study-learner-panel-step-pick-layout--row-above-panel .study-rag-pipeline-steps-col {
+    flex-direction: column;
+  }
+}
+
+.study-model-response-example {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.study-teaching-intro-data-example {
+  width: 100%;
+  max-width: 100%;
+}
+
+.study-model-response-example-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #b8c8f0;
+  letter-spacing: 0.01em;
+}
+
+.study-model-response-example-intro {
+  margin: 0;
+}
+
+.study-model-response-example-part {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.study-model-response-example-part-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7ee8d8;
+}
+
+.study-model-response-main-card {
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid rgba(118, 138, 220, 0.35);
+  background: rgba(14, 18, 32, 0.92);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+.study-model-response-main-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.28rem;
+  margin: 0 0 0.55rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(118, 138, 220, 0.22);
+}
+
+.study-model-response-example-badge {
+  display: inline-block;
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+  border: 1px solid rgba(94, 224, 168, 0.35);
+  background: rgba(94, 224, 168, 0.1);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(142, 228, 192, 0.95);
+  line-height: 1.3;
+}
+
+.study-model-response-example-caption {
+  margin: 0;
+  max-width: 42em;
+  line-height: 1.42;
+  color: #a8b8d4;
+}
+
+.study-model-response-main-card-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #c8d8f8;
+}
+
+.study-model-response-field-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 560px) {
+  .study-model-response-field-grid:not(.study-model-response-field-grid--triple) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .study-model-response-field-grid--triple {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .study-model-response-field-grid--triple > .study-model-response-field-tile:last-child:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1040px) {
+  .study-model-response-field-grid--triple {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .study-model-response-field-grid--triple > .study-model-response-field-tile:last-child:nth-child(3) {
+    grid-column: auto;
+  }
+}
+
+.study-model-response-field-tile {
+  margin: 0;
+  padding: 0.55rem 0.65rem 0.6rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.22);
+  background: rgba(20, 26, 44, 0.75);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.study-model-response-field-label {
+  margin: 0 0 0.18rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #9eb4dc;
+  line-height: 1.3;
+}
+
+.study-model-response-field-value {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #f0f4fc;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.study-model-response-field-explanation {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.42;
+  color: #c5d4ec;
+}
+
+.study-model-response-field-tech {
+  margin: 0.15rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #a8b8d8;
+  word-break: break-word;
+}
+
+.study-model-response-fields-summary {
+  margin: 0;
+  padding: 0;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+.study-model-response-check-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.study-model-response-check {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.35rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 180, 0.2);
+  background: rgba(16, 20, 36, 0.65);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.study-model-response-check-label {
+  color: #c5d2ea;
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.study-model-response-check-sep {
+  color: #6b7a96;
+}
+
+.study-model-response-check-value {
+  font-weight: 600;
+}
+
+.study-model-response-check--yes .study-model-response-check-value {
+  color: #6ee0b8;
+}
+
+.study-model-response-check--pending .study-model-response-check-value {
+  color: #d4b86a;
+}
+
+.study-model-response-check--no .study-model-response-check-value {
+  color: #f0a8a8;
+}
+
+.study-model-response-conclusion {
+  margin: 0.55rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(118, 140, 228, 0.38);
+  border-left: 3px solid rgba(140, 165, 255, 0.75);
+  background: rgba(22, 30, 52, 0.72);
+  color: #d6e2f6;
+  line-height: 1.48;
+}
+
+.study-model-response-tech-details {
+  margin-top: 0.15rem;
+}
+
+.study-model-response-tech-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+}
+
+.study-model-response-schema-list {
+  margin: 0;
+}
+
+.study-model-response-json-card {
+  border-color: rgba(118, 138, 220, 0.32);
+  background: #0a0e18;
+}
+
+.study-model-response-json-pre {
+  margin: 0;
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre;
+  word-break: normal;
+  font-size: 0.78rem;
+}
+
+@media (min-width: 769px) {
+  .study-learner-panel-step-pick-layout .study-step-detail-layout {
+    grid-template-columns: minmax(200px, 42%) minmax(0, 1fr);
+  }
+}

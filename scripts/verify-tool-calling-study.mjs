@@ -102,11 +102,19 @@ else {
 
 const qaPath = join(root, 'src/data/study/tool-calling-qa-testing.ts');
 const qaSrc = readFileSync(qaPath, 'utf8');
-const qaCats = (qaSrc.match(/id:\s*'tc-qa-/g) ?? []).length;
+/** Три рівні тестування (handler / harness / +LLM) — id `tc-qa-level-*` */
+const qaLevels = (qaSrc.match(/id:\s*'tc-qa-level-/g) ?? []).length;
+if (qaLevels === 3) console.log('OK: 3 QA test levels (handler, harness, +LLM)');
+else {
+  ok = false;
+  console.log(`FAIL: expected 3 QA test levels, found ${qaLevels}`);
+}
+/** Шість категорій матриці перевірок (schema, sandbox, permission, …) — не рахувати level ids */
+const qaCats = (qaSrc.match(/id:\s*'tc-qa-(?!level)/g) ?? []).length;
 if (qaCats === 6) console.log('OK: 6 QA test categories');
 else {
   ok = false;
-  console.log(`FAIL: expected 6 QA categories, found ${qaCats}`);
+  console.log(`FAIL: expected 6 QA test categories, found ${qaCats} (exclude tc-qa-level-*)`);
 }
 if (qaSrc.includes('TOOL_CALLING_QA_GWT_SCENARIOS') && qaSrc.includes('readPlaywrightReport')) {
   console.log('OK: QA GWT scenarios');

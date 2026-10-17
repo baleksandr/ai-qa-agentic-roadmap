@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getMapLabel } from '../data/learning-map.registry';
-import { TOPIC_BY_ID, getLearningRoute } from '../data/topics.registry';
+import { TOPIC_BY_ID } from '../data/topics.registry';
+import { getStudyNextTopic, getStudyPrevTopic } from '../lib/studyTopicNavigation';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
-import { MarkdownBody } from '../components/MarkdownBody';
+import { ReviewMarkdownBody } from '../components/ReviewMarkdownBody';
+import { getEnrichedReviewMarkdown } from '../data/review/review-mode-by-topic';
 import { SiteNav } from '../components/SiteNav';
 import { ProgressPicker } from '../components/ProgressPicker';
 import { useProgress } from '../hooks/useProgress';
@@ -21,10 +23,8 @@ export function TopicPage() {
     return parseLessonMarkdown(raw);
   }, [topic]);
 
-  const route = getLearningRoute();
-  const index = topic ? route.findIndex((t) => t.id === topic.id) : -1;
-  const prev = index > 0 ? route[index - 1] : null;
-  const next = index >= 0 && index < route.length - 1 ? route[index + 1] : null;
+  const prev = topic ? getStudyPrevTopic(topic.id) : null;
+  const next = topic ? getStudyNextTopic(topic.id) : null;
 
   if (!topic) {
     return (
@@ -36,7 +36,9 @@ export function TopicPage() {
   }
 
   const learning = getProgress(topic.id);
-  const reviewMarkdown = lesson?.reviewMarkdown ?? '';
+  const reviewMarkdown = topic
+    ? getEnrichedReviewMarkdown(topic.id, lesson?.reviewMarkdown ?? '')
+    : '';
 
   return (
     <div className="page topic-page topic-review-page">
@@ -66,7 +68,7 @@ export function TopicPage() {
         {topic.migrationStatus === 'not_migrated' ? (
           <p className="muted">Огляд з’явиться після перенесення з DOCX.</p>
         ) : (
-          <MarkdownBody markdown={reviewMarkdown} />
+          <ReviewMarkdownBody markdown={reviewMarkdown} />
         )}
       </article>
 

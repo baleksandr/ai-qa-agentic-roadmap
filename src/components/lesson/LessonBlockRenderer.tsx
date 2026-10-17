@@ -1,5 +1,7 @@
 import type { LessonBlock } from '../../types/lessonBlocks';
 import { LessonRichParagraphs } from './lessonRichText';
+import { StudyLearnerPhraseParagraphs } from './StudyLearnerPhraseParagraphs';
+import { StudyRememberTakeaways } from './StudyRememberTakeaways';
 
 interface Props {
   block: LessonBlock;
@@ -7,6 +9,8 @@ interface Props {
 
 export function LessonBlockRenderer({ block }: Props) {
   switch (block.type) {
+    case 'phraseParagraphs':
+      return <StudyLearnerPhraseParagraphs items={block.items} />;
     case 'paragraph':
       return (
         <div className={block.editorialReview ? 'lesson-needs-review' : undefined}>
@@ -66,7 +70,7 @@ export function LessonBlockRenderer({ block }: Props) {
       return (
         <aside className="lesson-callout lesson-key-idea">
           <span className="lesson-callout-label">Запам’ятати</span>
-          <LessonRichParagraphs text={block.text} />
+          <StudyRememberTakeaways bullets={block.bullets} text={block.text} />
         </aside>
       );
     case 'qaExample':

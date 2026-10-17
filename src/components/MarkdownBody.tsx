@@ -28,7 +28,7 @@ function studyMarkdownComponents(studyTables: boolean, studyPanelLabels: boolean
       if (isStudyPanelSectionLabel(text)) {
         return <strong className="study-panel-section-label">{children}</strong>;
       }
-      return <strong>{children}</strong>;
+      return <strong className="study-text-emphasis">{children}</strong>;
     };
   }
 

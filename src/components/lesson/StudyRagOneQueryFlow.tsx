@@ -14,8 +14,6 @@ import { StudyRagThreeStates } from './StudyRagThreeStates';
 import { MarkdownBody } from '../MarkdownBody';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
-import { StudyInteractionHint } from './StudyInteractionHint';
-
 type Props = {
   scenario: RagInvestigationScenario;
   restMarkdown?: string;
@@ -49,11 +47,6 @@ export function StudyRagOneQueryFlow({ scenario, restMarkdown = '' }: Props) {
 
       <StudyStepDetailLayout
         wrapperClassName="study-rag-pipeline-glossary study-rag-pipeline-with-panel"
-        hint={
-          <StudyInteractionHint>
-            Оберіть крок ліворуч — поруч що сталося, хто виконав і що далі.
-          </StudyInteractionHint>
-        }
         navAriaLabel="Шість кроків одного run"
         nav={
           <StudyPipelineStepNav
@@ -61,7 +54,6 @@ export function StudyRagOneQueryFlow({ scenario, restMarkdown = '' }: Props) {
               key: i + 1,
               titleUk: s.titleUk,
               teaserUk: s.teaserUk,
-              badgeUk: `Крок ${i + 1}`,
             }))}
             activeKey={activeStep}
             onSelect={(key) => {

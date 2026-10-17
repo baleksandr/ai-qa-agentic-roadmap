@@ -1,5 +1,9 @@
 import { useCallback, useState, type ReactNode } from 'react';
 import {
+  studyInteractiveCardActiveClass,
+  studyInteractiveCardSelectionProps,
+} from '../../lib/studyInteractiveCardState';
+import {
   POLICY_FLOW_HINT_BY_ID,
   POLICY_FLOW_NODE_HINTS,
 } from '../../data/study/policy-flow-node-hints';
@@ -50,8 +54,8 @@ function FlowNode({
     'policy-flow-node',
     `policy-flow-node--${variant}`,
     small ? 'is-small' : '',
-    nodeId ? 'is-clickable' : '',
-    isActive ? 'is-selected' : '',
+    nodeId ? 'is-clickable study-interactive-card' : '',
+    nodeId && isActive ? studyInteractiveCardActiveClass(true) : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -71,7 +75,7 @@ function FlowNode({
       type="button"
       className={className}
       lang={lang}
-      aria-pressed={isActive}
+      {...studyInteractiveCardSelectionProps(isActive ?? false)}
       aria-label={hint ? `${hint.titleUk}. Натисніть для пояснення` : undefined}
       onClick={() => onSelect(nodeId)}
     >
@@ -186,8 +190,7 @@ export function StudyPolicyApprovalFlowDiagram() {
   return (
     <figure className="policy-flow-figure">
       <figcaption className="policy-flow-caption muted small">
-        Альтернативні гілки після policy — не послідовні кроки. Терміни на схемі англійською, як у trace.{' '}
-        <strong className="policy-flow-caption-cta">Натисніть блок</strong> — деталі праворуч (на телефоні — нижче).
+        Альтернативні гілки після policy — не послідовні кроки. Терміни на схемі англійською, як у trace.
       </figcaption>
 
       <div className="policy-flow-shell">

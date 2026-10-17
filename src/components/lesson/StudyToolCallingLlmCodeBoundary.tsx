@@ -5,7 +5,6 @@ import {
   TOOL_CALLING_RESPONSIBILITY_ROWS,
   TOOL_CALLING_RISK_EXAMPLES,
 } from '../../data/study/tool-calling-llm-code-flow';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
@@ -25,7 +24,6 @@ export function StudyToolCallingLlmCodeBoundary({ introMarkdown }: Props) {
         key: s.step,
         titleUk: `Крок ${s.step}`,
         teaserUk: s.titleUk,
-        badgeUk: s.actorUk,
         actorUk: s.actorUk,
       })),
     [],
@@ -37,10 +35,6 @@ export function StudyToolCallingLlmCodeBoundary({ introMarkdown }: Props) {
     <section className="study-tool-calling-llm-code study-rag-pipeline-glossary" aria-label="Де код, а де LLM">
       <p className="study-rag-scenario-kicker muted small">Навчальний приклад · login_spec · readPlaywrightReport</p>
       <p className="study-boundary-lead">{parseLessonBold(lead)}</p>
-
-      <StudyInteractionHint>
-        Оберіть крок ліворуч — поруч вхід, дія й вихід для цього етапу одного run.
-      </StudyInteractionHint>
 
       <StudyStepDetailLayout
         navAriaLabel="Шість кроків readPlaywrightReport"

@@ -20,6 +20,12 @@ export type LessonEnrichmentEntry = {
 
 export const LESSON_ENRICHMENT: LessonEnrichmentEntry[] = [
   {
+    topicId: 'fundamentals',
+    tier: 'partial',
+    teachingThread: true,
+    notes: 'Structured JSON + StudyTeachingCardsSection (розділи 6, 8, 11); hero/outcomes',
+  },
+  {
     topicId: 'concept-03',
     tier: 'reference',
     teachingThread: true,
@@ -27,6 +33,24 @@ export const LESSON_ENRICHMENT: LessonEnrichmentEntry[] = [
     interviewDeck: true,
     oneStoryFlow: true,
     notes: 'Еталон курсу',
+  },
+  {
+    topicId: 'concept-01',
+    tier: 'minimal',
+    teachingThread: false,
+    notes: 'Пакет 1 PART II: 8§ MD + hero/outcomes; UI/deck — далі',
+  },
+  {
+    topicId: 'concept-02',
+    tier: 'minimal',
+    teachingThread: false,
+    notes: 'Пакет 1 PART II: 8§ MD + hero/outcomes; UI/deck — далі',
+  },
+  {
+    topicId: 'concept-04',
+    tier: 'minimal',
+    teachingThread: false,
+    notes: 'Пакет 1 PART II: 8§ MD + hero/outcomes; UI/deck — далі',
   },
   {
     topicId: 'concept-10',

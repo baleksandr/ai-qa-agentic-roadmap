@@ -2,7 +2,6 @@ import { lookupRagQaCheckDetail, qaCheckDetailToMarkdown } from '../../data/stud
 import type { RagQaCheckItem } from '../../lib/ragQaSection';
 import { MarkdownBody } from '../MarkdownBody';
 import { StudyPanelTerms } from './StudyPanelTerms';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyQaPhaseStrip } from './StudyQaPhaseStrip';
 import { useMemo, useState } from 'react';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
@@ -45,9 +44,6 @@ export function StudyRagQaChecks({ items }: Props) {
 
   return (
     <div className="study-rag-qa-block study-rag-pipeline-glossary">
-      <StudyInteractionHint>
-        Оберіть перевірку ліворуч — поруч пояснення й терміни з уроку.
-      </StudyInteractionHint>
       <StudyStepDetailLayout
         navAriaLabel="Перевірки QA"
         nav={

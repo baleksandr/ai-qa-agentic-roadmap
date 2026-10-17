@@ -1,0 +1,320 @@
+/**
+ * Study Mode — єдині hover / press / вибір для інтерактивних навчальних карток.
+ * Обрана картка: React-стан (is-active + aria-pressed + data-selected), не :focus.
+ */
+
+/* Номер картки — окрема колонка сітки, заголовок переноситься в основній колонці */
+.study-flow-stage-card.has-card-number {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.4rem;
+  align-items: start;
+  padding-top: 0.48rem;
+  padding-right: 0.55rem;
+}
+
+.study-flow-stage-card.has-card-number > .study-card-number {
+  grid-column: 2;
+  grid-row: 1;
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: 1;
+  justify-self: end;
+  align-self: start;
+  flex-shrink: 0;
+}
+
+.study-flow-stage-card.has-card-number > .study-flow-stage-card-top {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.study-flow-stage-card.has-card-number.is-pipeline-compact > .study-flow-stage-card-foot {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+}
+
+.study-flow-stage-card.has-card-number:not(.is-pipeline-compact) > .study-flow-stage-title {
+  grid-column: 1;
+  grid-row: 2;
+  min-width: 0;
+}
+
+.study-flow-stage-card.has-card-number:not(.is-pipeline-compact) > .study-flow-stage-teaser {
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 0;
+}
+
+.study-flow-stage-card.has-card-number:not(.is-pipeline-compact) > .study-flow-stage-cta {
+  grid-column: 1;
+  grid-row: 4;
+  min-width: 0;
+}
+
+.study-flow-stage-card.has-card-number .study-flow-stage-title {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.study-flow-stage-card.has-card-number .study-flow-stage-card-meta--pipeline {
+  min-width: 0;
+  width: 100%;
+}
+
+.study-card-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  padding: 0.1rem 0.36rem;
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  color: #dce8ff;
+  background: rgba(86, 104, 196, 0.32);
+  border: 1px solid rgba(132, 152, 238, 0.45);
+  border-radius: 7px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07) inset;
+  pointer-events: none;
+}
+
+.study-flow-stage-card.study-interactive-card.is-active .study-card-number,
+.study-flow-stage-card.study-interactive-card[aria-pressed='true'] .study-card-number,
+.study-flow-stage-card.study-interactive-card[data-selected='true'] .study-card-number {
+  color: #e8f0ff;
+  background: rgba(78, 98, 188, 0.38);
+  border-color: rgba(148, 168, 248, 0.52);
+}
+
+.study-flow-stage-card.is-pipeline-compact.is-pipeline-no-glyph .study-flow-stage-card-top--pipeline {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Назви інтерактивних карток (не рожеві — рожевий лише рамка вибору) */
+.study-interactive-card-title {
+  color: var(--study-interactive-card-title);
+  font-weight: var(--study-interactive-card-title-weight);
+}
+
+.study-interactive-card.is-active .study-interactive-card-title,
+.study-interactive-card[aria-pressed='true'] .study-interactive-card-title,
+.study-interactive-card[data-selected='true'] .study-interactive-card-title {
+  color: var(--study-interactive-card-title-active);
+}
+
+.study-rag-story-step-btn .study-rag-story-step-title,
+.study-split-hint-pick .study-split-hint-pick-title,
+.study-transfer-card.is-clickable.study-interactive-card .study-transfer-card-text,
+.study-flow-ribbon-step.is-clickable.study-interactive-card .study-flow-ribbon-label,
+button.policy-flow-node.study-interactive-card .policy-flow-node-inner {
+  color: var(--study-interactive-card-title);
+  font-weight: var(--study-interactive-card-title-weight);
+}
+
+.study-rag-story-step-btn.is-active .study-rag-story-step-title,
+.study-rag-story-step-btn[aria-pressed='true'] .study-rag-story-step-title,
+.study-split-hint-pick.is-active .study-split-hint-pick-title,
+.study-split-hint-pick[aria-pressed='true'] .study-split-hint-pick-title,
+.study-transfer-card.is-clickable.study-interactive-card.is-active .study-transfer-card-text,
+.study-transfer-card.is-clickable.study-interactive-card[aria-pressed='true'] .study-transfer-card-text,
+.study-flow-ribbon-step.is-clickable.study-interactive-card.is-active .study-flow-ribbon-label,
+.study-flow-ribbon-step.is-clickable.study-interactive-card[aria-pressed='true'] .study-flow-ribbon-label,
+button.policy-flow-node.study-interactive-card.is-active .policy-flow-node-inner,
+button.policy-flow-node.study-interactive-card[aria-pressed='true'] .policy-flow-node-inner {
+  color: var(--study-interactive-card-title-active);
+}
+
+/* —— Базова поверхня —— */
+:is(
+    .study-interactive-card,
+    .fundamentals-concept-node-btn.study-interactive-card,
+    .study-process-compare-card.study-interactive-card,
+    .study-flow-stage-card.study-interactive-card,
+    .study-rag-story-step-btn,
+    .study-rag-qa-card:not(:disabled),
+    .study-split-hint-pick,
+    button.policy-flow-node.study-interactive-card,
+    .study-transfer-card.is-clickable.study-interactive-card,
+    .study-flow-ribbon-step.is-clickable.study-interactive-card
+  ) {
+  border-left-width: 3px;
+  border-left-color: var(--study-card-border-left);
+  border-color: var(--study-card-border-muted);
+  background: var(--study-card-surface);
+  color: #e8eef8;
+  box-shadow: var(--study-card-shadow-rest);
+  transform: translateY(0);
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    background 0.16s ease,
+    transform 0.12s ease;
+}
+
+.study-flow-stage-card.is-input,
+.study-flow-stage-card.is-middle,
+.study-flow-stage-card.is-output,
+.study-transfer-card.is-input,
+.study-transfer-card.is-middle,
+.study-transfer-card.is-output,
+.study-flow-ribbon-step.is-first,
+.study-flow-ribbon-step.is-last {
+  border-left-color: var(--study-card-border-left);
+}
+
+/* —— Hover (лише не обрані) —— */
+:is(
+    .study-interactive-card,
+    .fundamentals-concept-node-btn.study-interactive-card,
+    .study-process-compare-card.study-interactive-card,
+    .study-flow-stage-card.study-interactive-card.is-clickable,
+    .study-rag-story-step-btn,
+    .study-rag-qa-card:not(:disabled),
+    .study-split-hint-pick,
+    button.policy-flow-node.study-interactive-card,
+    .study-transfer-card.is-clickable.study-interactive-card,
+    .study-flow-ribbon-step.is-clickable.study-interactive-card
+  ):hover:not(.is-active):not(.is-selected):not([aria-pressed='true']):not([data-selected='true']) {
+  border-color: var(--study-card-border-hover);
+  border-left-color: var(--study-card-border-left);
+  background: var(--study-card-bg-hover);
+  box-shadow: var(--study-card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+button.policy-flow-node.study-interactive-card:hover:not(.is-active):not(.is-selected):not([aria-pressed='true']):not([data-selected='true']) {
+  filter: brightness(1.06);
+}
+
+/* —— Натискання (лише не обрані) —— */
+:is(
+    .study-interactive-card,
+    .fundamentals-concept-node-btn.study-interactive-card,
+    .study-process-compare-card.study-interactive-card,
+    .study-flow-stage-card.study-interactive-card.is-clickable,
+    .study-rag-story-step-btn,
+    .study-rag-qa-card:not(:disabled),
+    .study-split-hint-pick,
+    button.policy-flow-node.study-interactive-card,
+    .study-transfer-card.is-clickable.study-interactive-card,
+    .study-flow-ribbon-step.is-clickable.study-interactive-card
+  ):active:not(.is-active):not(.is-selected):not([aria-pressed='true']):not([data-selected='true']) {
+  transform: translateY(0);
+  box-shadow: var(--study-card-shadow-active);
+  transition-duration: 0.05s;
+}
+
+button.policy-flow-node.study-interactive-card:active:not(.is-active):not(.is-selected):not([aria-pressed='true']):not([data-selected='true']) {
+  filter: brightness(0.98);
+}
+
+/* —— Обрана картка (постійно, поки activeKey у React) —— */
+:is(
+    .study-interactive-card.is-active,
+    .study-interactive-card.is-selected,
+    .study-interactive-card[aria-pressed='true'],
+    .study-interactive-card[data-selected='true'],
+    .fundamentals-concept-node-btn.study-interactive-card.is-active,
+    .fundamentals-concept-node-btn.study-interactive-card[aria-pressed='true'],
+    .study-flow-stage-card.study-interactive-card.is-active,
+    .study-flow-stage-card.study-interactive-card[aria-pressed='true'],
+    .study-flow-stage-card.study-interactive-card[data-selected='true'],
+    button.policy-flow-node.study-interactive-card.is-selected,
+    button.policy-flow-node.study-interactive-card.is-active,
+    button.policy-flow-node.study-interactive-card[aria-pressed='true']
+  ) {
+  border-color: rgba(244, 114, 182, 0.52);
+  border-left-width: 4px;
+  border-left-color: var(--study-card-selected-accent);
+  background: linear-gradient(155deg, rgba(36, 22, 42, 0.98) 0%, rgba(12, 14, 28, 0.94) 100%);
+  box-shadow:
+    0 0 0 1px rgba(244, 114, 182, 0.36),
+    0 0 20px var(--study-card-selected-glow),
+    inset 3px 0 12px rgba(244, 114, 182, 0.08);
+  transform: translateY(0);
+  filter: none;
+}
+
+/* Policy-вузли: варіантні кольори лишаються, рамка вибору — зверху */
+button.policy-flow-node.study-interactive-card.is-active,
+button.policy-flow-node.study-interactive-card.is-selected,
+button.policy-flow-node.study-interactive-card[aria-pressed='true'] {
+  background: linear-gradient(155deg, rgba(36, 22, 42, 0.96) 0%, rgba(12, 14, 28, 0.92) 100%);
+}
+
+:is(
+    .study-interactive-card.is-active,
+    .study-interactive-card[aria-pressed='true'],
+    .study-interactive-card[data-selected='true']
+  ):hover {
+  border-left-color: var(--study-card-selected-accent);
+  border-color: rgba(244, 114, 182, 0.58);
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(244, 114, 182, 0.42),
+    0 0 24px var(--study-card-selected-glow),
+    inset 3px 0 12px rgba(244, 114, 182, 0.1);
+}
+
+/* —— Фокус клавіатури (окремо від вибору) —— */
+.study-interactive-card:focus {
+  outline: none;
+}
+
+.study-interactive-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.study-interactive-card.is-active:focus-visible,
+.study-interactive-card[aria-pressed='true']:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.study-interactive-card .study-flow-stage-teaser,
+.study-flow-stage-card.study-interactive-card .study-flow-stage-teaser {
+  color: #c5d2ea;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  :is(
+      .study-interactive-card.is-active,
+      .study-interactive-card[aria-pressed='true'],
+      .study-interactive-card[data-selected='true']
+    ) {
+    border-left-width: 5px;
+    box-shadow:
+      0 0 0 1px rgba(244, 114, 182, 0.45),
+      0 0 16px var(--study-card-selected-glow),
+      inset 4px 0 14px rgba(244, 114, 182, 0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.study-interactive-card, .study-flow-stage-card.study-interactive-card) {
+    transition: none;
+    transform: none;
+  }
+
+  :is(.study-interactive-card):hover:not(.is-active):not([aria-pressed='true']) {
+    transform: none;
+  }
+
+  :is(.study-interactive-card.is-active, .study-interactive-card[aria-pressed='true']) {
+    box-shadow:
+      0 0 0 1px rgba(244, 114, 182, 0.4),
+      inset 4px 0 0 var(--study-card-selected-accent);
+  }
+}

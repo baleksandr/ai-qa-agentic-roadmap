@@ -12,7 +12,6 @@ import { chainStageDetailToMarkdown } from '../../data/study/rag-chain-stage-det
 import { MarkdownBody } from '../MarkdownBody';
 import { StudyPanelTerms } from './StudyPanelTerms';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
 
@@ -63,11 +62,6 @@ export function StudyToolCallingOneFlow() {
 
       <StudyStepDetailLayout
         wrapperClassName="study-rag-pipeline-with-panel"
-        hint={
-          <StudyInteractionHint>
-            Оберіть крок ліворуч — поруч з’явиться пояснення з уроку та розбір механізму для QA.
-          </StudyInteractionHint>
-        }
         navAriaLabel="П’ять кроків одного виклику tool"
         nav={
           <StudyPipelineStepNav

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import type { StudyHintItem } from '../../data/study/study-hint-types';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { LessonRichParagraphs, parseLessonBold } from './lessonRichText';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { STUDY_EMPTY_ITEM_PANEL_UK } from '../../lib/studyLearnerCopy';
@@ -38,9 +37,11 @@ export function StudySplitHintPanel({
   return (
     <div className="study-split-hint study-rag-pipeline-glossary">
       <LessonRichParagraphs text={leadUk} className="lesson-p study-boundary-lead" />
-      {introUk?.trim() && (
-        <StudyInteractionHint className="study-split-hint-intro">{introUk}</StudyInteractionHint>
-      )}
+      {introUk?.trim() ? (
+        <p className="study-split-hint-intro muted small study-learner-explanation">
+          {parseLessonBold(introUk)}
+        </p>
+      ) : null}
 
       <StudyStepDetailLayout
         navAriaLabel={listAriaLabel}

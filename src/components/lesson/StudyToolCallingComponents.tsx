@@ -3,7 +3,6 @@ import { TOOL_CALLING_STAGES } from '../../data/study/tool-calling-flow-stages';
 import { lookupToolCallingComponentDetail } from '../../data/study/tool-calling-component-details';
 import { chainStageDetailToMarkdown } from '../../data/study/rag-chain-stage-details';
 import { MarkdownBody } from '../MarkdownBody';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPanelTerms } from './StudyPanelTerms';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { StudyLearnerFlowTrack } from './StudyLearnerFlowTrack';
@@ -51,7 +50,6 @@ export function StudyToolCallingComponents() {
           <strong>П’ять кроків механізму</strong> (назви в проді різняться).
         </p>
       }
-      hint={<StudyInteractionHint>Оберіть крок ліворуч, щоб побачити пояснення для QA.</StudyInteractionHint>}
       beforeNav={
         <div className="study-pipeline-ribbon-overview">
           <p className="muted small study-pipeline-ribbon-lead">Один run investigation (назви в проді різняться):</p>

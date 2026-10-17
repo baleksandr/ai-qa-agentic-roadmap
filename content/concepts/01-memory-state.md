@@ -1,116 +1,137 @@
 # Concept 01 — Memory & State
 
-> **migrationStatus (з DOCX):** `partial`  
-> **Джерело:** PART II — Concept 1  
+> **migrationStatus:** `partial` — Study Mode: 8 розділів, самодостатній текст (пакет 1 PART II).
 
 ## Review Mode
 
-**QUICK VIEW:** State = де виконання знаходиться зараз. Memory = що система зберегла з минулого і може повернути в майбутній context.
+**Проблема:** модель не «пам’ятає» між окремими HTTP-запитами; довге investigation з десятками кроків без збереженого стану неможливо відновити після збою.
 
-- Проблема: LLM не «пам’ятає» між запитами без application state.
-- State — поточний run; memory — збережене з минулого для наступних run.
-- Harness + context builder вирішують, що повернути в context перед LLM.
+**Ідея:** **state (стан)** — де зараз цей run (крок, статус, останні спостереження); **memory (пам’ять)** — що система зберегла з минулих run і може знову покласти в контекст. Зберігання і відбір контексту — **код harness**, не LLM.
+
+**Для QA:** перевіряйте restore після рестарту, ізоляцію між користувачами/run, що саме потрапило в `messages[]` перед викликом моделі.
 
 ## Study Mode
 
-### 0. Яку проблему ми взагалі намагаємося вирішити?
+### Навіщо потрібні memory і state?
 
-Уявімо звичайний виклик LLM. Ти пишеш: «Мене звати Олександр». Модель відповідає. Запит завершився. Через хвилину ти робиш новий незалежний запит: «Як мене звати?». Якщо попередня інформація не була знову передана в контекст, модель не має магічного доступу до неї.
+Один виклик API до моделі — це замкнений епізод: надіслали `messages[]`, отримали відповідь, з’єднання закрилося. Модель **не має** внутрішньої бази «що ми говорили вчора», поки застосунок знову не передасть текст у prompt.
 
-Для agentic-систем цього недостатньо ще сильніше. Агент може виконувати задачу 20 хвилин, робити 15 tool calls, чекати approval і відновлюватися після падіння процесу. Йому потрібно знати, що вже зроблено, що отримано і який наступний крок.
+Для **QA Regression Investigation Agent** це критично. Після падіння `login_spec` агент може десять разів викликати tools, чекати human approval і зупинитися посеред run через рестарт pod. Без **state** він не знає, що вже прочитав звіт CI і який гіпотезі довіряє. Без **memory** він не може акуратно підтягнути, наприклад, що в цьому продукті таймаут на кнопці часто був селектор, а не мережа — якщо таке знання колись зберегли з дозволу політики.
 
-```
-Request 1: "Мене звати Олександр"
-↓
-LLM
-↓
-Response
-↓
-request finished
+| Термін | Простими словами |
+|--------|------------------|
+| **State (стан)** | Поточний знімок **цього** run: id, крок, статус, останні результати tools |
+| **Memory (пам’ять)** | Збережене з **минулого**, що harness **може** знову додати в контекст |
+| **Context builder** | Код, який вирішує, **який** шмат state/history/memory потрапить у наступний виклик LLM |
 
-Request 2: "Як мене звати?"
-↓
-LLM
-↓
-??? якщо application не повернула попередній контекст
-```
+### Де це в одному run після login_spec?
 
-### 1. Головна ідея простими словами
+*Навчальний приклад: умовні `runId`, тікети.*
 
-**Ключова думка**
+Падіння `login_spec` на staging. Harness створює `runId=inv-442`, state: `step=1`, `status=investigating`. Агент (через LLM) просить прочитати звіт — harness виконує tool, записує в state `lastObservation=timeout_on_submit_button`. Перед другим викликом моделі **context builder** додає в `messages[]` короткий summary state, а з long-term memory — один факт «у UI-тестах login після редизайну v12 часто ламався `#submit`» (якщо політика дозволяє цьому tenant).
 
-Тому розділяємо дві речі. **State (стан)** — це поточний робочий стан виконання: `step=4`, `taskStatus=running`, `lastToolResult=...` **Memory (пам’ять)** — це інформація з минулого, яку система вирішила зберегти і, можливо, використати пізніше.
+Ця концепція **не** замінює RAG (пошук у документах) і **не** є orchestration (хто наступний у workflow). Вона відповідає на питання: **що зберегти між кроками одного run і що перенести з минулого в контекст**.
 
-### 2. З яких компонентів це складається?
+run створено → кроки investigation → checkpoint state → context builder → LLM → оновлення state
 
-- State manager (менеджер стану)
-- Short-term memory / conversation history
-- Long-term memory storage
-- Checkpoint store (контрольні точки)
-- Context builder (збирач контексту)
-- Retention / summarization logic
+### З чого складається механізм?
 
-### 3. Що фізично передається між компонентами?
+| Компонент | Роль |
+|-----------|------|
+| State manager | Читає/записує поточний об’єкт run |
+| Conversation history | Короткострокова історія повідомлень у межах run |
+| Long-term memory store | Факти, summary, embeddings + metadata (за дизайном продукту) |
+| Checkpoint store | Знімок state для відновлення після збою |
+| Context builder | Збирає фінальний prompt: system + state slice + memory hits + user |
+| Retention / summarization | Стискає історію, коли наближається ліміт токенів |
 
-State часто представлений як JSON/об’єкт: `{runId, step, status, observations, openTasks}`. Memory може зберігатися як текстові записи, структуровані facts, summaries або embeddings + metadata.
+### Послідовність під капотом
 
-### 4. Що відбувається під капотом — крок за кроком
+**Крок 1.** Harness створює `runId` і початковий state (код).  
+**Вхід:** подія «почати investigation»; **вихід:** `{ runId, step, status }`.
 
-1. Harness створює `runId` і початковий state.
-2. Після кожної дії записує observation: результат tool, помилку, вибір користувача.
-3. За потреби робить checkpoint у Redis/PostgreSQL/іншому сховищі.
-4. Перед новим model call context builder вибирає релевантну частину state/history/memory.
-5. LLM бачить лише те, що application поклала в context; вона не читає базу сама.
-6. Після рестарту процес може відновити state із checkpoint і продовжити.
+**Крок 2.** Після кожної дії (tool, approval, помилка) harness дописує observation у state (код).  
+**Вхід:** structured result; **вихід:** оновлений state JSON.
 
-### 5. Де тут LLM, а де звичайний deterministic code?
+**Крок 3.** За політикою — checkpoint у Redis/PostgreSQL/інше сховище (код).  
+**Вхід:** state; **вихід:** `checkpointId`.
 
-LLM відповідає за probabilistic interpretation/decision/generation там, де потрібне розуміння природної мови або вибір наступної дії. Усе, що стосується реального I/O, зберігання, permissions, network calls, retries, schema validation, queues, databases і policy enforcement, виконується звичайним програмним кодом та інфраструктурою. Межа між цими двома світами — одна з найважливіших mental models у всьому курсі.
+**Крок 4.** Перед model call context builder обирає фрагменти state, history, memory (код).  
+**Вхід:** state + policy; **вихід:** `messages[]` для API.
 
-### 6. Повний простий приклад
+**Крок 5.** LLM бачить лише переданий контекст і генерує наступну дію або текст (модель).  
+**Вхід:** `messages[]`; **вихід:** text або tool_call proposal.
 
-QA Agent розслідує nightly failure. State: `runId=812`, `step=3`, `status=investigating`, `correlationId=abc`. Memory: «У цьому проєкті 500 часто означає product bug у Payment Service». State потрібен для поточного run, memory — для повторного використання знання.
+**Крок 6.** Після рестарту процес відновлює state з checkpoint і продовжує з того ж кроку (код).
 
-### 7. Де це може впасти? — failure modes
+### Де код, а де LLM?
 
-- State загубився після рестарту → агент повторює небезпечну дію
-- Стара memory підмішується в нову задачу → неправильний висновок
-- Context переповнюється історією → latency/cost і деградація якості
-- Checkpoint неатомарний → суперечливий стан
+| Що | Хто |
+|----|-----|
+| Створення run, запис state, checkpoint, TTL, ACL на memory | Код harness |
+| Вибір, **що** з memory показати (правила, не «інтуїція» моделі) | Код + політики |
+| Інтерпретація падіння тесту, формування гіпотези, пропозиція наступного tool | LLM |
+| Виконання tool після approve | Код handler |
 
-### 8. Security — що важливо захистити?
+Модель **не читає** базу пам’яті напряму — лише те, що context builder поклав у prompt.
 
-- Не зберігати secrets/PII без потреби
-- Ізолювати memory між users/tenants
-- TTL/retention policy
-- Encryption at rest + access control
+### Де може зламатися?
 
-### 9. Як це тестувати як QA/SDET?
+#### State загубився після рестарту
 
-- Перевірити restore після crash
-- Перевірити reset/new conversation isolation
-- Перевірити concurrent updates
-- Перевірити, що sensitive data не повертається іншому user
-- Перевірити summarization не втрачає critical facts
+**Сценарій:** pod перезапустили без checkpoint.  
+**Де зупиняється:** агент повторює вже виконаний write-tool.  
+**У trace:** новий `runId` або `step=1` при тому ж user goal.  
+**Harness:** idempotent tools, dedupe по `correlationId`.  
+**QA:** kill process після кроку 3 → restore → той самий `runId`, той самий `step`, без повторного side effect.
 
-### 10. Observability — що потрібно бачити в production?
+#### Стара memory в новій задачі
 
-Логувати state transitions, checkpoint id, memory reads/writes, selected memory items і причину retrieval. Не логувати секрети у відкритому вигляді.
+**Сценарій:** факт з payment flow потрапив у investigation login.  
+**Сигнал:** неправильна гіпотеза при коректному CI.  
+**QA:** новий run з іншим `productArea` — memory з іншого tenant/area не в prompt (spy на context builder).
 
-### 11. Production considerations
+#### Переповнення контексту
 
-У production важливо думати не лише про happy path, а про versioning, backward compatibility, latency, cost, retries, idempotency, rate limits, concurrency, degradation/fallback, data retention, deployment, monitoring і incident response. Конкретна вага цих факторів залежить від цієї концепції, але production-система завжди повинна мати контрольовану поведінку при часткових збоях.
+**Сценарій:** вся історія 40 tool calls у `messages[]`.  
+**Очікування:** summarization або обрізання з логом «що викинули».  
+**Не має статися:** тихий drop критичного `lastObservation` без trace.
 
-### 12. Як ця концепція пов’язана з іншими?
+#### Неатомарний checkpoint
 
-Ця концепція не існує ізольовано. Попередній логічний крок: Fundamentals: LLM, context, tokens. Наступний: Concept 2 — Orchestration. Під час навчання завжди повертайся до глобальної карти: модель, harness, state/memory, tools/MCP, RAG, A2A, guardrails, evals та observability — це шари однієї системи.
+**Сценарій:** запис state обірвався на півкроку.  
+**QA:** property test або chaos: після restore state консистентний, немає `status=running` без `lastObservation`.
 
-### 13. Коротка відповідь на співбесіді
+### Як QA це тестує?
 
-**Interview answer**
+| Перевірка | Умова | Дія | Очікування | Не має статися | Доказ |
+|-----------|-------|-----|------------|----------------|-------|
+| Restore | Checkpoint увімкнено | Рестарт після tool N | Продовження з N+1 | Повторний write | trace `checkpointId`, state diff |
+| Ізоляція | Два user | Паралельні run | Memory user A не в run B | Витік PII | лог context builder |
+| Reset | «Нова розмова» | New session | Порожній state, стара memory за політикою | Старий `runId` | API + UI session id |
+| Summarization | Довга історія | 30+ turns | Латентність у межах SLA | Втрата останнього failure summary | metric + snapshot prompt |
 
-State описує поточне виконання workflow, а memory — інформацію з минулого, яку система може повторно використати. Обидва механізми контролює application/harness: він зберігає дані та вирішує, що саме повернути в контекст LLM.
+### Production і observability
 
-### 14. “АААА, ось воно як!” — що треба запам’ятати
+Логують переходи state (`step`, `status`), `checkpointId`, факти **читання** memory (без секретів у відкритому вигляді), причину inclusion/exclusion у context builder. Retention і encryption at rest — вимоги продукту; книга описує типи memory загально, деталі сховища — **архітектура вашого harness**.
 
-Не зубри визначення. Спробуй без документа намалювати flow від входу до виходу і для кожної стрілки відповісти: хто це виконує, що саме передається, де зберігається state, де працює LLM, а де звичайний код. Якщо можеш це відновити — концепція реально засвоєна.
+| Тема | Навіщо |
+|------|--------|
+| Versioning state schema | Сумісність після deploy |
+| Tenant isolation | Memory не змішується між клієнтами |
+| Degraded mode | Якщо memory store недоступний — явна деградація, не hallucinated «пам’ять» |
+
+### Запам’ятати та співбесіда
+
+| Теза | Коротко |
+|------|---------|
+| State vs memory | State — **зараз**; memory — **з минулого** для повторного використання |
+| Хто керує | Harness зберігає і **вибирає**, що показати LLM |
+| LLM | Не має прямого доступу до сховища |
+| QA | Restore, ізоляція, вміст prompt перед model call |
+
+:::study-sources
+- *AI Engineering*, 2025 — memory types, друк. с. 195–196; RAG and AI Memory, друк. с. 143 (контекст для агентів).
+- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 1 — state manager, checkpoint, context builder (архів курсу).
+- Навчальний сценарій: QA Regression Investigation Agent, `login_spec`, умовні `runId` / investigation — для закріплення механізму.
+:::study-sources-end

@@ -107,7 +107,7 @@ export function StudyRagHitsLayers({ view, highlightStep }: Props) {
                 <p className="study-rag-hits-layer-hint muted small">{meta.hint}</p>
                 {pendingSelected ? (
                   <p className="study-rag-hits-pending muted small">
-                    Оберіть <strong>крок 3</strong> run (відбір/rerank), щоб побачити selected evidence.
+                    На <strong>кроці 3</strong> run (відбір/rerank) у trace видно selected evidence.
                   </p>
                 ) : (
                   <div className="study-rag-hits-hit-stack">

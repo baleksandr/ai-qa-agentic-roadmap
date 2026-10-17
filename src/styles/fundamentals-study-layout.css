@@ -1,0 +1,260 @@
+/* Fundamentals Study — визначення, карти понять, панелі */
+
+.study-definition-accent {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 11px;
+  border: 1px solid rgba(123, 159, 255, 0.35);
+  border-left-width: 4px;
+  border-left-color: rgba(123, 159, 255, 0.85);
+  background: linear-gradient(155deg, rgba(91, 140, 255, 0.12) 0%, rgba(10, 14, 28, 0.65) 100%);
+  max-width: 52rem;
+}
+
+.study-definition-accent-marker {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: rgba(123, 159, 255, 0.9);
+}
+
+.study-definition-accent-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.study-definition-accent-term {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.study-definition-accent-definition {
+  margin: 0;
+}
+
+/* Термін і пояснення — study-term-accent.css (.study-term-accent, .study-learner-explanation) */
+
+/* Ключова фраза + пояснення в тілі уроку (без рамки визначення) */
+.study-learner-phrase-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 52rem;
+}
+
+.study-learner-phrase-p {
+  margin: 0;
+}
+
+/* Карта AI — на десктопі схема зліва, панель пояснення справа (без container query) */
+.fundamentals-ai-map {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 1rem;
+}
+
+.fundamentals-ai-map-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.15rem;
+  margin-top: 0.65rem;
+  width: 100%;
+}
+
+.fundamentals-ai-map-schema {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.25rem 0.35rem;
+}
+
+.fundamentals-ai-map-detail {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(168deg, #121a30 0%, #0a0e18 100%);
+  box-sizing: border-box;
+}
+
+@media (min-width: 769px) {
+  .fundamentals-ai-map-body {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem 1.5rem;
+  }
+
+  .fundamentals-ai-map-schema {
+    flex: 0 1 min(22rem, 38%);
+    max-width: 22rem;
+  }
+
+  .fundamentals-ai-map-detail {
+    flex: 1 1 0;
+    min-width: min(100%, 16rem);
+  }
+}
+
+.fundamentals-concept-map-caption {
+  margin: 0 0 0.75rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.fundamentals-ai-map-root {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 17rem;
+  width: 100%;
+}
+
+.fundamentals-ai-map-fork {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.15rem 0 0.35rem;
+  color: var(--accent-2);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.fundamentals-ai-map-fork-stem {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.fundamentals-ai-map-fork-split {
+  display: flex;
+  justify-content: center;
+  gap: min(42%, 10rem);
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 0.12rem;
+  font-size: 0.88rem;
+}
+
+.fundamentals-ai-map-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+  align-items: start;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.fundamentals-ai-map-group {
+  min-width: 0;
+}
+
+.fundamentals-concept-map-branch-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 0.4rem;
+  text-align: center;
+}
+
+.fundamentals-ai-map-group-cards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.fundamentals-ai-map-group-cards .fundamentals-concept-node-btn {
+  width: 100%;
+  max-width: 15.5rem;
+}
+
+.fundamentals-concept-node-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: left;
+  border-radius: 10px;
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.fundamentals-concept-node-title {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+.fundamentals-concept-node-break {
+  display: none;
+}
+
+.fundamentals-concept-node-teaser {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--muted);
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+.fundamentals-concept-map-chain-arrow {
+  text-align: center;
+  color: var(--accent-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.1rem 0;
+}
+
+.fundamentals-concept-map-panel .study-rag-qa-panel-body {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .fundamentals-ai-map-groups {
+    grid-template-columns: 1fr;
+    max-width: 18rem;
+  }
+
+  .fundamentals-ai-map-fork-split {
+    gap: 3rem;
+  }
+
+}
+
+.structured-study-layout .study-section-body .study-teaching-cards,
+.structured-study-layout .study-col-main .study-teaching-cards {
+  max-width: none;
+  width: 100%;
+}

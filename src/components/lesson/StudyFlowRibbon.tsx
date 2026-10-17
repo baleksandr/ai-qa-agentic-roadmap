@@ -4,6 +4,10 @@ import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
 import { MarkdownBody } from '../MarkdownBody';
 import { StudyDetailFlyout } from './StudyDetailFlyout';
 import { StudyFlowStageCard } from './StudyFlowStageCard';
+import {
+  studyInteractiveCardActiveClass,
+  studyInteractiveCardSelectionProps,
+} from '../../lib/studyInteractiveCardState';
 import { StudyPanelTerms } from './StudyPanelTerms';
 
 export type StageDetailLookup = (stage: string, stageIndex: number) => ChainStageDetail | null;
@@ -197,7 +201,7 @@ function StageCard({
   active?: boolean;
   onOpen: () => void;
 }) {
-  const className = `study-transfer-card ${index === 0 ? 'is-input' : index === total - 1 ? 'is-output' : 'is-middle'}${clickable ? ' is-clickable' : ''}${active ? ' is-active' : ''}`;
+  const className = `study-transfer-card study-interactive-card ${index === 0 ? 'is-input' : index === total - 1 ? 'is-output' : 'is-middle'}${clickable ? ' is-clickable' : ''}${clickable ? studyInteractiveCardActiveClass(active ?? false) : ''}`;
   const content = (
     <>
       {numbered && <span className="study-flow-ribbon-num">{index + 1}</span>}
@@ -208,7 +212,12 @@ function StageCard({
   );
   if (clickable) {
     return (
-      <button type="button" className={className} onClick={onOpen} aria-pressed={active}>
+      <button
+        type="button"
+        className={className}
+        onClick={onOpen}
+        {...studyInteractiveCardSelectionProps(active ?? false)}
+      >
         {content}
       </button>
     );
@@ -231,7 +240,7 @@ function StageRibbonStep({
   clickable: boolean;
   onOpen: () => void;
 }) {
-  const className = `study-flow-ribbon-step ${index === 0 ? 'is-first' : ''} ${index === total - 1 ? 'is-last' : ''}${clickable ? ' is-clickable' : ''}`;
+  const className = `study-flow-ribbon-step${index === 0 ? ' is-first' : ''}${index === total - 1 ? ' is-last' : ''}${clickable ? ' is-clickable study-interactive-card' : ''}`;
   const content = (
     <>
       {numbered && <span className="study-flow-ribbon-num">{index + 1}</span>}

@@ -16,7 +16,9 @@
 
 ### Навіщо потрібен tool calling?
 
-Regression agent після падіння `login_spec` має отримати дані з `./playwright-report/`, trace або API — не вигадати їх з пам’яті моделі.
+:::study-key-phrase
+Regression після login_spec|потрібні дані з `./playwright-report/`, trace або API — не вигадка з «пам’яті» моделі.
+:::
 
 | Твердження | Пояснення |
 |------------|-----------|
@@ -116,8 +118,6 @@ Policy deny без side effect.
 | **Schema** | Дозволені імена й типи — не «будь-який API» |
 | **tool result** | Факти з I/O у context; часто обрізані |
 | **≠ RAG** | Retrieval з індексу vs виклик функції зараз |
-
-Нижче — інтерактив **«Перевір себе перед співбесідою»** (10 запитань, pitch UK/EN, посилання далі).
 
 :::study-sources
 - Deep Study Guide v10 — Concept 10 Tool Calling (архів курсу).

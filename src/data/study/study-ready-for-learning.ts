@@ -2,7 +2,12 @@
  * Теми, де Study Mode готовий для навчання (повний урок + інтерактив).
  * Окремо від migrationStatus і від особистого прогресу користувача.
  */
-export const STUDY_READY_FOR_LEARNING_TOPIC_IDS: readonly string[] = ['concept-03', 'concept-10'];
+export const STUDY_READY_FOR_LEARNING_TOPIC_IDS: readonly string[] = [
+  'fundamentals',
+  'concept-03',
+  'concept-10',
+  'concept-14',
+];
 
 const READY_SET = new Set(STUDY_READY_FOR_LEARNING_TOPIC_IDS);
 

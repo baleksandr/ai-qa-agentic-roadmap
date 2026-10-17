@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { TOOL_CALLING_FAILURE_DETAILS } from '../../data/study/tool-calling-failure-details';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
@@ -34,10 +33,6 @@ export function StudyToolCallingFailureModes({ introUk }: Props) {
       <p className="study-rag-failures-lead muted small">
         Сім типових збоїв tool calling (навчальні приклади).
       </p>
-      <StudyInteractionHint>
-        Оберіть збій ліворуч — поруч з’являться сценарій, сигнал у trace і перевірка QA.
-      </StudyInteractionHint>
-
       <StudyStepDetailLayout
         navAriaLabel="Збої tool calling"
         nav={

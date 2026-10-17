@@ -1,10 +1,12 @@
 import type { ProcessStep } from '../../lib/studyBodyFormat';
+import { buildProcessStepsTeachingBundle } from '../../data/study/study-teaching-cards.registry';
 import {
   GUARDRAILS_UNDER_THE_HOOD_INTRO,
   lookupGuardrailsProcessStep,
 } from '../../data/study/guardrails-process-steps';
 import { lookupRagFlowStep } from '../../data/study/rag-query-flow-steps';
 import { LessonRichParagraphs } from './lessonRichText';
+import { StudyTeachingCardsSection } from './StudyTeachingCardsSection';
 
 type Props = {
   steps: ProcessStep[];
@@ -12,7 +14,30 @@ type Props = {
   sectionHint?: string;
 };
 
+function isGuardrailsUnderTheHoodSection(topicId?: string, sectionHint?: string) {
+  return (
+    topicId === 'concept-17' &&
+    (sectionHint?.toLowerCase().includes('крок за кроком') ||
+      sectionHint?.toLowerCase().includes('під капотом'))
+  );
+}
+
 export function StudyProcessStepCards({ steps, topicId, sectionHint }: Props) {
+  const teachingBundle =
+    topicId && sectionHint ? buildProcessStepsTeachingBundle(topicId, sectionHint, steps) : null;
+  if (teachingBundle) {
+    return (
+      <StudyTeachingCardsSection
+        bundle={{
+          ...teachingBundle,
+          leadUk: isGuardrailsUnderTheHoodSection(topicId, sectionHint)
+            ? GUARDRAILS_UNDER_THE_HOOD_INTRO.replace(/\*\*/g, '')
+            : teachingBundle.leadUk,
+        }}
+      />
+    );
+  }
+
   const isGuardrailsFlow =
     topicId === 'concept-17' &&
     (sectionHint?.toLowerCase().includes('крок за кроком') ||

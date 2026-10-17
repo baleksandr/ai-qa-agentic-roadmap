@@ -3,7 +3,6 @@ import { RAG_PIPELINE_COMPONENTS } from '../../data/study/rag-pipeline-component
 import { lookupRagPipelineComponentDetail } from '../../data/study/rag-pipeline-component-details';
 import { chainStageDetailToMarkdown } from '../../data/study/rag-chain-stage-details';
 import { MarkdownBody } from '../MarkdownBody';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPanelTerms } from './StudyPanelTerms';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
@@ -48,7 +47,6 @@ export function StudyRagPipelineComponents() {
           <strong>Дев’ять кроків підготовки та запиту</strong> (назви в проді різняться).
         </p>
       }
-      hint={<StudyInteractionHint>Оберіть крок ліворуч, щоб побачити пояснення для QA.</StudyInteractionHint>}
       nav={
         <StudyPipelineStepNav
           items={navItems}

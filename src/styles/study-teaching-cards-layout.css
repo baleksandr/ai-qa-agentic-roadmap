@@ -1,0 +1,308 @@
+/* Єдина UI-підказка для інтерактивних Study-сторінок (після outcomes, перед розділами) */
+.study-page-cards-hint {
+  max-width: 42rem;
+  margin: 0 0 1.1rem;
+}
+
+/* Підказка «як користуватися уроком» під outcomes — звичайний перенос, без горизонтального вилізання */
+.study-learning-outcomes .study-outcomes-lesson-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.45rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0 0;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid rgba(94, 224, 168, 0.32);
+  border-left-width: 4px;
+  border-left-color: rgba(94, 224, 168, 0.85);
+  background: linear-gradient(155deg, rgba(94, 224, 168, 0.16) 0%, rgba(12, 28, 24, 0.55) 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+
+.study-learning-outcomes .study-outcomes-lesson-hint-label {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(142, 228, 192, 0.95);
+  white-space: nowrap;
+}
+
+.study-learning-outcomes .study-outcomes-lesson-hint-text {
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 100%;
+  color: #e8f4ef;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+/* Навчальні картки Study Mode — компактна зона, центр, читабельна панель */
+
+.study-teaching-cards {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Підказка до блоку карток (не головна ідея уроку) */
+.study-teaching-cards .study-rag-story-intro.lesson-callout {
+  margin-bottom: 0.65rem;
+  padding: 0.55rem 0.75rem 0.6rem;
+  max-width: none;
+}
+
+.study-teaching-cards .study-teaching-intro-data-example {
+  width: 100%;
+  max-width: none;
+  margin: 0 0 0.75rem;
+  box-sizing: border-box;
+}
+
+.study-teaching-cards .study-rag-story-intro .lesson-callout-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.28rem;
+  color: rgba(126, 232, 216, 0.82);
+}
+
+.study-teaching-cards .study-rag-story-intro-text,
+.study-teaching-cards .study-rag-story-intro-text-p {
+  font-size: 0.9rem;
+  line-height: 1.52;
+  color: #e8eef8;
+}
+
+/* Вигляд карток — study-interactive-cards.css */
+
+.study-teaching-cards--cyber .study-flow-stage-glyph {
+  border-color: rgba(90, 110, 160, 0.35);
+  background: rgba(12, 18, 36, 0.85);
+}
+
+.study-teaching-cards-nav-hint {
+  margin: 0 0 0.65rem;
+  max-width: none;
+}
+
+.study-step-detail-nav .study-teaching-cards-nav-hint {
+  width: 100%;
+}
+
+.study-teaching-concepts-heading {
+  margin: 0.85rem 0 0.35rem;
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #e8eef8;
+  letter-spacing: 0.01em;
+}
+
+.study-concept-nav-group {
+  margin-bottom: 0.85rem;
+}
+
+.study-concept-nav-group-title {
+  margin: 0 0 0.45rem;
+  padding: 0 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(126, 232, 216, 0.88);
+}
+
+.study-concept-nav-group-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.study-teaching-cards-flow-overview {
+  margin: 0.75rem 0 0.5rem;
+}
+
+.study-teaching-cards-layout .study-step-detail-layout {
+  margin-top: 0.65rem;
+  width: 100%;
+}
+
+.study-teaching-cards-layout .study-step-detail-panel {
+  min-width: 0;
+}
+
+.study-teaching-cards .study-flow-stage-card--pipeline .study-flow-stage-card-label {
+  white-space: nowrap;
+}
+
+/* Десктоп: картки зліва, повна панель справа (як StudyStepDetailLayout у App.css) */
+@media (min-width: 769px) {
+  .study-teaching-cards-layout.study-rag-pipeline-with-panel {
+    width: 100%;
+    max-width: none;
+  }
+
+  .study-teaching-cards-layout .study-step-detail-panel {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .study-teaching-cards-layout .study-step-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .study-teaching-cards-layout .study-step-detail-nav {
+    width: 100%;
+    max-width: none;
+  }
+
+  .study-teaching-cards-layout .study-step-detail-panel {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+.structured-study-layout .study-section-body .study-teaching-cards {
+  margin-top: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Порівняння двох процесів (Training vs Inference та інші пари) */
+.study-process-compare-question {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #e8eef8;
+  max-width: 46rem;
+}
+
+.study-process-compare-primary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+@media (min-width: 720px) {
+  .study-process-compare-primary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.study-process-compare-secondary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 560px) {
+  .study-process-compare-secondary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.study-process-compare-card {
+  width: 100%;
+  text-align: left;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0f1528;
+  padding: 0.7rem 0.75rem;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.study-process-compare-card--secondary {
+  padding: 0.55rem 0.65rem;
+}
+
+.study-process-compare-card-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.study-process-compare-card-sub {
+  margin: 0.15rem 0 0;
+}
+
+.study-process-compare-card-steps {
+  margin: 0.55rem 0 0.45rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.study-process-compare-card-steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.study-process-compare-step-label {
+  font-weight: 650;
+  color: rgba(123, 159, 255, 0.95);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.study-process-compare-step-text {
+  color: #dce4f8;
+}
+
+.study-process-compare-card-teaser-only {
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #dce4f8;
+  text-align: left;
+}
+
+.study-process-compare-card-hallmark {
+  margin: 0.35rem 0 0;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.study-process-compare-hallmark-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(126, 232, 216, 0.85);
+  margin-bottom: 0.12rem;
+}
+
+.study-process-compare-panel {
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.study-process-compare-footer {
+  margin-top: 0.65rem;
+  max-width: 46rem;
+  color: #dce4f8;
+}

@@ -1,7 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { StructuredStudy } from '../../types/lessonBlocks';
+import { useStudySectionsOpen } from '../../hooks/useStudySectionsOpen';
+import { FundamentalsLessonBlocks } from './FundamentalsLessonBlocks';
 import { LessonBlocks } from './LessonBlockRenderer';
 import { ProgressPicker } from '../ProgressPicker';
+import { StudySectionsToolbar } from './StudySectionsToolbar';
 import type { LearningStatus } from '../../types/topic';
 import { LEARNING_LABELS } from '../../types/topic';
 
@@ -13,33 +16,31 @@ interface Props {
 
 export function StructuredStudyView({ study, learning, onLearningChange }: Props) {
   const sectionIds = useMemo(() => study.sections.map((s) => s.id), [study.sections]);
-  const [openIds, setOpenIds] = useState<Set<string>>(() =>
-    study.sections[0] ? new Set([study.sections[0].id]) : new Set(),
-  );
+  const {
+    openIds,
+    expandAll,
+    collapseAll,
+    toggleSection,
+    openSection,
+    allExpanded,
+    allCollapsed,
+  } = useStudySectionsOpen(sectionIds);
   const [activeNavId, setActiveNavId] = useState(study.sections[0]?.id ?? '');
-
-  const expandAll = useCallback(() => setOpenIds(new Set(sectionIds)), [sectionIds]);
-  const collapseAll = useCallback(() => setOpenIds(new Set()), []);
 
   const toggle = (id: string) => {
     setActiveNavId(id);
-    setOpenIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    toggleSection(id);
   };
 
   const scrollToSection = (id: string) => {
     setActiveNavId(id);
-    setOpenIds((prev) => new Set(prev).add(id));
+    openSection(id);
     document.getElementById(`study-section-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
-    <div className="structured-study-layout">
-      <nav className="study-col-nav" aria-label="Підтеми розділу">
+    <div className="structured-study-layout study-mode-layout study-mode-with-aside">
+      <nav className="study-col-nav study-col-nav-sticky" aria-label="Підтеми розділу">
         <p className="study-col-nav-title">У цьому розділі</p>
         <ul>
           {study.sections.map((s) => (
@@ -54,9 +55,6 @@ export function StructuredStudyView({ study, learning, onLearningChange }: Props
             </li>
           ))}
         </ul>
-        <p className="study-source-note small muted">
-          Архів для звірки: <code>{study.sourceArchivePath}</code>
-        </p>
       </nav>
 
       <div className="study-col-main">
@@ -65,14 +63,12 @@ export function StructuredStudyView({ study, learning, onLearningChange }: Props
           {study.chapterSubtitle && <p className="muted study-chapter-sub">{study.chapterSubtitle}</p>}
         </header>
 
-        <div className="study-toolbar">
-          <button type="button" className="study-toolbar-btn" onClick={expandAll}>
-            Розгорнути всі
-          </button>
-          <button type="button" className="study-toolbar-btn" onClick={collapseAll}>
-            Згорнути всі
-          </button>
-        </div>
+        <StudySectionsToolbar
+          allExpanded={allExpanded}
+          allCollapsed={allCollapsed}
+          onExpandAll={expandAll}
+          onCollapseAll={collapseAll}
+        />
 
         <div className="study-sections">
           {study.sections.map((section) => {
@@ -96,7 +92,11 @@ export function StructuredStudyView({ study, learning, onLearningChange }: Props
                 </button>
                 {isOpen && (
                   <div className="study-section-body">
-                    <LessonBlocks blocks={section.blocks} />
+                    {study.topicId === 'fundamentals' ? (
+                      <FundamentalsLessonBlocks sectionId={section.id} blocks={section.blocks} />
+                    ) : (
+                      <LessonBlocks blocks={section.blocks} />
+                    )}
                   </div>
                 )}
               </section>

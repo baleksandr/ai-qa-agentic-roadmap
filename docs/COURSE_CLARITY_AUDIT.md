@@ -4,6 +4,8 @@
 
 **Стандарт:** проблема → проста ідея → вхід/виконавець/дія/вихід/наступний крок → наскрізний навчальний приклад → ризики → QA; для вузлів-даних — «що містить / хто підготував / хто використовує». Технічна глибина — блок **Глибше**, посилання на інші уроки — **Докладніше**, не замість визначення.
 
+**Масштабування PART II:** живий прогрес і пакети — `docs/PART_II_STUDY_ROLLOUT_PROGRESS.md`; стандарт якості — skill § «PART II».
+
 **Інфраструктура (2026-03):**
 
 - `src/lib/studyClarityPanel.ts` — шаблони панелей process/data
@@ -18,11 +20,11 @@
 
 | ID | Тема | Study MD | TS панелі / UI | Статус | Примітки |
 |----|------|----------|----------------|--------|----------|
-| concept-01 | Memory & State | ☐ | ☐ | не розпочато | |
-| concept-02 | Orchestration | ☐ | ☐ | не розпочато | |
+| concept-01 | Memory & State | ☑ 8§ | hero/outcomes | пакет 1 | MD V10-рівня; UI/deck/verify — далі |
+| concept-02 | Orchestration | ☑ 8§ | hero/outcomes | пакет 1 | те саме |
 | **concept-03** | **RAG** | ☑ | ☑ | **еталон** | `STUDY_LESSON_RAG_TEMPLATE.md`; interview deck + clarity panels |
 | **concept-10** | Tool Calling | ☑ 8 § | ☑ panels + deck | **partial** | `verify:tool-calling`; thread `readPlaywrightReport`; 5-step UI |
-| concept-04 | Agent Harness | ☐ | schema-harness | не розпочато | |
+| concept-04 | Agent Harness | ☑ 8§ | hero/outcomes | пакет 1 | schema-harness узгодити пізніше |
 | concept-05 | Evals | ☐ | ☐ | не розпочато | |
 | concept-06 | MCP | ☐ | schema-mcp | не розпочато | |
 | concept-07 | Skills | ☐ | ☐ | не розпочато | |

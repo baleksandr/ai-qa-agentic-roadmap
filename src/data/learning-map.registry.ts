@@ -221,6 +221,11 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
         label: 'Довідник курсу',
         hint: 'Довідник курсу — не обов’язковий маршрут',
       },
+      {
+        topicId: 'qa-interview',
+        label: 'Питання для QA-співбесіди',
+        hint: 'Питання й відповіді для інтерв’ю за темами — не входить у лічильник Fundamentals',
+      },
     ],
     edges: [],
   },

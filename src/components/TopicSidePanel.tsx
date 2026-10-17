@@ -5,7 +5,8 @@ import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning'
 import type { TopicMeta } from '../types/topic';
 import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
-import { MarkdownBody } from './MarkdownBody';
+import { ReviewMarkdownBody } from './ReviewMarkdownBody';
+import { getEnrichedReviewMarkdown } from '../data/review/review-mode-by-topic';
 import { ProgressPicker } from './ProgressPicker';
 import { useProgress } from '../hooks/useProgress';
 
@@ -21,8 +22,9 @@ export function TopicSidePanel({ topic, onClose }: Props) {
   const reviewMarkdown = useMemo(() => {
     const raw = loadMarkdownByPath(topic.contentPath);
     if (!raw) return '';
-    return parseLessonMarkdown(raw).reviewMarkdown;
-  }, [topic.contentPath]);
+    const fromFile = parseLessonMarkdown(raw).reviewMarkdown;
+    return getEnrichedReviewMarkdown(topic.id, fromFile);
+  }, [topic.contentPath, topic.id]);
 
   return (
     <aside className="topic-side-panel" role="dialog" aria-label={topic.title}>
@@ -59,7 +61,7 @@ export function TopicSidePanel({ topic, onClose }: Props) {
         {topic.migrationStatus === 'not_migrated' ? (
           <p className="muted">Матеріал ще не перенесено з DOCX.</p>
         ) : (
-          <MarkdownBody markdown={reviewMarkdown} />
+          <ReviewMarkdownBody markdown={reviewMarkdown} />
         )}
       </div>
 

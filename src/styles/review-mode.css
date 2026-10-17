@@ -1,0 +1,127 @@
+/* Review Mode — бічна панель і /topic/:id (окремо від App.css) */
+
+.topic-side-body .review-markdown,
+.review-body .review-markdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.review-markdown-prose .markdown-body p {
+  margin: 0 0 0.55rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.review-card-grid {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.review-card-grid--phases {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 520px) {
+  .topic-review-page .review-card-grid--phases {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.review-card {
+  border-radius: 10px;
+  border: 1px solid rgba(126, 232, 216, 0.22);
+  background: rgba(12, 20, 36, 0.85);
+  padding: 0.55rem 0.65rem;
+  min-width: 0;
+}
+
+.review-card-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--study-term-accent, #b8c9ff);
+}
+
+.review-card-body {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--study-explanation-text, #dce4f8);
+  overflow-wrap: anywhere;
+}
+
+.review-step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.review-step-card {
+  border-radius: 10px;
+  border: 1px solid rgba(91, 140, 255, 0.25);
+  background: rgba(14, 18, 32, 0.9);
+  padding: 0.5rem 0.6rem;
+  min-width: 0;
+}
+
+.review-step-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.review-step-title {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--study-term-accent, #b8c9ff);
+}
+
+.review-step-who {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #7ee8d8;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.review-step-body {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.review-compare-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.review-compare-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+@media (max-width: 400px) {
+  .review-compare-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.review-card--compare {
+  border-color: rgba(255, 255, 255, 0.1);
+}

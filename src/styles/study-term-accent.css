@@ -1,0 +1,58 @@
+/* Термін / назва механізму / коротка теза всередині пояснень Study Mode */
+
+:root {
+  --study-term-accent: #b8c9ff;
+  --study-explanation-text: #dce4f8;
+}
+
+.study-term-accent {
+  font-weight: 600;
+  color: var(--study-term-accent);
+}
+
+.study-learner-explanation,
+.study-definition-accent-definition {
+  font-weight: 400;
+  color: var(--study-explanation-text);
+}
+
+.study-learner-label-sep {
+  font-weight: 400;
+  color: var(--study-explanation-text);
+}
+
+/* Markdown ** у поясненні — дрібніша підказка/gloss, не головна думка (не .study-term-accent) */
+.study-text-emphasis,
+.study-learner-explanation .study-text-emphasis,
+.study-learner-panel-value .study-text-emphasis,
+.study-rag-qa-panel-body .study-text-emphasis,
+.study-detail-panel-with-terms .study-text-emphasis {
+  font-size: 0.86em;
+  font-weight: 600;
+  color: #c5d2ea;
+}
+
+.study-learner-explanation strong:not(.study-text-emphasis),
+.markdown-body-study-panel strong:not(.study-panel-section-label):not(.study-text-emphasis),
+.markdown-body-study-tables strong:not(.study-panel-section-label):not(.study-text-emphasis) {
+  font-weight: 600;
+  color: inherit;
+}
+
+.study-learner-panel-value .study-term-accent {
+  font-weight: 600;
+  color: var(--study-term-accent);
+}
+
+@media (forced-colors: active) {
+  .study-term-accent {
+    color: LinkText;
+    font-weight: 700;
+  }
+
+  .study-learner-explanation,
+  .study-definition-accent-definition {
+    color: CanvasText;
+    font-weight: 400;
+  }
+}

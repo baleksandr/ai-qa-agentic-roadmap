@@ -1,109 +1,80 @@
 # Concept 12 — Reasoning
 
-> **migrationStatus (з DOCX):** `partial`  
-> **Джерело:** PART II — Concept 12 (pdf)  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
+> **migrationStatus:** `partial` — Study Mode: 8 розділів (PART II пакет 2).
 
 ## Review Mode
 
-Reasoning: model inference аналізує context і формує рішення/наступну дію. Reasoning сам по собі ще не робить систему agent. Concept 11 — Planning ↓ [Concept 12 — Reasoning] <-- ЗАРАЗ ВИВЧАЄМО ↓ Concept 13 — Fine-tuning
+**Проблема:** складне investigation потребує кількох кроків мислення; один короткий prompt часто дає поспішний висновок.
+
+**Ідея reasoning (міркування моделі):** способи змусити або дозволити LLM **розкладати** задачу (chain-of-thought у prompt, structured steps, tool-assisted reasoning) — це **поведінка inference**, не окремий «розумний сервіс».
+
+**Для QA:** чи кроки мислення відповідають evidence; чи немає «красивої» логіки без tool facts.
 
 ## Study Mode
 
-Concept 12. Reasoning — міркування
-### QUICK VIEW — Reasoning: model inference аналізує context і формує рішення/наступну дію.
-Reasoning сам по собі ще не робить систему agent.
-Concept 11 — Planning
-↓
-[Concept 12 — Reasoning] <-- ЗАРАЗ ВИВЧАЄМО
-↓
-Concept 13 — Fine-tuning
-### 0. Яку проблему ми взагалі намагаємося вирішити?
-Модель має не лише продовжити текст, а вибрати між альтернативами: відповідати зараз, викликати tool,
-попросити уточнення, перевірити факт. Для цього потрібне внутрішнє обчислення над context.
-Context
-↓
-Model inference
-↓
-Decision / answer / tool proposal
-### 1. Головна ідея простими словами
-Ключова думка
-Reasoning — процес, у якому модель використовує context і свої learned representations для отримання
-рішення/проміжної стратегії. Reasoning ≠ agent: без harness/tools воно не виконує зовнішні actions.
-### 2. З яких компонентів це складається?
-• Context
-• Model weights
-• Inference process
-• Optional intermediate reasoning representation
-• Decision/output
-### 3. Що фізично передається між компонентами?
-Input tokens → internal activations → output token probabilities / structured decision. Детальні внутрішні
-міркування не обов’язково доступні application.
-### 4. Що відбувається під капотом — крок за кроком
-### 86. 1) Context токенізується.
-### 87. 2) Transformer обчислює representations/attention across tokens.
-### 88. 3) Model генерує наступні tokens або structured choice.
-### 89. 4) Harness інтерпретує output як answer/tool call/plan.
-### 5. Де тут LLM, а де звичайний deterministic code?
-LLM відповідає за probabilistic interpretation/decision/generation там, де потрібне розуміння природної
-мови або вибір наступної дії. Усе, що стосується реального I/O, зберігання, permissions, network calls,
+### Навіщо reasoning в агенті?
 
-retries, schema validation, queues, databases і policy enforcement, виконується звичайним програмним
-кодом та інфраструктурою. Межа між цими двома світами — одна з найважливіших mental models у
-всьому курсі.
-### 6. Повний простий приклад
-Після 500 error + backend stack trace модель робить висновок: більш імовірно product defect, тому
-рекомендує створити bug, а не rerun test.
-### 7. Де це може впасти? — failure modes
-• Confident wrong inference
-• Missing context
-• Bias toward first hypothesis
-• Overthinking/latency
-• Reasoning not grounded in evidence
-### 8. Security — що важливо захистити?
-• Do not rely on model reasoning for authorization
-• Sensitive reasoning/context exposure
-• Policy decisions deterministic
-### 9. Як це тестувати як QA/SDET?
-• Reasoning-sensitive eval tasks
-• Counterexamples
-• Evidence attribution
-• Tool-choice accuracy
-• Robustness to irrelevant context
-### 10. Observability — що потрібно бачити в production?
-Input/output, decision labels, model version, latency/tokens; не вимагати/логувати прихований chain-of-
-thought як production dependency.
-### 11. Production considerations
-У production важливо думати не лише про happy path, а про versioning, backward compatibility, latency,
-cost, retries, idempotency, rate limits, concurrency, degradation/fallback, data retention, deployment,
-monitoring і incident response. Конкретна вага цих факторів залежить від цієї концепції, але production-
-система завжди повинна мати контрольовану поведінку при часткових збоях.
-### 12. Як ця концепція пов’язана з іншими?
-Ця концепція не існує ізольовано. Попередній логічний крок: Concept 11 — Planning. Наступний: Concept
-13 — Fine-tuning. Під час навчання завжди повертайся до глобальної карти: модель, harness,
-state/memory, tools/MCP, RAG, A2A, guardrails, evals та observability — це шари однієї системи.
+Після `login_spec` недостатньо відповісти «перевірте мережу». Потрібно зв’язати: symptom у звіті → можливі причини → які tools дадуть доказ. Reasoning — як модель **планує проміжні кроки** в тексті або через чергу tool calls (часто разом із planning).
 
-### 13. Коротка відповідь на співбесіді
-**Interview answer**
-Reasoning is the model’s inference over context to choose an answer or next action. It can improve
-decisions, but it is still probabilistic and does not replace deterministic policy, validation or tool execution.
-### 14. “АААА, ось воно як!” — що треба запам’ятати
-Не зубри визначення. Спробуй без документа намалювати flow від входу до виходу і для кожної стрілки
-відповісти: хто це виконує, що саме передається, де зберігається state, де працює LLM, а де звичайний
-код. Якщо можеш це відновити — концепція реально засвоєна.
+| Термін | Простими словами |
+|--------|------------------|
+| **Reasoning** | Ланцюг проміжних кроків до висновку |
+| **Grounding** | Висновок має спиратися на tool/RAG facts |
 
-### QA-приклад
+### Де в run investigation?
 
-Див. відповідний підрозділ «повний приклад» у Study Mode (якщо є в джерелі).
+*Навчальний приклад.*
 
-### Failure modes / security / testing / observability / production
+1. LLM бачить timeout на `#submit`.  
+2. У тексті (або hidden scratchpad, якщо продукт підтримує) відокремлює гіпотези: селектор / staging data / мережа.  
+3. Пропонує `readPlaywrightReport` — harness виконує.  
+4. Оновлює висновок після fact з trace snippet.
 
-Див. розділи failure / security / testing / observability / production у Study Mode.
+Reasoning **не** замінює tools: без звіту це guess. QA перевіряє, що кожна сильна теза має evidence у trace.
 
-### Запитання для самоперевірки
+symptom → гіпотези → tool facts → оновлений висновок
 
-Відновіть flow без документа (див. блок «АААА» або hands-on у джерелі).
+### Компоненти (у продукті)
 
-### Коротка відповідь для співбесіди
+| Елемент | Роль |
+|---------|------|
+| Prompt (step-by-step) | Просить явні кроки |
+| Tool results | Факти для оновлення міркування |
+| Harness max steps | Обмежує нескінченне «думаю» |
+| Evaluator (опційно) | Окрема перевірка логіки |
 
-Див. **Interview answer** у Study Mode.
+### Послідовність
+
+**Вхід:** goal + context. **LLM:** проміжні кроки / tool_call. **Код:** tools, state. **Вихід:** висновок або наступний tool. **Наступний:** context builder додає observations.
+
+### Де код vs LLM?
+
+LLM — формулює гіпотези. Код — надає facts, stop rules. Людина — approve небезпечні дії.
+
+### Збої
+
+#### Ungrounded reasoning
+
+Красива причинність без citation. **QA:** assert tool викликано перед сильним твердженням.
+
+#### Over-long chain
+
+Витік токенів. **Harness:** summarization mid-run.
+
+### Як QA тестує?
+
+Golden cases: за фіксованого mock tool output очікуваний наступний tool або поле в JSON. Adversarial: суперечливі facts → модель має запитати ще data, не вгадувати.
+
+### Production
+
+Не логувати повний scratchpad з PII; latency vs depth trade-off. Книга: reasoning patterns — частково в inventory.
+
+### Запам’ятати та співбесіда
+
+Міркування має бути **прив’язане до evidence** з tools/RAG, не замінювати їх.
+
+:::study-sources
+- *AI Engineering*, 2025 — reasoning / agents (inventory).
+- V10 Concept 12.
+- Навчальний: `login_spec`, гіпотези селектор vs data.
+:::study-sources-end

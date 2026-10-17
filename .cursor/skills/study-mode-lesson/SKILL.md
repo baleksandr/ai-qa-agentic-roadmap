@@ -4,12 +4,75 @@ description: >-
   Покращення Study Mode для уроків курсу (markdown → UI): структура розділів,
   картки, ribbon-схеми, таблиці, inline/flyout панелі деталей, без вигаданих
   фактів. Use when editing content/concepts Study Mode, StudyModeSections,
-  src/components/lesson, src/data/study, RAG lesson (concept-03), verify:rag,
+  src/components/lesson, src/data/study, PART II concepts 01–20, verify:*-study,
   or user asks to improve/fix lesson cards and side panels. Project rule:
   .cursor/rules/study-mode-lesson.mdc (alwaysApply).
 ---
 
 # Study Mode — правила оформлення уроку
+
+## Єдиний стандарт навчального UI (усі теми)
+
+Застосовується до **Fundamentals**, **20 Concepts**, **Lab 0–9**, **Review** і **Study** (панелі, картки, markdown). Деталі реалізації: `docs/SITE_LEARNING_UI_STANDARDS.md`. Перевірка: `npm run verify:study-standards` (у т.ч. симуляція inline `**`/`#` без браузера) + `npm run build`. Перед ✓ «готова» картка: переглянути **весь** текст панелі після рендеру (усі вибори внутрішніх кроків), не лише рядок у `.ts`.
+
+1. **Пара «назва — пояснення»:** `StudyLabeledExplanation` (`termUk` + `explanationUk`); дані — `labeledLead`, `labeledLines`, `labeledPairs`, key-phrase. Пояснення на **окремому рядку** після абзаца (`StudyLearnerExplanationBlocks`: цілий абзац-пара або хвіст «. Агентний run — коли…»). Акцент лише на назві; ` — ` у DOM. Не фарбувати тире всередині звичайного речення. `**` — `.study-text-emphasis`.
+2. **Панелі карток:** власне пояснення, приклад, QA; «Вхід/вихід» лише для процесу. `StudyDefinitionAccent` — термін окремим рядком без тире в `leadUk`.
+3. **Терміни:** перша поява — UA + EN/розшифрування за потреби; без повторного словника в кожній панелі.
+4. **«Запам’ятати» / `keyIdea`:** 2–3 висновки з уроку (знання), не інструкції UI («оберіть картку», «картки нижче»). **Підсумок після інтерактивних карток** (наприклад «Як це перевіряти») — `afterInteractiveSummary` + `StudyAfterInteractiveSummary`, не `phraseParagraphs` під віджетом; не дублювати `keyIdea`. **Навчальний сценарій** (`leadUk` / callout) окремо від **єдиної UI-підказки** на Study-сторінці: `StudyPageCardsHint` + `STUDY_PAGE_CARDS_INTERACTION_HINT_UK` (`studyPageInteractive.ts`) — після outcomes, перед розділами; лише якщо `topicStudyPageHasInteractiveCards`. У розділах, вкладених картках і панелях не дублювати «оберіть крок/картку» (`StudyInteractionHint` лише в `StudyPageCardsHint`). Кілька висновків — `StudyRememberTakeaways`: компактні проміжки між рядками, **без** маркерів, нумерації чи внутрішніх рисок (акцентна рамка лише на `.lesson-callout`). Один висновок — один абзац. Concepts/labs — `study-remember-markdown`. **Пунктуація:** простий однорідний перелік — коми й сполучник перед останнім елементом; `;` лише між складними самостійними частинами речення (не в коді/JSON/URL).
+5. **Процес vs поняття:** справжній послідовний run (RAG, tool calling) — `presentation: 'process'` і кроки ланцюга. Якщо картки описують **різні аспекти однієї історії** (eval окремо від training, drift ≠ retrain) — `presentation: 'concepts'`, групи `conceptGroups`, без «Крок N з M». Не створювати враження, що hold-out відокремлюють після навчання, якщо в змісті це навпаки. **§15 Deterministic vs Probabilistic:** код — точні очікування за зафіксованих fixture/умов, LLM — змістові критерії на eval-наборі, не exact string match prose.
+6. **Інтерактивні навчальні картки:** стилі `study-interactive-cards.css`, стан вибору — `src/lib/studyInteractiveCardState.ts` (`activeKey` у React → `is-active` + `aria-pressed` + `data-selected`). Обрана картка лишається рожевою без фокусу; hover/focus-visible — окремо. **Назва картки** — `StudyInteractiveCardTitle` + `--study-interactive-card-title` (світлий синьо-фіолетовий, напівжирна); teaser/description — звичайний світлий текст; не фарбувати назви рожевим при виборі. Нові списки — `StudyPipelineStepNav` → `StudyFlowStageCard`. **Нумерація:** `studyCardNumber.ts` + `numberPrefix` / `parentCardNumber` — на картці `1`, `2`, `3.1` (не в тексті уроку); у панелі «Картка N», не «Крок» для понять. Порівняння двох режимів у панелі — `processStepPick` (еталон §13 «Reasoning і агент»), не `labeledLines`.
+
+## PART II — довести 20 концепцій до навчального рівня
+
+**Еталони глибини (не копіювати структуру механічно):** `concept-03` (RAG), `concept-10` (Tool Calling). Решта 18 тем — той самий **стандарт якості**, форма UI/розділів **за змістом** теми.
+
+**Джерело змісту:** повні уроки PART II V10 (`content/concepts/`, архів курсу), не короткі картки «Карти курсу». Перед редагуванням теми звір поточний Study Mode з V10: що вже є в поясненнях, схемах, QA-сценаріях, співбесіді; що загубилось або злиплось у стіну тексту. `source/AI.pdf` + `docs/AI_ENGINEERING_SOURCE_INVENTORY.md` — лише **перевірка фактів і термінів**; урок на сайті **самодостатній** (не «відкрийте книгу замість пояснення»).
+
+**Обов’язковий зміст кожної концепції**
+
+1. Просте визначення + конкретна проблема, яку вирішує.
+2. Один наскрізний приклад **QA Regression Investigation Agent** (`login_spec` → дії агента → результат). Якщо концепція не в кожному кроці — явно сказати, **де** вона потрібна.
+3. Послідовність: вхід → хто виконує → дія → вихід → що отримує наступний компонент.
+4. Межа **LLM** / **код (harness, handler)** / **зовнішній сервіс** / **людина (approve)**.
+5. Новий термін при першій появі — простими словами, потім EN/скорочення.
+6. Типові збої + QA-перевірки: умова → дія → очікування → чого **не** має статися → докази (trace/spy).
+7. Production — якщо доречно для теми (не шаблонний абзац «versioning…» без прив’язки).
+8. Кілька питань самоперевірки з **Коротко для співбесіди** + **Розберімо до гвинтиків** + типова помилка (deck у `study-interview-registry.ts`).
+
+**Подача:** короткі абзаци, списки, окремі схеми `→` лише для потоку даних/рішень (`studyArrowFlow.ts`). Не дублювати один flow трьома блоками. Технічні деталі — у **Глибше** (панелі clarity або розгортання), якщо заважають першому прочитанню. Без learner-facing «§N», «компонент 5 pipeline», «оберіть вузол», посилань на файли репозиторію.
+
+**Темп роботи (агент)**
+
+- Пакети **3–4 концепції** послідовно по маршруту курсу (див. `docs/PART_II_STUDY_ROLLOUT_PROGRESS.md`).
+- Після кожного пакета: повнота змісту (8 пунктів), рендер, переходи, self-check, `npm run build`; виправити знайдене; **не зупинятися** з пропозицією «продовжити» — ціль усі **18** тем (окрім еталонів 03 і 10).
+- Якщо джерело не дає підстав — позначити невизначеність; **не вигадувати** механізми чи комерційний досвід.
+
+**Позначка «Study Mode готовий для навчання»** (`study-ready-for-learning.ts`, ✓ на карті)
+
+Ставити **лише** після чекліста для **цієї** теми: усі 8 пунктів змісту, hero + outcomes + nav blurb (для збагачених), інтерактив там, де еталон вимагає (split nav, failure cards, QA matrix — за потреби теми), interview deck brief+deep, verify-скрипт за наявності, ручна перевірка в UI. **Не** ставити за наявність тексту, акордеонів або успішний `build`.
+
+**Прогрес:** оновлювати `docs/PART_II_STUDY_ROLLOUT_PROGRESS.md` (topicId → зроблено → бракує → результат перевірки). **Не чіпати** особистий прогрес користувача (Не вивчено / У процесі / Вивчено) — лише `useProgress` / local storage.
+
+## Навчальні картки + бокова панель (єдиний патерн)
+
+**Еталони взаємодії:** concept-03 (RAG), concept-10 (Tool Calling) — компактні кроки зліва, предметна панель справа (`StudyStepDetailLayout`, `StudyPipelineStepNav`, `StudyFlowStageCard`).
+
+**Спільна реалізація для нових тем і Fundamentals:**
+
+- UI: `StudyTeachingCardsSection` + дані в `*-teaching-cards.ts` / `fundamentals-teaching-cards.ts` (`getFundamentalsTeachingCards` через `study-teaching-cards.registry.ts`). Панелі: `fundamentalsTeachingStep()` → `fundamentalsPanel` + `StudyTeachingCardPanel`.
+- Кожна картка — **унікальне** пояснення: простими словами, зв’язок із сусідніми кроками, приклад QA investigation (`login_spec`), збій і як помітити при тестуванні. Поле **«Зв’язок з іншими поняттями»** (`linkUk` / `relationUk`) — логіка між ідеями, не назви груп UI чи позиція картки на сторінці. Рендер: `StudyTermAccent` / `StudyLabeledExplanation` для кольору терміна; `parseLessonBold` і `MarkdownBody` — наголос `.study-text-emphasis` без кольору терміна. **Вхід/вихід** — лише для процесу (`omitInputOutput` для порівнянь). Без сирих маркерів і «§N».
+- Структура карток **визначається змістом** (процес, компоненти, порівняння, ризики, QA) — не механічні «5 кроків» у кожну тему; не дублювати вже готові блоки RAG/Tool Calling.
+- **Порівняння двох процесів:** `StudyProcessCompareBundle` → `StudyProcessCompareSection` (картки з вхід/дія/результат + ключова ознака на картці; панель — механізм, приклад login_spec, QA). Дані Fundamentals: `fundamentals-study-widgets.ts`. Не замінює кодові блоки й не парсить markdown автоматично.
+- **Картки з панеллю для аспектів теми:** `StudyTeachingCardsSection` + `fundamentalsPanel` (§4 Model — три картки). Лише коли без панелі важко зрозуміти механізм; не кожен `phraseParagraphs` → картка.
+- **Ключова фраза в Study Mode (єдиний UI):** `StudyLearnerKeyPhraseLine`; між фразою й поясненням у DOM — текстовий роздільник ` — ` (копіювання без злипання). **Fundamentals JSON:** `keyIdea` + `definitionAccent`; довгі `phraseParagraphs` / `diagram` / `flow` / `code` / `list` **не дублювати** те саме, що вже в teaching-картках (§2–3, §7–12 — один процес = одна схема карток, без паралельного ASCII-блоку в JSON). **Markdown/Lab:** `:::study-key-phrase` + `фраза|пояснення`. Не автопарсинг тире; не всі `strong`.
+- Fundamentals зміст (§2–5 і далі): ланцюг **визначення → keyIdea (коротка суть) → teaching-картки з панелями**; §2 ML — один сценарій, **різні** тікети для training і hold-out/eval, `flowArrowLine` з **групами** (не 7 кроків одного виклику); примітку «умовний сценарій» — у `leadUk`, не в «Запам’ятати». У тексті панелі — терміни простими словами при першій появі. Блок **«Терміни»** — лише 1–3 записи для **обраної** картки (`fundamentalsTeachingStep` → `panel.terms`), не один словник на першій картці. Teaser на картці видимий без кліку. Панелі **унікальні** (що відбувається → приклад → QA), без повтору загального визначення ML/LLM у кожній панелі, без панелей-заглушок заради однакової кількості полів.
+- **QA-перевірка в панелі:** окремий підблок `StudyLearnerPanelQaCheck` — поле `qaCheckUk` на кроці `processStepPick` / секції `plain`, або секція `type: 'qaCheck'`. Не вбудовувати `**QA-перевірка:**` у `bodyUk`/`detailUk`; не підсвічувати довільне «QA» в тексті. Блок «Для QA investigation» — короткий підсумок, без дубля `qaCheckUk`.
+- **Інтерактивний перелік у правій панелі:** коли **кожен пункт** списку потребує окремого пояснення й QA-перевірки — `processStepPick` → `StudyLearnerPanelProcessStepPick` (не перетворювати автоматично кожен звичайний `labeledLines` / markdown-список). **process** — кроки run (`presentation: 'process'`, виконавець у панелі); **concepts** — питання до одного твердження (`presentation: 'concepts'`, без «кроків API»). Картки **колонкою**, деталь поруч (десктоп) або під картками; `qaEvidence` або `qaCheckUk` на кроці (`StudyLearnerPanelQaCheck`) — без дубля teaser у панелі й без повтору в «Для QA investigation». Стилі: `study-learner-panel-step-pick`.
+- **Щільні панелі:** `FundamentalsCardPanel.sections` + `StudyLabeledExplanation` (`termUk` / `explanationUk`); акцент лише на `termUk`. Усередині `explanationUk` — `parseLessonBold` (наголос без кольору). **Рядок «назва + пояснення»:** `StudyLabeledExplanation` — inline-потік (`study-learner-labeled-head` + пояснення в тому ж абзаці); не flex-wrap усього пояснення на новий рядок; на вузькій мінікартці — колонка без тире (`@container` у `study-learner-panel.css`). **Терміни картки:** `FundamentalsCardPanel.terms` (1–3 записи `StudyPanelTermEntry`) → `StudyPanelTerms` у `StudyLearnerPanelBody` для **поточної** teaching-картки, не один словник на весь урок. Teaser на картці схеми — одне речення «що це?», не перелік сусідів. Заголовки блоків панелі — бірюзові `.study-learner-panel-label` / `.study-panel-section-label`.
+- **Fundamentals (§1–20):** `teaserUk` — лише на картці; при `fundamentalsPanel` права панель після заголовка одразу з розділів (`StudyTeachingCardsSection`), без дубля teaser. Панелі понять — `fundamentalsConceptStep` + `panel.terms`; reasoning ≠ tool calls у логах harness.
+- **§14 Hallucination (еталон понять + докази):** одна історія `login_spec` / `#submit` у `leadUk` без повтору визначення з `definitionAccent`. Розділяти **непідтверджено ≠ спростовано** і **валідний формат ≠ правдивий зміст**. Вкладені орієнтири в панелі — `processStepPick` + `qaCheckUk`, не `labeledLines`: «Симптом» («Що ми знаємо…» — не три стани одного факту), «Формат» (три рівні parse/schema/факт). **Приклад відповіді моделі:** спочатку зрозуміла картка полів і статуси перевірок (`StudyModelResponseExampleBlock`, дані `login-spec-model-response-json.ts` — одне джерело для UI й JSON), технічний JSON і правила схеми — у розгортанні «Показати JSON», без великого code block наперед. У навчальному UA не склеювати вимоги через `;` — короткі речення. У кожній з чотирьох карток — `panel.terms` (2–3 предметні терміни) + унікальні секції; «Зв’язок з іншими поняттями» без «Далі» / «Після schema». Orphan-текст у JSON §14 не дублювати під віджетом — лише `keyIdea`.
+- Стилі: `study-teaching-cards-layout.css` + `StudyStepDetailLayout`: на **десктопі (≥769px)** картки/навігація зліва, **повна** панель справа на всю ширину `study-col-main` (без `max-width: 52rem` по центру). Мобільно — панель під списком, на всю ширину. Кіберпанк — лише вигляд карток, не ламати grid. §1 AI: `fundamentals-ai-map-body` row на десктопі.
+- Markdown уроку **залишається** повним; картки допомагають вивчати, не замінюють текст.
 
 ## Еталон concept-03 (RAG)
 
@@ -43,7 +106,7 @@ description: >-
 
 - **8+ розділів** через `###` у Study Mode; парсер `parseStudyDocument` → акордеон + **лівий зміст** (1…N).
 - **concept-03 / concept-10**: три колонки — зміст | контент | **контекст** (`StudyLessonAside`: вужча колонка ~280–360px, **окремий скрол**). Права панель — лише підказки до розділу (focus, приклад, tips / рідкий JSON), **не** дублювати таблиці й кроки з центрального блоку; зміст лише зліва.
-- За замовчуванням відкритий **перший** розділ; toolbar «Розгорнути / Згорнути всі».
+- За замовчуванням відкритий **перший** розділ; `StudySectionsToolbar` + `useStudySectionsOpen`: `aria-pressed` і `.is-active` лише коли **усі** розгорнуті / **усі** згорнуті; частковий стан — обидві кнопки нейтральні. Вибрана навчальна картка — `.is-active` + `data-selected="true"`, рожевий лівий край не залежить від `:hover`/`:focus` (див. `study-teaching-cards-layout.css`).
 - Заголовок H1 для збагачених тем — **hero**, не дублювати `# Concept` з markdown; `pageTitleUk` у hero для screen readers.
 
 ## Рендеринг markdown
@@ -52,7 +115,7 @@ description: >-
 - Ланцюги `→`: **лише справжні схеми** (`isPipelineArrowLine` у `studyArrowFlow.ts`):
   - 3+ стрілки або короткі кроки без `**` на початку абзаца.
   - **Не** перетворювати прозу QA (`запит → chunk_id`, `citation → chunk`) на ribbon.
-- Абзац лише з `→` у вступі/тілі → `StudyFlowRibbon` (variant `ribbon`).
+- Абзац лише з `→` у вступі/тілі → `StudyFlowRibbon` (variant `ribbon`) для коротких ланцюгів; **4+ кроків** у блоці outcomes / довгі §3 — `StudyLearnerFlowTrack` (компактно по центру, `study-learner-flow-layout.css`): без розтягування вузлів на всю ширину; 7 кроків — ряд 4 + ряд 3 з однозначним `↓` між рядами; на вузькому екрані — вертикальний timeline без горизонтального скролу.
 - Технічні ланцюги (`Documents → Parse → …`) → `layout="cards"`.
 - Розділ **«з чого складається»** (tool calling, RAG pipeline тощо): спочатку **оглядовий ribbon** (`StudyFlowRibbon`, `layout="ribbon"`) з повним ланцюгом з markdown (`Harness → LLM → …`), потім **детальні кроки** (`StudyStepDetailLayout`). Stages ribbon — у `*-ribbon-stages.ts` або парсинг через `StudyMarkdownWithFlows` (рядок у ```text``` з `→` підтримується в `studyArrowFlow.ts`). Не лишати ланцюг лише в невидимому code fence.
 - Порожній markdown **не** рендерити (`Контент ще не додано`).
@@ -116,7 +179,7 @@ description: >-
 
 **Підказка до split-panel:**
 
-- `StudyInteractionHint` — компактна смуга «Підказка» над списком кроків, **на всю ширину** блоку (не в лівій колонці grid).
+- `StudyPageCardsHint` / `StudyInteractionHint` — **одна** смуга «Підказка» на Study-сторінку з інтерактивними картками; не повторювати в `StudyStepDetailLayout`, `processStepPick`, RAG/TC блоках.
 
 CSS: `src/App.css` — блоки `.markdown-body-study-panel`, `.study-panel-terms-*`, `.study-rag-qa-detail-panel`, `.study-interaction-hint`. Нові мітки секцій — дописувати в `PANEL_SECTION_LABELS` у `src/lib/studyPanelMarkdown.ts`.
 
@@ -128,7 +191,8 @@ CSS: `src/App.css` — блоки `.markdown-body-study-panel`, `.study-panel-te
 - Мобільно: список зверху, пояснення знизу (без `order: -1` на панелі).
 - **Панель всередині блоку**, не fullscreen flyout — для невеликого тексту.
 - Flyout (`StudyDetailFlyout`) — лише для **кроків схем** (ланцюг даних, offline pipeline), де потрібен фокус.
-- Активний пункт: `is-active`, перший з деталями — за замовчуванням.
+- **Вибрана картка навігації** (`StudyFlowStageCard` / `StudyPipelineStepNav`, policy-flow, compare, transfer ribbon): `study-interactive-card` + `is-active` / `data-selected="true"` + `aria-pressed` / `aria-current="step"`; стилі — `study-interactive-cards.css`. Перший пункт відкритий у панелі за замовчуванням.
+- **Картки понять vs процес:** `presentation: 'concepts'` у `StudyTeachingCardsBundle` — без «Крок N з M», без `StudyLearnerFlowTrack` з усіх заголовків, без номера на картці; заголовок блоку (`conceptsHeadingUk`), опційно `conceptGroups`. Процесні уроки — `flowArrowLine` і підпис «Розбір по кроках». Приклад і QA у панелі — **унікальні** для кожної картки.
 - Панель: clarity-міні-секції (див. вище) + опційно **Коротко з уроку** з markdown; **Терміни** окремим блоком.
 - Візуалізація: `phase` chip + міні-смуга фаз (`StudyQaPhaseStrip`) — offline / пошук / LLM / security / observability.
 
@@ -136,7 +200,7 @@ CSS: `src/App.css` — блоки `.markdown-body-study-panel`, `.study-panel-te
 
 - Стиль як `topic-card` / `study-component-card`: номер, kind, заголовок, тіло.
 - Переліки компонентів — **стовпець** карток з поясненням, не один рядок через кому.
-- «Запам’ятати» — маркований список, **не** stepper «Крок 1–4».
+- «Запам’ятати» — кілька коротких висновків у компактному блоці (`StudyRememberTakeaways`), **не** stepper «Крок 1–4».
 - Кроки процесу — лише в блоках `#### Послідовність` / `**Крок N.**` у відповідному розділі.
 
 ## Співбесіда (`StudyInterviewSelfCheck`)
@@ -183,13 +247,22 @@ CSS: `src/App.css` — блоки `.markdown-body-study-panel`, `.study-panel-te
 - **Погано (акцент замість змісту):** «— **пропозиція**, не виконання.» «**I/O на диску** — у handler.»
 - У clarity-панелях `**Проста ідея**` / `**Проблема**` — мітки секцій (`studyPanelLabels`); у тексті під міткою — звичайна проза або терміни курсу, без жирного «для краси».
 
+## Review Mode (бічна панель і `/topic/:id`)
+
+- **Джерело:** `src/data/review/review-mode-by-topic.ts` (пріоритет) + fallback з `## Review Mode` у markdown.
+- **Еталон якості:** concept-03 RAG — проблема, ідея, роль у **QA Regression Investigation Agent**, QA, запам’ятати; без шаблону з підстановкою назви.
+- **Візуалізація:** `ReviewMarkdownBody` + `:::review-phases`, `:::review-steps`, `:::review-compare` (див. `src/lib/reviewMarkdownBlocks.ts`). Дві фази — дві картки; процес — кроки; порівняння — два блоки. Не зливати ланцюг у один абзац зі стрілками.
+- **Стилі:** `src/styles/review-mode.css` (не дублювати великі блоки в `App.css` без потреби).
+- **Карта маршруту:** доп. layout — `src/styles/learning-map-layout.css`; migration badge лише в панелі деталей, не «!» на кожному вузлі.
+
 ## Навчальна карта (вкладка «Навчальний маршрут»)
 
 Окремо від Study Mode сторінки уроку — вузли на головній (`LearningMapView`, `MapTopicNode`, `MapLearningStatus`, стилі `.learning-map` у `App.css`).
 
 - **Ієрархія на картці:** етап (заголовок секції, UA) → **назва теми** (`getMapLabel` = `shortTitle` з `topics.registry`, коротко EN: RAG, MCP, Tool Calling) → **стан вивчення** (○ ◐ ● + текст UA). Підказка `hint` на карті — українською.
 - **Не ставити `!` на вузлах** за `migrationStatus: partial` — це пояснюється в бічній панелі теми (`TopicSidePanel`, badge міграції). На карті лише **«Study Mode готовий для навчання»** для topicId з `study-ready-for-learning.ts`.
-- **Композиція етапу:** один вузол — `.map-stage.is-single` (заголовок + картка в одному ряді на десктопі); кілька вузлів — сітка + горизонтальні зв’язки `→` (мобільно — вертикальний маршрут `↓` між темами в етапі).
+- **Композиція етапу:** один вузол — `.map-stage.is-single`; кілька вузлів — **група по центру** етапу (`learning-map-layout.css`), `→` лише між картками (без полоски `map-flow-link-line`). Назва теми на десктопі **в один рядок** (`white-space: nowrap`, достатній `min-width` вузла); якщо ряд не вміщується — **цілий вузол** на наступний ряд (`packConceptStageRows`), між рядами `↓` під останньою карткою попереднього ряду. Lab — сітка з `minmax` для довших назв. Мобільно — вертикальний маршрут без обрізання.
+- **Компактні схеми в Study Mode** (outcomes, §3, `StudyLearnerFlowTrack`): блок **обмеженої ширини**, по центру (`study-learner-flow-layout.css`); кроки не розтягувати на всю ширину колонки; перенос між рядами — однозначний `↓` від останнього кроку першого ряду; стрілки `→` з відступом від карток.
 - **Між етапами:** `.map-route-connector` («Далі по маршруту»), не випадкові риски через текст.
 - Нові теми на карті — лише через `learning-map.registry.ts` + `topics.registry.ts`; фільтри «Увесь маршрут / 20 концепцій / Практика» не дублюють уроки.
 

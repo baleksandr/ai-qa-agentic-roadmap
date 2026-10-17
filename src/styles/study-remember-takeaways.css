@@ -1,0 +1,57 @@
+/* «Запам’ятати» — компактні проміжки між висновками; рамка лише на .lesson-callout */
+
+.lesson-key-idea .study-remember-takeaways,
+.study-remember-markdown .study-remember-takeaways {
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.lesson-key-idea .study-remember-takeaways-item,
+.study-remember-markdown .study-remember-takeaways-item {
+  margin: 0;
+  padding: 0;
+  line-height: 1.55;
+  font-size: inherit;
+  overflow-wrap: anywhere;
+}
+
+.lesson-key-idea .study-remember-takeaways-single,
+.study-remember-markdown .study-remember-takeaways-single {
+  margin: 0.35rem 0 0;
+  padding: 0;
+  line-height: 1.55;
+}
+
+/* Markdown «Запам’ятати» (concepts/labs): без маркерів, щільніші абзаци й списки */
+.study-remember-markdown .markdown-body > ul,
+.study-remember-markdown .markdown-body > ol {
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.study-remember-markdown .markdown-body > ul > li,
+.study-remember-markdown .markdown-body > ol > li {
+  margin: 0;
+  padding: 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.study-remember-markdown .markdown-body > p + p {
+  margin-top: 0.3rem;
+}
+
+.study-remember-markdown .markdown-body > p:first-child {
+  margin-top: 0.35rem;
+}
+
+.study-remember-markdown .markdown-body > p {
+  line-height: 1.55;
+}

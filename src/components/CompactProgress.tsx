@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 import { getAllMapTopicIds } from '../data/learning-map.registry';
+import { isMapProgressTopic } from '../lib/mapProgressExcluded';
 import { useProgress } from '../hooks/useProgress';
 
 /** Прогрес без довідника (довідник не обов’язковий у маршруті) */
 export function CompactProgress() {
   const { map } = useProgress();
   const ids = useMemo(
-    () => getAllMapTopicIds().filter((id) => id !== 'reference-library'),
+    () => getAllMapTopicIds().filter((id) => isMapProgressTopic(id)),
     [],
   );
 

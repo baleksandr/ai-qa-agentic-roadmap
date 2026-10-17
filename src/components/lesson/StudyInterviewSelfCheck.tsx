@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import type { StudyInterviewDeck } from '../../data/study/study-interview-types';
 import { useStudySelfCheck } from '../../hooks/useStudySelfCheck';
 import { MarkdownBody } from '../MarkdownBody';
+import { STUDY_LEARNER_MARKDOWN } from '../../lib/studyLearnerMarkdown';
 import { LessonRichParagraphs, parseLessonBold } from './lessonRichText';
 
 function stripInterviewQuestionPrefix(questionUk: string): string {
@@ -60,7 +61,7 @@ export function StudyInterviewSelfCheck({ deck }: Props) {
                               Розберімо до гвинтиків
                             </p>
                             <div className="study-rag-interview-answer-deep markdown-body">
-                              <MarkdownBody markdown={q.answerDeepUk} />
+                              <MarkdownBody markdown={q.answerDeepUk} {...STUDY_LEARNER_MARKDOWN} />
                             </div>
                           </>
                         ) : null}

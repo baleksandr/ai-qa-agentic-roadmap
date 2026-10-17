@@ -3,7 +3,7 @@ import {
   TOOL_CALLING_LEARNER_FLOW_STAGES,
 } from '../../data/study/tool-calling-learner-flow';
 import { flowStagesFromChunk, splitMarkdownWithArrowFlows } from '../../lib/studyArrowFlow';
-import { MarkdownBody } from '../MarkdownBody';
+import { StudyMarkdownSegments } from './StudyMarkdownSegments';
 import { StudyFlowRibbon } from './StudyFlowRibbon';
 import { StudyLearnerFlowTrack } from './StudyLearnerFlowTrack';
 
@@ -28,7 +28,7 @@ export function StudyMarkdownWithFlows({ markdown, flowAriaLabel, studyTables = 
       {parts.map((part, i) => {
         if (part.kind === 'flow') {
           const stages = flowStagesFromChunk(part.text);
-          if (stages.length >= 6 || stagesMatchToolCallingFlow(stages)) {
+          if (stages.length >= 4 || stagesMatchToolCallingFlow(stages)) {
             return (
               <StudyLearnerFlowTrack
                 key={`flow-${i}`}
@@ -49,7 +49,7 @@ export function StudyMarkdownWithFlows({ markdown, flowAriaLabel, studyTables = 
         }
         return (
           <div key={`md-${i}`} className="study-md-flow-block">
-            <MarkdownBody markdown={part.text} studyTables={studyTables} />
+            <StudyMarkdownSegments markdown={part.text} studyTables={studyTables} />
           </div>
         );
       })}

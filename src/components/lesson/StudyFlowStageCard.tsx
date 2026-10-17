@@ -1,4 +1,14 @@
 import type { ChainStageDetail } from '../../data/study/rag-chain-stage-details';
+import {
+  studyFlowStageActorBadge,
+  studyFlowStageGlyphLabel,
+  studyFlowStageKindBadge,
+} from '../../lib/studyFlowStageCardUi';
+import {
+  studyInteractiveCardActiveClass,
+  studyInteractiveCardSelectionProps,
+} from '../../lib/studyInteractiveCardState';
+import { StudyInteractiveCardTitle } from './StudyInteractiveCardTitle';
 
 type Props = {
   stageLabel: string;
@@ -15,6 +25,10 @@ type Props = {
   /** Якщо немає ChainStageDetail (QA, guardrails hint тощо). */
   navBadgeUk?: string;
   navActorUk?: string;
+  /** У режимі понять — без номера «кроку» на картці. */
+  showStepNumber?: boolean;
+  /** Ієрархічний номер картки (1, 2, 3.1 …) перед назвою. */
+  cardNumberUk?: string;
 };
 
 function stepKind(index: number, total: number): string {
@@ -41,26 +55,6 @@ function visualKeyFromStage(stage: string, detail: ChainStageDetail | null): str
   return 'step';
 }
 
-function glyphForKey(key: string): string {
-  const map: Record<string, string> = {
-    documents: 'DOC',
-    parse: 'PAR',
-    chunks: 'CHK',
-    embed: 'IDX',
-    store: 'DB',
-    query: 'Q',
-    retrieve: 'SR',
-    hits: 'K',
-    context: 'CTX',
-    filter: 'FLT',
-    llm: 'LLM',
-    harness: 'HAR',
-    executor: 'EXE',
-    step: 'STP',
-  };
-  return map[key] ?? 'STP';
-}
-
 export function StudyFlowStageCard({
   stageLabel,
   index,
@@ -73,15 +67,21 @@ export function StudyFlowStageCard({
   listTeaserUk,
   navBadgeUk,
   navActorUk,
+  showStepNumber = true,
+  cardNumberUk,
 }: Props) {
-  const kind = navBadgeUk ?? detail?.cardBadgeUk ?? stepKind(index, total);
+  const showCardNumber = Boolean(cardNumberUk?.trim());
+  const autoKind = stepKind(index, total);
+  const kind = studyFlowStageKindBadge(navBadgeUk, detail?.cardBadgeUk, autoKind, showCardNumber);
   const title = detail?.titleUk ?? stageLabel;
   const teaser =
     listTeaserUk?.trim() ||
     detail?.cardTeaserUk ||
     (detail?.outputUk ? detail.outputUk.replace(/\*\*/g, '') : stageLabel);
-  const actor = navActorUk ?? detail?.cardActorUk ?? 'Код';
+  const actor = studyFlowStageActorBadge(navActorUk, detail?.cardActorUk, showCardNumber);
+  const showMetaBadges = Boolean(kind?.trim() || actor?.trim());
   const visual = visualKeyFromStage(stageLabel, detail);
+  const glyphLabel = studyFlowStageGlyphLabel(visual, showCardNumber);
   const position =
     index === 0 ? 'is-input' : index === total - 1 ? 'is-output' : 'is-middle';
 
@@ -89,30 +89,47 @@ export function StudyFlowStageCard({
     'study-flow-stage-card',
     `study-flow-stage-card--${visual}`,
     position,
+    showCardNumber ? 'has-card-number' : '',
     layout === 'pipeline' ? 'is-pipeline-compact' : '',
-    clickable ? 'is-clickable' : '',
-    active ? 'is-active' : '',
+    layout === 'pipeline' && !glyphLabel ? 'is-pipeline-no-glyph' : '',
+    clickable ? 'is-clickable study-interactive-card' : '',
+    clickable ? studyInteractiveCardActiveClass(active ?? false) : '',
   ]
     .filter(Boolean)
     .join(' ');
 
+  const cardNumberBadge = showCardNumber ? (
+    <span className="study-card-number" aria-hidden="true">{cardNumberUk}</span>
+  ) : null;
+
   const inner =
     layout === 'pipeline' ? (
       <>
+        {cardNumberBadge}
         <div className="study-flow-stage-card-top study-flow-stage-card-top--pipeline">
-          <span className={`study-flow-stage-glyph study-flow-stage-glyph--${visual}`} aria-hidden="true">
-            {glyphForKey(visual)}
-          </span>
+          {glyphLabel ? (
+            <span className={`study-flow-stage-glyph study-flow-stage-glyph--${visual}`} aria-hidden="true">
+              {glyphLabel}
+            </span>
+          ) : null}
           <div className="study-flow-stage-card-meta study-flow-stage-card-meta--pipeline">
-            <h5 className="study-flow-stage-title">{title}</h5>
-            <div className="study-flow-stage-card-badges">
-              <span className="study-flow-stage-kind">{kind}</span>
-              <span className={`study-flow-stage-actor${actor === 'LLM' ? ' is-llm' : ''}`}>{actor}</span>
-            </div>
+            <StudyInteractiveCardTitle as="h5" className="study-flow-stage-title">
+              {title}
+            </StudyInteractiveCardTitle>
+            {showMetaBadges ? (
+              <div className="study-flow-stage-card-badges">
+                {kind ? <span className="study-flow-stage-kind">{kind}</span> : null}
+                {actor ? (
+                  <span className={`study-flow-stage-actor${actor === 'LLM' ? ' is-llm' : ''}`}>{actor}</span>
+                ) : null}
+              </div>
+            ) : null}
           </div>
-          <span className="study-flow-stage-num" aria-label={`Крок ${index + 1}`}>
-            {index + 1}
-          </span>
+          {showStepNumber && !showCardNumber ? (
+            <span className="study-flow-stage-num" aria-label={`Крок ${index + 1}`}>
+              {index + 1}
+            </span>
+          ) : null}
         </div>
         <div className="study-flow-stage-card-foot">
           <p className="study-flow-stage-teaser">{teaser}</p>
@@ -126,21 +143,32 @@ export function StudyFlowStageCard({
       </>
     ) : (
       <>
+        {cardNumberBadge}
         <div className="study-flow-stage-card-top">
-          <span className={`study-flow-stage-glyph study-flow-stage-glyph--${visual}`} aria-hidden="true">
-            {glyphForKey(visual)}
-          </span>
-          <div className="study-flow-stage-card-meta">
-            <div className="study-flow-stage-card-badges">
-              <span className="study-flow-stage-kind">{kind}</span>
-              <span className={`study-flow-stage-actor${actor === 'LLM' ? ' is-llm' : ''}`}>{actor}</span>
-            </div>
-            <span className="study-flow-stage-num" aria-label={`Крок ${index + 1}`}>
-              {index + 1}
+          {glyphLabel ? (
+            <span className={`study-flow-stage-glyph study-flow-stage-glyph--${visual}`} aria-hidden="true">
+              {glyphLabel}
             </span>
+          ) : null}
+          <div className="study-flow-stage-card-meta">
+            {showMetaBadges ? (
+              <div className="study-flow-stage-card-badges">
+                {kind ? <span className="study-flow-stage-kind">{kind}</span> : null}
+                {actor ? (
+                  <span className={`study-flow-stage-actor${actor === 'LLM' ? ' is-llm' : ''}`}>{actor}</span>
+                ) : null}
+              </div>
+            ) : null}
+            {showStepNumber ? (
+              <span className="study-flow-stage-num" aria-label={`Крок ${index + 1}`}>
+                {index + 1}
+              </span>
+            ) : null}
           </div>
         </div>
-        <h5 className="study-flow-stage-title">{title}</h5>
+        <StudyInteractiveCardTitle as="h5" className="study-flow-stage-title">
+          {title}
+        </StudyInteractiveCardTitle>
         <p className="study-flow-stage-teaser">{teaser}</p>
         {clickable && (
           <span className="study-flow-stage-cta">
@@ -153,7 +181,19 @@ export function StudyFlowStageCard({
 
   if (clickable) {
     return (
-      <button type="button" className={className} onClick={onOpen} aria-pressed={active}>
+      <button
+        type="button"
+        className={className}
+        onClick={onOpen}
+        {...studyInteractiveCardSelectionProps(active ?? false)}
+      >
+        {active ? (
+          <span className="sr-only">
+            {showStepNumber
+              ? 'Обраний крок, пояснення в панелі поруч'
+              : 'Обрана картка, пояснення в панелі поруч'}
+          </span>
+        ) : null}
         {inner}
       </button>
     );

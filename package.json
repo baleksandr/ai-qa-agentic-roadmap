@@ -11,6 +11,7 @@
     "verify:guardrails": "node scripts/verify-guardrails-study.mjs",
     "verify:rag": "node scripts/verify-rag-study.mjs",
     "verify:tool-calling": "node scripts/verify-tool-calling-study.mjs",
+    "verify:study-standards": "node scripts/verify-study-content-standards.mjs",
     "docx:inventory": "node scripts/docx-inventory-full.mjs",
     "source:migrate": "node scripts/migrate-from-source.mjs"
   },

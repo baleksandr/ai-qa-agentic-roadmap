@@ -1,0 +1,261 @@
+/* Навчальна карта — центровані групи, читабельні назви, стрілки між картками */
+
+.learning-map {
+  align-items: center;
+}
+
+.map-stage-block {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.map-stage {
+  width: 100%;
+}
+
+.map-stage-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-stage-header {
+  width: 100%;
+  text-align: left;
+}
+
+.map-stage.is-single {
+  max-width: min(100%, 20rem);
+  align-self: center;
+}
+
+.map-stage.is-single .map-stage-inner {
+  align-items: stretch;
+  width: 100%;
+}
+
+.map-stage.is-single .map-stage-track {
+  width: 100%;
+}
+
+.map-stage.is-single .map-node {
+  width: 100%;
+}
+
+.learning-map .map-flow-link-line {
+  display: none !important;
+}
+
+.learning-map .map-stage:not(.is-single):not(.is-lab-grid) .map-stage-track {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem 0.45rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  grid-template-columns: unset !important;
+}
+
+.map-stage-track--split {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.map-stage-track-row-wrap {
+  display: grid;
+  justify-items: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.map-stage-track-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem 0.45rem;
+  max-width: 100%;
+  grid-column: 1;
+}
+
+.map-stage-row-bridge {
+  grid-column: 1;
+  justify-self: end;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  line-height: 1;
+  padding: 0.12rem 0 0.18rem;
+  padding-right: 6.75rem;
+  pointer-events: none;
+}
+
+.map-stage-track-row-wrap[data-row-count='2'] .map-stage-row-bridge {
+  padding-right: 6.5rem;
+}
+
+.map-stage-track-row-wrap[data-row-count='3'] .map-stage-row-bridge {
+  padding-right: 6.75rem;
+}
+
+.map-stage-track-row-wrap[data-row-count='4'] .map-stage-row-bridge {
+  padding-right: 6.85rem;
+}
+
+.map-node-chain-item {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  min-width: 0;
+  max-width: none !important;
+}
+
+.learning-map .map-stage:not(.is-single):not(.is-lab-grid) .map-node {
+  width: auto !important;
+  min-width: 13.25rem;
+  max-width: 16.5rem;
+  min-height: 5.5rem;
+  flex-shrink: 0;
+}
+
+.map-node-label {
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.25;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+@media (min-width: 720px) {
+  .learning-map .map-stage:not(.is-single) .map-node-label {
+    white-space: nowrap;
+  }
+}
+
+.learning-map .map-flow-link {
+  display: inline-flex !important;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  min-width: 1.35rem;
+  padding: 0;
+  margin: 0 0.12rem;
+  align-self: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.learning-map .map-flow-link-chevron {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  line-height: 1;
+}
+
+.learning-map .map-node {
+  position: relative;
+  z-index: 1;
+}
+
+/* Lab 0–9: сітка по центру, мінімальна ширина для довших назв */
+.learning-map .map-stage.is-lab-grid .map-stage-track {
+  display: grid !important;
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  grid-template-columns: repeat(5, minmax(11.5rem, 1fr));
+  gap: 0.55rem;
+  justify-content: center;
+}
+
+.learning-map .map-stage.is-lab-grid .map-node-chain-item {
+  display: flex !important;
+  min-width: 0;
+}
+
+.learning-map .map-stage.is-lab-grid .map-flow-link {
+  display: none !important;
+}
+
+.learning-map .map-stage.is-lab-grid .map-node {
+  width: 100% !important;
+  min-width: 0;
+  max-width: none;
+}
+
+@media (min-width: 900px) {
+  .learning-map .map-stage:not(.is-single):not(.is-lab-grid) .map-stage-track:not(.map-stage-track--split) {
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 719px) {
+  .learning-map .map-stage:not(.is-single) .map-stage-track {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.35rem;
+  }
+
+  .map-stage-track--split {
+    width: 100%;
+  }
+
+  .map-stage-track-row-wrap {
+    width: 100%;
+  }
+
+  .map-stage-track-row {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .map-stage:not(.is-single) .map-node-chain-item {
+    width: 100%;
+  }
+
+  .learning-map .map-stage:not(.is-single):not(.is-lab-grid) .map-node {
+    width: 100% !important;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .learning-map .map-stage:not(.is-single) .map-node-label {
+    white-space: normal;
+  }
+
+  .map-stage-row-bridge {
+    justify-self: center;
+    padding-right: 0;
+    padding: 0.1rem 0;
+  }
+
+  .learning-map .map-stage:not(.is-single) .map-flow-link,
+  .map-stage-track--split .map-flow-link {
+    width: auto;
+    min-width: 0;
+    padding: 0.15rem 0;
+  }
+
+  .learning-map .map-stage:not(.is-single) .map-flow-link-chevron,
+  .map-stage-track--split .map-flow-link-chevron {
+    display: inline-block;
+  }
+
+  .learning-map .map-stage.is-lab-grid .map-stage-track {
+    grid-template-columns: 1fr;
+  }
+}
+
+.topic-side-panel .topic-side-body {
+  overflow-x: hidden;
+}

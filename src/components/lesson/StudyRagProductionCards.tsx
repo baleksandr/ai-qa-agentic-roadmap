@@ -1,7 +1,6 @@
 import { lookupRagProductionDetail, productionDetailToMarkdown } from '../../data/study/rag-production-details';
 import type { RagProductionItem } from '../../lib/ragProductionSection';
 import { MarkdownBody } from '../MarkdownBody';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPanelTerms } from './StudyPanelTerms';
 import { useMemo, useState } from 'react';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
@@ -46,9 +45,6 @@ export function StudyRagProductionCards({ items, footerMarkdown }: Props) {
 
   return (
     <div className="study-rag-production-block study-rag-pipeline-glossary">
-      <StudyInteractionHint>
-        Оберіть тему — справа розшифровка термінів і що перевіряти в QA.
-      </StudyInteractionHint>
       <StudyStepDetailLayout
         wrapperClassName="study-rag-production-layout"
         navAriaLabel="Теми production"

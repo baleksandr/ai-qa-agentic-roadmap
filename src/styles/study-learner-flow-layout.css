@@ -1,0 +1,140 @@
+/* Компактні навчальні схеми (outcomes, §3) — цілісний блок по центру, без розтягування */
+
+.study-learning-outcomes {
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.study-learning-outcomes .markdown-body,
+.study-learning-outcomes .study-outcomes-body,
+.study-outcomes-with-flows .study-md-flow-block {
+  max-width: 42rem;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
+
+.study-outcomes-with-flows .study-md-flow-block .markdown-body p {
+  line-height: 1.5;
+}
+
+.study-outcomes-with-flows .study-learner-flow-track,
+.study-pipeline-ribbon-overview .study-learner-flow-track {
+  width: fit-content;
+  max-width: min(100%, 44rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.study-learner-flow-desktop-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.study-learner-flow-row-wrap {
+  display: grid;
+  justify-items: center;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.study-learner-flow-row-bridge-slot {
+  grid-column: 1;
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  margin: 0.12rem 0 0.18rem;
+  padding-right: 2.85rem;
+  pointer-events: none;
+}
+
+.study-learner-flow-row-wrap[data-head-count='3'] .study-learner-flow-row-bridge-slot {
+  padding-right: 2.65rem;
+}
+
+.study-learner-flow-row-wrap[data-head-count='4'] .study-learner-flow-row-bridge-slot {
+  padding-right: 2.75rem;
+}
+
+@media (min-width: 520px) {
+  .study-learner-flow-row {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .study-learner-flow-row-segment {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto !important;
+    min-width: 0;
+    max-width: none !important;
+    justify-content: center;
+  }
+
+  .study-learner-flow-row-segment:first-child {
+    flex: 0 0 auto !important;
+  }
+
+  .study-learner-flow-arrow {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 1.5rem;
+    padding: 0 0.4rem;
+    margin: 0 0.12rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent-2);
+    opacity: 0.92;
+  }
+
+  .study-learner-flow-pill {
+    flex: 0 0 auto !important;
+    width: auto;
+    min-width: 5.5rem;
+    max-width: 11.5rem;
+  }
+
+  .study-learner-flow-pill-label {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: pretty;
+  }
+
+  /* Скасувати розтягування з App.css для довгих ланцюгів */
+  .study-learner-flow-track[data-stage-count='7'] .study-learner-flow-row:first-of-type .study-learner-flow-row-segment,
+  .study-learner-flow-track[data-stage-count='7'] .study-learner-flow-row:last-of-type .study-learner-flow-row-segment {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+  }
+
+  .study-learner-flow-track[data-stage-count='7'] .study-learner-flow-row:last-of-type {
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    transform: none;
+  }
+}
+
+.study-outcomes-with-flows .study-flow-ribbon {
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+}

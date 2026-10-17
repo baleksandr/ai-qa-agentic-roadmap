@@ -11,7 +11,6 @@ import {
   GUARDRAILS_OBS_SCENARIO_OUTCOMES,
   GUARDRAILS_OBS_SOURCE_MARKDOWN,
 } from '../../data/study/guardrails-observability-lesson';
-import { StudyInteractionHint } from './StudyInteractionHint';
 import { StudyPolicyApprovalFlowDiagram } from './StudyPolicyApprovalFlowDiagram';
 import { LessonRichParagraphs, parseLessonBold } from './lessonRichText';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
@@ -186,9 +185,6 @@ export function StudyGuardrailsObservability() {
         <p className="muted small study-obs-intro">
           Кожне поле пояснено через сценарій <code lang="en">createJiraIssue</code> і project QA.
         </p>
-        <StudyInteractionHint className="study-split-hint-intro">
-          Оберіть поле ліворуч — поруч деталі для перевірок QA.
-        </StudyInteractionHint>
         <FieldSplitPanel />
       </section>
 

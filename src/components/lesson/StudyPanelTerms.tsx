@@ -1,3 +1,5 @@
+import { StudyLabeledExplanation } from './StudyLabeledExplanation';
+
 type Term = { label: string; text: string };
 
 type Props = {
@@ -13,8 +15,11 @@ export function StudyPanelTerms({ terms }: Props) {
       <ul className="study-panel-terms-list">
         {terms.map((t) => (
           <li key={t.label}>
-            <span className="study-panel-term-label">{t.label}</span>
-            <p className="study-panel-term-desc">{t.text}</p>
+            <StudyLabeledExplanation
+              termUk={t.label}
+              explanationUk={t.text}
+              className="study-learner-labeled-line study-panel-term-line"
+            />
           </li>
         ))}
       </ul>

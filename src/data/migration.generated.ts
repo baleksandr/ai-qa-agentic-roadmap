@@ -25,6 +25,7 @@ export const MIGRATION_OVERRIDE: Record<string, MigrationOverride> = {
   'concept-18': { migrationStatus: 'partial', migrationNotes: 'Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.' },
   'concept-19': { migrationStatus: 'partial', migrationNotes: 'Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.' },
   'concept-20': { migrationStatus: 'partial', migrationNotes: 'Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.' },
+  'qa-interview': { migrationStatus: 'partial', migrationNotes: 'Банк питань у Study Mode; категорії в qa-interview-bank.ts.' },
   'reference-library': { migrationStatus: 'partial', migrationNotes: 'Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.' },
   'lab-0': { migrationStatus: 'partial', migrationNotes: 'Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.' },
   'lab-1': { migrationStatus: 'partial', migrationNotes: 'Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.' },

@@ -5,7 +5,8 @@ import { StudyModeSections } from '../components/StudyModeSections';
 import { SiteNav } from '../components/SiteNav';
 import { ProgressPicker } from '../components/ProgressPicker';
 import { getMapLabel } from '../data/learning-map.registry';
-import { TOPIC_BY_ID, getLearningRoute } from '../data/topics.registry';
+import { TOPIC_BY_ID } from '../data/topics.registry';
+import { getStudyNextTopic } from '../lib/studyTopicNavigation';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
 import { loadStructuredStudy } from '../lib/structuredStudy';
 import { buildStudyLearningOutcomes } from '../data/study/study-lesson-intros';
@@ -15,7 +16,14 @@ import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
 import { StudyLessonAcronymHero } from '../components/lesson/StudyLessonAcronymHero';
 import { hasStudyLessonAside } from '../data/study/study-lesson-aside.registry';
 import { getStudyLessonHero } from '../data/study/study-lesson-heroes';
-
+import { StudyMarkdownWithFlows } from '../components/lesson/StudyMarkdownWithFlows';
+import {
+  getLessonOutcomesFlowAriaLabel,
+  getStudyOutcomesLessonHint,
+} from '../data/study/study-lesson-intros';
+import { StudyOutcomesLessonHint } from '../components/lesson/StudyOutcomesLessonHint';
+import { StudyPageCardsHint } from '../components/lesson/StudyPageCardsHint';
+import { topicStudyPageHasInteractiveCards } from '../lib/studyPageInteractive';
 export function TopicStudyPage() {
   const { topicId } = useParams<{ topicId: string }>();
   const topic = topicId ? TOPIC_BY_ID[topicId] : undefined;
@@ -38,9 +46,7 @@ export function TopicStudyPage() {
     };
   }, [topic, structured]);
 
-  const route = getLearningRoute();
-  const index = topic ? route.findIndex((t) => t.id === topic.id) : -1;
-  const next = index >= 0 && index < route.length - 1 ? route[index + 1] : null;
+  const next = topic ? getStudyNextTopic(topic.id) : null;
 
   if (!topic) {
     return (
@@ -53,6 +59,12 @@ export function TopicStudyPage() {
 
   const learning = getProgress(topic.id);
   const lessonHero = getStudyLessonHero(topic.id);
+  const structuredOutcomes =
+    structured && topic.id === 'fundamentals'
+      ? buildStudyLearningOutcomes(topic.id, '')
+      : '';
+  const outcomesLessonHint = structured ? getStudyOutcomesLessonHint(topic.id) : null;
+  const showPageCardsHint = topicStudyPageHasInteractiveCards(topic.id);
 
   return (
     <div className="page topic-study-page topic-study-page-wide">
@@ -85,11 +97,29 @@ export function TopicStudyPage() {
       {topic.migrationStatus === 'not_migrated' ? (
         <p className="muted">Матеріал ще не перенесено з DOCX.</p>
       ) : structured ? (
-        <StructuredStudyView
-          study={structured}
-          learning={learning}
-          onLearningChange={(s) => setProgress(topic.id, s)}
-        />
+        <>
+          {structuredOutcomes ? (
+            <aside className="study-learning-outcomes study-outcomes-with-flows" aria-label="Що я зрозумію після цього уроку">
+              <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
+              <StudyMarkdownWithFlows
+                markdown={structuredOutcomes}
+                flowAriaLabel={getLessonOutcomesFlowAriaLabel(topic.id)}
+              />
+              {outcomesLessonHint ? (
+                <StudyOutcomesLessonHint
+                  labelUk={outcomesLessonHint.labelUk}
+                  textUk={outcomesLessonHint.textUk}
+                />
+              ) : null}
+            </aside>
+          ) : null}
+          {showPageCardsHint ? <StudyPageCardsHint /> : null}
+          <StructuredStudyView
+            study={structured}
+            learning={learning}
+            onLearningChange={(s) => setProgress(topic.id, s)}
+          />
+        </>
       ) : (
         <div className="topic-study-legacy-wrap">
           <StudyModeSections
@@ -111,7 +141,7 @@ export function TopicStudyPage() {
         <nav className="topic-nav study-next-nav">
           {next ? (
             <Link className="study-next-link" to={`/topic/${next.id}/study`}>
-              Наступна тема: {next.title} →
+              Наступна тема: {getMapLabel(next.id)} →
             </Link>
           ) : (
             <Link to="/">Завершити маршрут на карті</Link>

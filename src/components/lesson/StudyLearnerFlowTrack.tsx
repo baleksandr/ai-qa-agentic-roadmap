@@ -7,7 +7,9 @@ type Props = {
 
 function splitRows(stages: string[], firstRowCount?: number): [string[], string[]] {
   if (stages.length <= 5) return [stages, []];
-  const split = firstRowCount ?? Math.ceil(stages.length / 2);
+  const defaultSplit =
+    stages.length === 7 ? 4 : firstRowCount ?? Math.ceil(stages.length / 2);
+  const split = firstRowCount ?? defaultSplit;
   const clamped = Math.min(Math.max(split, 2), stages.length - 1);
   return [stages.slice(0, clamped), stages.slice(clamped)];
 }
@@ -34,13 +36,19 @@ function FlowRow({
   stages,
   startIndex,
   total,
+  rowVariant,
 }: {
   stages: string[];
   startIndex: number;
   total: number;
+  rowVariant?: 'head' | 'tail';
 }) {
   return (
-    <div className="study-learner-flow-row" role="list">
+    <div
+      className={`study-learner-flow-row${rowVariant === 'tail' ? ' study-learner-flow-row--tail' : ''}`}
+      role="list"
+      data-row-count={stages.length}
+    >
       {stages.map((stage, i) => {
         const globalIndex = startIndex + i;
         return (
@@ -83,16 +91,29 @@ export function StudyLearnerFlowTrack({ stages, ariaLabel = 'Послідовн�
   return (
     <div className="study-learner-flow-track" data-stage-count={stages.length}>
       <div className="study-learner-flow-desktop" aria-label={ariaLabel}>
-        <FlowRow stages={rowA} startIndex={0} total={stages.length} />
-        {rowB.length > 0 && (
-          <>
-            <div className="study-learner-flow-row-bridge" aria-hidden="true">
-              <span className="study-learner-flow-row-bridge-line" />
-              <span className="study-learner-flow-row-bridge-chevron">↓</span>
-            </div>
-            <FlowRow stages={rowB} startIndex={rowA.length} total={stages.length} />
-          </>
-        )}
+        <div className="study-learner-flow-desktop-inner">
+          <div
+            className="study-learner-flow-row-wrap"
+            data-head-count={rowA.length}
+            data-tail-count={rowB.length}
+          >
+            <FlowRow stages={rowA} startIndex={0} total={stages.length} rowVariant="head" />
+            {rowB.length > 0 && (
+              <>
+                <div className="study-learner-flow-row-bridge-slot" aria-hidden="true">
+                  <span className="study-learner-flow-row-bridge-line" />
+                  <span className="study-learner-flow-row-bridge-chevron">↓</span>
+                </div>
+                <FlowRow
+                  stages={rowB}
+                  startIndex={rowA.length}
+                  total={stages.length}
+                  rowVariant="tail"
+                />
+              </>
+            )}
+          </div>
+        </div>
       </div>
       <FlowTimeline stages={stages} ariaLabel={ariaLabel} />
     </div>

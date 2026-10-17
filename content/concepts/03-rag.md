@@ -225,8 +225,6 @@ Confidential chunk у hits через помилку ACL на індексаці
 | **Vector DB** | **Варіант** індексу, не визначення RAG |
 | **Retrieval ≠ правда** | Успішний пошук не гарантує правильну відповідь — перевіряйте citations, свіжість індексу й права |
 
-Нижче — інтерактивний блок **«Перевір себе перед співбесідою»** (10 запитань, цільні відповіді UK/EN, посилання «Що вивчити далі»).
-
 :::study-sources
 - *AI Engineering*, 2025 Edition (Pachaar & Chawla) — RAG: «What is RAG?», друк. с. 106; «Workflow of a RAG system», друк. с. 113–115.
 - *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 3 — компоненти, failure modes, testing, observability (архів курсу).
