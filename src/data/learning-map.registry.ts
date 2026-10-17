@@ -1,7 +1,8 @@
 /**
- * Навчальна карта для UI: зрозумілі назви та етапи.
+ * Навчальна карта для UI: етапи українською, **назва на картці** — `shortTitle` з topics.registry (EN).
  * topicId лишаються незмінними — уроки й прогрес прив’язані до них.
  */
+import { TOPIC_BY_ID } from './topics.registry';
 export type LearningMapNode = {
   topicId: string;
   label: string;
@@ -33,7 +34,7 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
   {
     id: 'agent-action',
     title: '2. Як агент діє',
-    subtitle: 'Промпт, інструменти, harness, цикл рішень',
+    subtitle: 'Промпт, інструменти, оболонка агента, цикл рішень',
     nodes: [
       {
         topicId: 'concept-14',
@@ -47,8 +48,8 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       },
       {
         topicId: 'concept-04',
-        label: 'Оболонка агента (harness)',
-        hint: 'Run, контекст, tool results і цикл виконання',
+        label: 'Оболонка агента',
+        hint: 'Запуск, контекст, результати інструментів і цикл виконання',
       },
       {
         topicId: 'concept-12',
@@ -74,8 +75,8 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       },
       {
         topicId: 'concept-03',
-        label: 'RAG',
-        hint: 'Діставання знань з документів у контекст',
+        label: 'Доповнення з документами (RAG)',
+        hint: 'Діставання знань з документів у контекст моделі',
       },
       {
         topicId: 'concept-15',
@@ -84,17 +85,17 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       },
       {
         topicId: 'concept-06',
-        label: 'MCP',
-        hint: 'Підключення tools і даних за стандартом',
+        label: 'Протокол MCP',
+        hint: 'Підключення інструментів і даних за стандартом',
       },
       {
         topicId: 'concept-13',
-        label: 'Донавчання (fine-tuning)',
+        label: 'Донавчання моделі',
         hint: 'Коли змінюють саму модель, а не лише контекст',
       },
       {
         topicId: 'concept-07',
-        label: 'Навички (skills)',
+        label: 'Навички агента',
         hint: 'Повторно використовувані пакети інструкцій і дій',
       },
     ],
@@ -123,7 +124,7 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       },
       {
         topicId: 'concept-16',
-        label: 'Агентні workflows',
+        label: 'Агентні робочі процеси',
         hint: 'Графи та сценарії з кількох кроків',
       },
       {
@@ -133,7 +134,7 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       },
       {
         topicId: 'concept-08',
-        label: 'Взаємодія агентів (A2A)',
+        label: 'Протокол A2A між агентами',
         hint: 'Делегування між агентами',
       },
     ],
@@ -147,17 +148,17 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
   {
     id: 'quality',
     title: '5. Контроль якості',
-    subtitle: 'Обмеження, спостережуваність, evals, бенчмарки',
+    subtitle: 'Обмеження, спостережуваність, оцінювання, бенчмарки',
     nodes: [
       {
         topicId: 'concept-17',
-        label: 'Guardrails',
-        hint: 'Дозволені дії та політики безпеки',
+        label: 'Політики та захист',
+        hint: 'Дозволені дії та межі безпеки агента',
       },
       {
         topicId: 'concept-18',
         label: 'Спостережуваність',
-        hint: 'Traces, логи, що сталося в run',
+        hint: 'Трасування, логи та докази того, що сталося в run',
       },
       {
         topicId: 'concept-05',
@@ -185,12 +186,12 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       { topicId: 'lab-1', label: 'Мета й межі', hint: 'Purpose і scope проєкту' },
       { topicId: 'lab-2', label: 'Системний промпт', hint: 'Інструкція для моделі' },
       { topicId: 'lab-3', label: 'Підключаємо модель', hint: 'Перший виклик LLM API' },
-      { topicId: 'lab-4', label: 'Додаємо інструменти', hint: 'Tools, tool calling, MCP' },
-      { topicId: 'lab-5', label: 'Пам’ять у практиці', hint: 'Memory і state в коді' },
-      { topicId: 'lab-6', label: 'Цикл агента', hint: 'Orchestration і agent loop' },
-      { topicId: 'lab-7', label: 'Запуск з термінала', hint: 'CLI для розслідування' },
-      { topicId: 'lab-8', label: 'Тестуємо агента', hint: 'Testing і evals' },
-      { topicId: 'lab-9', label: 'Надійність і підтримка', hint: 'Production-ready агент' },
+      { topicId: 'lab-4', label: 'Додаємо інструменти', hint: 'Виклики інструментів і MCP у коді' },
+      { topicId: 'lab-5', label: 'Пам’ять у практиці', hint: 'Пам’ять і стан у коді агента' },
+      { topicId: 'lab-6', label: 'Цикл агента', hint: 'Оркестрація та цикл виконання' },
+      { topicId: 'lab-7', label: 'Запуск з термінала', hint: 'Командний рядок для розслідування' },
+      { topicId: 'lab-8', label: 'Тестуємо агента', hint: 'Автотести та оцінювання' },
+      { topicId: 'lab-9', label: 'Надійність і підтримка', hint: 'Агент готовий до експлуатації' },
     ],
     edges: Array.from({ length: 9 }, (_, i) => ({
       from: `lab-${i}`,
@@ -218,7 +219,7 @@ export const LEARNING_MAP_STAGES: LearningMapStage[] = [
       {
         topicId: 'reference-library',
         label: 'Довідник курсу',
-        hint: 'Reference library — не обов’язковий маршрут',
+        hint: 'Довідник курсу — не обов’язковий маршрут',
       },
     ],
     edges: [],
@@ -236,6 +237,8 @@ for (const stage of LEARNING_MAP_STAGES) {
 }
 
 export function getMapLabel(topicId: string): string {
+  const topic = TOPIC_BY_ID[topicId];
+  if (topic?.shortTitle) return topic.shortTitle;
   return labelByTopicId[topicId] ?? topicId;
 }
 
@@ -246,6 +249,43 @@ export function getMapHint(topicId: string): string | undefined {
 /** Усі topicId на карті (для прогресу та пошуку) */
 export function getAllMapTopicIds(): string[] {
   return LEARNING_MAP_STAGES.flatMap((s) => s.nodes.map((n) => n.topicId));
+}
+
+/** Фільтр карти: ті самі topicId, інший спосіб перегляду (без дублікатів уроків). */
+export type LearningMapViewFilter = 'all' | 'concepts' | 'practice';
+
+export function filterLearningMapStages(filter: LearningMapViewFilter): LearningMapStage[] {
+  if (filter === 'all') return LEARNING_MAP_STAGES;
+  return LEARNING_MAP_STAGES
+    .map((stage) => ({
+      ...stage,
+      nodes: stage.nodes.filter((n) => {
+        if (filter === 'concepts') return n.topicId.startsWith('concept-');
+        if (filter === 'practice') return n.topicId.startsWith('lab-');
+        return true;
+      }),
+      edges: stage.edges.filter((e) => {
+        const fromOk =
+          filter === 'concepts'
+            ? e.from.startsWith('concept-')
+            : filter === 'practice'
+              ? e.from.startsWith('lab-')
+              : true;
+        const toOk =
+          filter === 'concepts'
+            ? e.to.startsWith('concept-')
+            : filter === 'practice'
+              ? e.to.startsWith('lab-')
+              : true;
+        return fromOk && toOk;
+      }),
+    }))
+    .filter((stage) => stage.nodes.length > 0);
+}
+
+/** Усі concept-* на карті (20 тем PART II). */
+export function getConceptMapTopicIds(): string[] {
+  return getAllMapTopicIds().filter((id) => id.startsWith('concept-'));
 }
 
 /** Міжетапний рекомендований перехід (для візуальної «доріжки») */

@@ -8,9 +8,13 @@ import { getMapLabel } from '../data/learning-map.registry';
 import { TOPIC_BY_ID, getLearningRoute } from '../data/topics.registry';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
 import { loadStructuredStudy } from '../lib/structuredStudy';
-import { parseStudySections } from '../lib/studySections';
+import { buildStudyLearningOutcomes } from '../data/study/study-lesson-intros';
+import { parseStudyDocument } from '../lib/studySections';
 import { useProgress } from '../hooks/useProgress';
 import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
+import { StudyLessonAcronymHero } from '../components/lesson/StudyLessonAcronymHero';
+import { hasStudyLessonAside } from '../data/study/study-lesson-aside.registry';
+import { getStudyLessonHero } from '../data/study/study-lesson-heroes';
 
 export function TopicStudyPage() {
   const { topicId } = useParams<{ topicId: string }>();
@@ -19,15 +23,19 @@ export function TopicStudyPage() {
 
   const structured = topic ? loadStructuredStudy(topic.id) : null;
 
-  const legacySections = useMemo(() => {
-    if (!topic || structured) return [];
+  const legacyStudy = useMemo(() => {
+    if (!topic || structured) return { sections: [], introMarkdown: '', sourcesMarkdown: '' };
     const raw = loadMarkdownByPath(topic.contentPath);
-    if (!raw) return [];
+    if (!raw) return { sections: [], introMarkdown: '', sourcesMarkdown: '' };
     const lesson = parseLessonMarkdown(raw);
     const study = lesson.studyMarkdown
       .replace(/^###\s+(QA-приклад|Failure modes|Запитання|Коротка відповідь)[\s\S]*$/im, '')
       .trim();
-    return parseStudySections(study);
+    const parsed = parseStudyDocument(study);
+    return {
+      ...parsed,
+      introMarkdown: buildStudyLearningOutcomes(topic.id, parsed.introMarkdown),
+    };
   }, [topic, structured]);
 
   const route = getLearningRoute();
@@ -44,6 +52,7 @@ export function TopicStudyPage() {
   }
 
   const learning = getProgress(topic.id);
+  const lessonHero = getStudyLessonHero(topic.id);
 
   return (
     <div className="page topic-study-page topic-study-page-wide">
@@ -54,7 +63,16 @@ export function TopicStudyPage() {
         <p className="muted small">
           <Link to={`/topic/${topic.id}`}>← Review Mode</Link>
         </p>
-        <h1>{getMapLabel(topic.id)}</h1>
+        <h1 className={lessonHero ? 'study-rag-page-h1' : undefined}>
+          {lessonHero ? (
+            <>
+              <span className="sr-only">{lessonHero.pageTitleUk}</span>
+              <StudyLessonAcronymHero hero={lessonHero} />
+            </>
+          ) : (
+            getMapLabel(topic.id)
+          )}
+        </h1>
         <p className="lead study-lead">Study Mode</p>
         <div className="topic-badges">
           <span className={`badge migration-${topic.migrationStatus}`}>
@@ -73,16 +91,21 @@ export function TopicStudyPage() {
           onLearningChange={(s) => setProgress(topic.id, s)}
         />
       ) : (
-        <div className="study-col-main study-col-main-only">
-          <StudyModeSections sections={legacySections} initialOpenId={legacySections[0]?.id} />
-          <footer className="study-footer study-footer-inline">
-            <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
-          </footer>
+        <div className="topic-study-legacy-wrap">
+          <StudyModeSections
+            topicId={topic.id}
+            sections={legacyStudy.sections}
+            introMarkdown={legacyStudy.introMarkdown}
+            sourcesMarkdown={legacyStudy.sourcesMarkdown}
+            initialOpenId={legacyStudy.sections[0]?.id}
+            learning={learning}
+            onLearningChange={(s) => setProgress(topic.id, s)}
+          />
         </div>
       )}
 
       <footer className="study-footer study-footer-global">
-        {!structured && (
+        {!structured && !hasStudyLessonAside(topic.id) && (
           <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
         )}
         <nav className="topic-nav study-next-nav">

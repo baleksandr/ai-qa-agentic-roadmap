@@ -1,0 +1,156 @@
+import type { ArchitectureSchema } from '../../types/architecture-simulation';
+
+export const CAG_SCHEMA: ArchitectureSchema = {
+  id: 'cag',
+  tabLabel: 'Підготовлений контекст (V10)',
+  title: 'Підготовлений контекст — Context-Augmented Generation (V10)',
+  subtitle: 'Стабільні QA-правила готують наперед і підкладають у context кожного run (термін V10 курсу).',
+  termNote:
+    'На цій схемі CAG = Context-Augmented Generation (курс). У книзі AI Engineering 2025 акронім CAG означає Cache-Augmented Generation (KV cache) — інший механізм; перемикач «prefix cache» показує саме його, не плутайте з підготовкою context.',
+  disclaimer:
+    'Навчальна схема QA Regression Investigation Agent. Підготовлений context ≠ автоматичне кешування у провайдера.',
+  svgLabel: 'Context-Augmented Generation (course): prepare stable context, then run query',
+  viewW: 860,
+  viewH: 320,
+  nodes: [
+    { id: 'kb', label: 'Stable Knowledge', shortLabel: 'Knowledge', role: 'data', topicId: 'concept-20', x: 28, y: 52, w: 158, h: 68, mobileOrder: 1 },
+    { id: 'prep', label: 'Prepare Context', shortLabel: 'Prepare', role: 'code', topicId: 'concept-20', x: 218, y: 52, w: 158, h: 68, mobileOrder: 2 },
+    { id: 'cache', label: 'Provider prefix cache', shortLabel: 'Prefix cache', role: 'data', topicId: 'concept-20', x: 408, y: 18, w: 168, h: 56, mobileOrder: 3, optional: true },
+    { id: 'user', label: 'User Query', shortLabel: 'Query', role: 'human', topicId: 'lab-7', x: 28, y: 198, w: 148, h: 64, mobileOrder: 4 },
+    { id: 'harness', label: 'Harness', shortLabel: 'Harness', role: 'code', topicId: 'concept-04', x: 218, y: 198, w: 158, h: 68, mobileOrder: 5 },
+    { id: 'llm', label: 'LLM', shortLabel: 'LLM', role: 'llm', topicId: 'concept-14', x: 408, y: 198, w: 118, h: 68, mobileOrder: 6 },
+    { id: 'out', label: 'Answer', shortLabel: 'Answer', role: 'outcome', topicId: 'lab-8', x: 558, y: 198, w: 140, h: 64, mobileOrder: 7 },
+  ],
+  edges: [
+    { id: 'e-kb-prep', from: 'kb', to: 'prep', label: 'rules', fromPort: 'right', toPort: 'left' },
+    {
+      id: 'e-prep-cache',
+      from: 'prep',
+      to: 'cache',
+      label: 'prefix hash',
+      optional: true,
+      fromPort: 'top',
+      toPort: 'left',
+      waypoints: [{ x: 297, y: 28 }],
+    },
+    {
+      id: 'e-prep-harness',
+      from: 'prep',
+      to: 'harness',
+      label: 'prepared block',
+      fromPort: 'bottom',
+      toPort: 'top',
+    },
+    { id: 'e-user-harness', from: 'user', to: 'harness', label: 'task', fromPort: 'right', toPort: 'left' },
+    { id: 'e-harness-llm', from: 'harness', to: 'llm', label: 'messages', fromPort: 'right', toPort: 'left' },
+    { id: 'e-llm-out', from: 'llm', to: 'out', label: 'draft', fromPort: 'right', toPort: 'left' },
+  ],
+  steps: [
+    {
+      id: 'c1',
+      title: 'Стабільні правила QA',
+      activeNodes: ['kb'],
+      activeEdges: ['e-kb-prep'],
+      markerEdgeId: 'e-kb-prep',
+      panel: {
+        problem:
+          'Regression agent має щоразу дотримуватись одного формату bug report і однакових правил severity — без пошуку по Confluence на кожен run.',
+        what:
+          'Команда підтримує невеликий версійований пакет: шаблон полів bug report, матриця severity, заборонені формулювання в summary.',
+        who: 'Людина (QA lead / platform): оновлює markdown або JSON у репозиторії; LLM цей крок не виконує.',
+        input:
+          'Навчальний приклад (не запуск):\nqa-rules-pack v3.2\n· bug_report.fields = [title, steps, expected, actual, severity]\n· severity.matrix = P0..P3',
+        output: 'Зафіксований артефакт «stable knowledge» з версією та checksum.',
+        recipient: 'Наступний крок — TypeScript prepare (ще без HTTP до моделі).',
+        why: 'Без цього кожен run залежав би від випадкового промпту в Jira-коментарі.',
+        systemChange:
+          'У системі з’явився канонічний джерельний файл правил; run ще не стартував, запиту до LLM не було.',
+        risks: 'Правила застаріли, але версію в harness не підняли — агент форматує «по-старому».',
+        qaAgent: 'Пакет «regression-bug-format» лежить у git; CI перевіряє, що harness посилається на v3.2.',
+      },
+    },
+    {
+      id: 'c2',
+      title: 'Підготовка context block',
+      activeNodes: ['kb', 'prep'],
+      activeEdges: ['e-kb-prep', 'e-prep-harness'],
+      markerEdgeId: 'e-prep-harness',
+      panel: {
+        problem: 'Сирий файл правил не можна кидати в API як є — потрібен нормалізований system/developer блок фіксованого вигляду.',
+        what: 'Build step або init harness читає knowledge pack, валідує схему, збирає один prepared context block (текст або structured messages).',
+        who: 'TypeScript (CI build або harness init); не LLM.',
+        input:
+          'qa-rules-pack v3.2 + policy «include severity examples»\n→ parse markdown sections',
+        output: 'preparedBlockId=regression-rules-v3.2 (≈4–8k tokens навчальний порядок)',
+        recipient: 'Зберігається в harness / artifact store до приходу user query.',
+        why: 'Context-Augmented: стабільне вже підготовлено, retrieval на цьому шляху не обов’язковий.',
+        systemChange: 'У runtime лежить готовий prefix; користувач ще не поставив задачу investigation.',
+        risks: 'Дубль правил у system і developer; block перевищує ліміт токенів провайдера.',
+        qaAgent: 'При старті run harness логує preparedBlockId у trace — відтворюваність.',
+      },
+    },
+    {
+      id: 'c3',
+      title: 'Опційно: prefix cache провайдера',
+      activeNodes: ['prep', 'cache'],
+      activeEdges: ['e-prep-cache'],
+      markerEdgeId: 'e-prep-cache',
+      panel: {
+        problem: 'Один і той самий великий prefix на кожен запит коштує часу й грошей — якщо провайдер підтримує кешування input.',
+        what:
+          'Harness надсилає prepared block як стабільний prefix; провайдер може зберегти його KV/state і на наступних запитах рахувати лише нову частину (user task). Це близько до Cache-Augmented Generation у книзі, не до визначення CAG курсу.',
+        who: 'API провайдер + конфіг harness (cache key, TTL); не людина й не LLM.',
+        input: 'prefix hash + preparedBlockId (той самий текст, що в кроці 2)',
+        output: 'cache_hit=true на input tokens (навчальний статус; залежить від провайдера)',
+        recipient: 'Наступний HTTP call harness → LLM використовує кешований prefix + новий user turn.',
+        why: 'Економія latency/cost; не замінює підготовку context — лише повторне використання вже зібраного prefix.',
+        systemChange: 'У провайдера (або на стороні SDK) з’явився запис кешу; зміст правил не змінився.',
+        risks: 'Плутати з CAG курсу; кеш інвалідовано після оновлення rules, але harness ще шле старий hash; TTL вичерпано.',
+        qaAgent: 'Вимірюйте cache hit rate окремо від «чи правильний bug format» — це інша метрика.',
+      },
+    },
+    {
+      id: 'c4',
+      title: 'Запит + збір messages',
+      activeNodes: ['user', 'harness', 'prep'],
+      activeEdges: ['e-user-harness', 'e-prep-harness', 'e-harness-llm'],
+      markerEdgeId: 'e-harness-llm',
+      panel: {
+        problem: 'Потрібно поєднати стабільні правила з конкретним падінням тесту в один коректний messages[].',
+        what: 'Harness додає user turn із CI failure summary до вже підготовленого block (і опційно використовує prefix cache).',
+        who: 'TypeScript harness (context builder).',
+        input:
+          'preparedBlockId=regression-rules-v3.2\n+ user: «Investigate login_test failed on staging, trace id abc»',
+        output: 'messages[] → model API (system/developer з rules + user task)',
+        recipient: 'LLM API endpoint.',
+        why: 'Динаміка лише в задачі; стабільне не re-retrieve з vector DB.',
+        systemChange: 'Створено повний prompt для одного run; модель ще не відповіла.',
+        risks: 'У user task випадково PII; порядок messages змішує tenant A/B.',
+        qaAgent: 'Той самий prepared block + новий failure log → новий run_id, той самий format policy.',
+      },
+    },
+    {
+      id: 'c5',
+      title: 'Генерація відповіді',
+      activeNodes: ['llm', 'out'],
+      activeEdges: ['e-harness-llm', 'e-llm-out'],
+      markerEdgeId: 'e-llm-out',
+      panel: {
+        problem: 'Потрібен структурований draft bug report, узгоджений з правилами з context.',
+        what: 'LLM читає messages і генерує текст/JSON відповіді; harness потім може валідувати schema.',
+        who: 'LLM (інференс); валідація — знову TypeScript.',
+        input: 'messages[] з кроку 4',
+        output:
+          'Навчальний приклад:\n{ "title": "Login failure staging", "severity": "P1", "steps": [...] }',
+        recipient: 'Harness → Jira tool (окремий крок tool calling) або людині на review.',
+        why: 'Модель застосовує підготовлені правила до конкретного failure.',
+        systemChange: 'У run з’явився draft відповіді; issue в Jira ще не створено, якщо tool не викликано.',
+        risks: 'Модель ігнорує severity matrix; hallucination steps — потрібен schema check.',
+        qaAgent: 'Golden run: той самий rules pack + фіксований failure → очікувані поля в JSON.',
+      },
+    },
+  ],
+  optionalToggleLabel: 'Prefix cache (книга: Cache-Augmented)',
+  optionalToggleHint:
+    'Увімкнено: на схемі з’являється вузол Provider prefix cache і стрілка prepared block → cache. Це показує, де провайдер може повторно використати той самий prefix (KV / prompt cache). Вимкнено: лишається лише CAG курсу — підготовка context без припущення про кеш API. Жоден підготовлений context сам по собі не стає кешем.',
+};

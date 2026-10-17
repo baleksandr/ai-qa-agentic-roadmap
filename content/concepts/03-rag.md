@@ -1,130 +1,234 @@
 # Concept 03 — RAG
 
-> **migrationStatus (з DOCX):** `partial`  
-> **Джерело:** PART II — Concept 3 (pdf)  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
+> **migrationStatus:** `partial` — Study Mode: 8 розділів, самодостатній текст.
 
 ## Review Mode
 
-RAG: зовнішній retrieval pipeline знаходить релевантні знання і додає їх як context перед model call. LLM сама Vector DB не шукає. Concept 2 — Orchestration ↓ [Concept 3 — RAG] <-- ЗАРАЗ ВИВЧАЄМО ↓ Concept 4 — Agent Harness
+**Проблема:** модель не бачить ваш Confluence, postmortem і закриті інциденти, поки ви явно не передасте текст у запит; покласти «всю wiki» в prompt — дорого й шумно.
+
+**Ідея RAG** (retrieval-augmented generation): спочатку **код** знаходить невеликі релевантні **фрагменти** в підготовленому сховищі, додає їх у prompt, потім **generative LLM** відповідає з опорою на ці уривки.
+
+**Дві фази:** (1) **offline** — документи → parse → chunks → індекс; (2) **runtime** — query → retriever → (опційно rerank) → context builder → LLM. Пошук, ACL і збір `messages[]` — завжди код; модель не «ходить у базу» сама.
+
+**Для QA:** перевіряйте trace (які chunk_id реально в prompt), groundedness і поточні докази (DOM, trace CI) — відповідь моделі це гіпотеза, не факт.
 
 ## Study Mode
 
-Concept 3. RAG — Retrieval-Augmented Generation
-### QUICK VIEW — RAG: зовнішній retrieval pipeline знаходить релевантні знання і додає їх як context
-перед model call. LLM сама Vector DB не шукає.
-Concept 2 — Orchestration
-↓
-[Concept 3 — RAG] <-- ЗАРАЗ ВИВЧАЄМО
-↓
-Concept 4 — Agent Harness
-### 0. Яку проблему ми взагалі намагаємося вирішити?
-LLM не має автоматичного доступу до твоєї внутрішньої документації, а її training knowledge може бути
-застарілим. Просто додавати 5 000 сторінок документації у prompt дорого, повільно і може перевищити
-context window.
-Потрібен механізм: знайти тільки релевантні шматки знань і передати їх моделі перед генерацією.
-500-page documentation
-↓
-User asks one question
-↓
-Не хочемо надсилати всі 500 сторінок
-↓
-Потрібно знайти тільки релевантні фрагменти
-### 1. Головна ідея простими словами
-Ключова думка
-RAG (Retrieval-Augmented Generation — генерація з доповненням через пошук) складається з двох фаз:
-indexing та retrieval/runtime. Модель не виконує пошук сама; звичайний application code готує
-зовнішній контекст.
-### 2. З яких компонентів це складається?
-• Document loader/parser
-• Chunker
-• Embedding model
-• Vector database/index
-• Retriever
-• Metadata filters
-• Reranker
-• Context builder
-• Generation LLM
-### 3. Що фізично передається між компонентами?
-Document text → chunks → embedding vectors (масиви чисел) + metadata. User question → query vector.
-Retriever повертає chunk IDs/text + similarity scores. Context builder формує текстовий context для LLM.
+### Навіщо потрібен RAG?
 
-### 4. Що відбувається під капотом — крок за кроком
-### 19. 1) Loader читає PDF/HTML/Confluence і дістає текст.
-### 20. 2) Chunker ріже текст на фрагменти керованого розміру.
-### 21. 3) Embedding model перетворює кожен chunk у vector [0.12, -0.73, ...].
-### 22. 4) Vector DB зберігає vector + reference на original text + metadata.
-### 23. 5) Під час question application створює embedding самого question.
-### 24. 6) Vector DB порівнює query vector зі stored vectors і повертає Top-K близьких результатів.
-### 25. 7) За потреби reranker переставляє кандидатів за релевантністю.
-### 26. 8) Context builder бере original chunk text і вставляє його у model input.
-### 27. 9) LLM бачить user question + retrieved text і генерує відповідь.
-### 5. Де тут LLM, а де звичайний deterministic code?
-LLM відповідає за probabilistic interpretation/decision/generation там, де потрібне розуміння природної
-мови або вибір наступної дії. Усе, що стосується реального I/O, зберігання, permissions, network calls,
-retries, schema validation, queues, databases і policy enforcement, виконується звичайним програмним
-кодом та інфраструктурою. Межа між цими двома світами — одна з найважливіших mental models у
-всьому курсі.
-### 6. Повний простий приклад
-**Питання: "Як у нашому framework працює authentication fixture?" Retriever знаходить chunks із**
-документації про auth fixture, а не весь repo wiki. LLM відповідає на основі цих фрагментів і може додати
-source references.
-### 7. Де це може впасти? — failure modes
-• Поганий chunking
-• Embedding не відображає domain vocabulary
-• Top-K не містить правильний chunk
-• Stale index
-• Reranker відкинув корисний документ
-• LLM hallucination попри правильний context
-### 8. Security — що важливо захистити?
-• ACL-aware retrieval
-• Не індексувати secrets
-• Tenant filters
-• Source-level permissions
-• Prompt injection у retrieved document
-### 9. Як це тестувати як QA/SDET?
-• Golden queries + expected relevant chunks
-• Recall@K / Precision@K
-• Groundedness
-• Citation correctness
-• Freshness after document update
-• Permission filters
+Велика мовна модель добре продовжує текст і пояснює загальні речі, але вона **не підключена** до вашого Confluence, внутрішнього git, postmortem чи закритих інцидентів. Усе, що сталося в компанії після дати навчання моделі, або ніколи не було публічним, для неї **невидиме**, поки ви явно не передасте текст у поточний запит.
 
-• Adversarial injected document
-### 10. Observability — що потрібно бачити в production?
-Логувати query, retrieval latency, selected chunk IDs, similarity scores, reranker scores, token count context,
-generation latency, citation mapping.
-### 11. Production considerations
-У production важливо думати не лише про happy path, а про versioning, backward compatibility, latency,
-cost, retries, idempotency, rate limits, concurrency, degradation/fallback, data retention, deployment,
-monitoring і incident response. Конкретна вага цих факторів залежить від цієї концепції, але production-
-система завжди повинна мати контрольовану поведінку при часткових збоях.
-### 12. Як ця концепція пов’язана з іншими?
-Ця концепція не існує ізольовано. Попередній логічний крок: Concept 2 — Orchestration. Наступний:
-Concept 4 — Agent Harness. Під час навчання завжди повертайся до глобальної карти: модель, harness,
-state/memory, tools/MCP, RAG, A2A, guardrails, evals та observability — це шари однієї системи.
-### 13. Коротка відповідь на співбесіді
-**Interview answer**
-RAG retrieves relevant external knowledge before generation. The retrieval pipeline — parsing, chunking,
-embeddings, vector search and context assembly — is ordinary application infrastructure; the LLM only
-receives the selected context and generates the answer.
-### 14. “АААА, ось воно як!” — що треба запам’ятати
-Не зубри визначення. Спробуй без документа намалювати flow від входу до виходу і для кожної стрілки
-відповісти: хто це виконує, що саме передається, де зберігається state, де працює LLM, а де звичайний
-код. Якщо можеш це відновити — концепція реально засвоєна.
+Уявіть типову ситуацію в QA. На staging впав автотест `login_spec`: таймаут на кнопці входу, у логах CI — `Timeout 30000ms exceeded`. Ви питаєте модель без додаткових даних: *«Чому в нас знову падає login на staging і що ми вже робили в минулому?»* Відповідь може звучати переконливо, але бути **вигаданою**: «перевірте мережу», хоча в минулому інциденті вже фіксували зламаний селектор після редизайну. Модель не «бреше навмисно» — у неї немає вашого розслідування в контексті цього запиту.
 
-### QA-приклад
+Якщо натомість покласти в prompt увесь wiki і всі логи, ви впретесь у **ліміт контексту**, заплатите зайве за токени і заплутаєте модель шумом. Потрібен компроміс: **не вся база**, а **доречні уривки** під конкретне питання.
 
-Див. відповідний підрозділ «повний приклад» у Study Mode (якщо є в джерелі).
+**RAG** — **R**etrieval-**A**ugmented **G**eneration. Три складові одного механізму:
 
-### Failure modes / security / testing / observability / production
+| Складова | Що означає |
+|----------|------------|
+| **retrieval** | Знайти фрагменти в підготовленому сховищі |
+| **augment** | Додати їх у prompt разом із запитом |
+| **generation** | Відповідь моделі з опорою на цей контекст |
 
-Див. розділи failure / security / testing / observability / production у Study Mode.
+На практиці це дві фази:
 
-### Запитання для самоперевірки
+| Фаза | Коли | Навіщо |
+|------|------|--------|
+| **Підготовка знань** (offline) | При оновленні документів | Зробити з великих файлів те, по чому **швидко шукати** |
+| **Запит** (runtime) | Кожен run investigation | Підібрати **малий** релевантний шар і передати в LLM |
 
-Відновіть flow без документа (див. блок «АААА» або hands-on у джерелі).
+| Твердження | Пояснення |
+|------------|-----------|
+| **Модель не ходить у базу сама** | Пошук, ACL і збір `messages[]` виконує код застосунку |
+| **Vector database** | Поширений, але **не обов’язковий** спосіб retrieval |
+| **Інші варіанти індексу** | Той самий принцип: BM25, hybrid search, індекс по метаданих |
 
-### Коротка відповідь для співбесіди
+### Як RAG працює в одному запиті?
 
-Див. **Interview answer** у Study Mode.
+Пройдемо **одну** історію **QA Regression Investigation Agent** після падіння `login_spec`. Назви тікетів і тексти фрагментів **умовні** (навчальний приклад).
+
+**Головна історія (один run).** Тест упав. Код шукає схожі минулі інциденти. Із знайденого залишає тільки те, що дозволено показати цьому запуску та корисно для питання. Вибрані уривки передає моделі. Модель пропонує можливу причину. QA перевіряє її на поточних доказах.
+
+**Передумова run (offline, не крок історії).** До початку: incident notes уже в пошуковому індексі `index-v12` (див. «Як підготувати документи для пошуку»).
+
+Після падіння `login_spec` harness (код) формує текст пошуку й metadata-фільтри з перевіреної ідентичності CI. Пошук можна **додатково** обмежити «останніми 90 днями», якщо реалізація підтримує фільтр за **датою інциденту** в metadata — у навчальному прикладі нижче показані лише фільтри, які входять у сценарій.
+
+```text
+login timeout staging #login-btn similar incidents
+Filters: tenant=acme, env=staging, service=auth
+```
+
+У дозволених результатах пошуку для tenant acme з’являються умовно INC-442 і INC-318. У **цьому** проході до LLM передають лише фрагмент INC-442; INC-318 залишається поза prompt. LLM формує гіпотезу з посиланням на INC-442 — це **гіпотеза**, поки QA не звірив DOM, Playwright trace і логи CI.
+
+```text
+chunk_id=chk-442-a  source_id=INC-442  score=0.81
+"... селектор #login-btn змінився на data-test=login-submit; тест чекав старий id ..."
+
+chunk_id=chk-318-b  source_id=INC-318  score=0.74
+"... схожий симптом, інший root cause (CDN cache) ..."
+```
+
+#### Послідовність кроків одного запиту
+
+**Крок 1.** Тест упав: CI і harness отримують повідомлення Playwright і trace.
+
+**Крок 2.** Код шукає схожі документи за симптомом (retrieval query і фільтри).
+
+**Крок 3.** Код відбирає, що можна показати (один набір даних у трьох станах):
+
+| Стан | У цьому прикладі |
+|------|------------------|
+| Знайдено пошуком | INC-442, INC-318 |
+| Дозволено run | INC-442, INC-318 |
+| Передано LLM | Лише INC-442 |
+
+**Крок 4.** Вибраний уривок (Retrieved context — **зовнішній документ**, не system policy) і опис падіння передають моделі.
+
+**Крок 5.** LLM висуває гіпотезу (не доведена причина сьогодні).
+
+**Крок 6.** Три перевірки (технічна → змістовна → поточний збій); QA: підтверджена, спростована або доказів недостатньо.
+
+**Два ризики для QA.**
+
+| Ризик | Суть |
+|-------|------|
+| **1. Чужий tenant** | Документ іншого tenant не потрапляє в те, що передали моделі |
+| **2. Хибна теза з правильним INC** | Посилання на INC-442 не робить тезу правильною, якщо її немає в тексті фрагмента або вона не пояснює **сьогоднішнє** падіння |
+
+### Як підготувати документи для пошуку?
+
+Поки користувач не поставив питання, система робить важку роботу окремо від run.
+
+| Етап offline | Що відбувається |
+|--------------|-----------------|
+| **Звідки беруться документи** | Confluence, PDF postmortem, інциденти, runbook — джерела, які ви **дозволили** індексувати; loader витягує текст і метадані (дата, сервіс, середовище) |
+| **Parse і chunk** | Великий документ ріжуть на **chunks** (інколи з перекриттям або за заголовками); поганий chunking — головна причина «retrieval є, а відповідь порожня» |
+| **Індексація** | Embedding у vector index, BM25 або **hybrid**; у store — vector + текст + metadata (**пам’ять** RAG-додатку, не пам’ять LLM) |
+| **Версії** | Rebuild має версію (`index-v12`); застарілий індекс дає «правильні» відповіді з неправильного минулого |
+
+Типові компоненти pipeline (назви в проді різняться): document loader, chunker, embedding model, index, retriever, metadata filters, reranker (опційно), context builder, generation LLM.
+
+```text
+Offline (навчальний потік):
+Documents → Parse → Chunks → [embed / index] → Searchable store
+                                      ↑
+                              версія, ACL, tenant
+```
+
+### Де код, а де LLM?
+
+| Дія | Хто виконує |
+|-----|-------------|
+| Читання файлів, cron індексації, chunking | Код (pipeline) |
+| Пошук, фільтри tenant/env, перевірка ACL | Код (retriever) |
+| Rerank (якщо є): виклик у pipeline, token budget, відбір у context | Код (harness / context builder); **оцінка та перестановка** hits — часто окрема cross-encoder або rerank-модель (ймовірнісно, не детерміновано) |
+| Збір `messages[]`, формат evidence | Код (context builder) |
+| Інтерпретація мови, синтез відповіді | **LLM** (generative) |
+
+| Межа | Пояснення |
+|------|-----------|
+| **LLM і wiki** | Не отримує credentials; **не** гарантує валідність citation — це політики й валідація після генерації |
+| **Mental model курсу** | Детермінований код vs ймовірнісна модель: знайшов **retriever**, не «модель зчитала базу» |
+
+Узагальнений ланцюг даних:
+
+```text
+Документ → chunks[{ id, text, metadata }] → (опційно) vectors у index
+Запит → retriever → hits[{ chunk_id, text, score, source_id }]
+Context builder → evidence + user message → API моделі → відповідь
+```
+
+**Приклад зібраного prompt (фрагмент, навчальний):**
+
+```text
+[System]
+Використовуй лише retrieved context для фактів про минулі інциденти.
+
+[Retrieved context]
+--- INC-442 ---
+... #login-btn → data-test=login-submit ...
+
+[User]
+login_spec failed staging, timeout #login-btn, trace ci-8842
+```
+
+### Де RAG може помилитися?
+
+#### Не знайшли потрібний документ
+
+Правильний postmortem є в wiki, але chunk в іншому індексі, query занадто вузький, або embedding «не бачить» доменні терміни (`#login-btn` vs «кнопка входу»). Симптом: «немає даних» або галюцинація без стоп-правила.
+
+#### Застарілий індекс
+
+UI змінили, reindex не зробили. Retrieval «успішний», відповідь веде до старого селектора.
+
+#### Порушення доступу
+
+Confidential chunk у hits через помилку ACL на індексації або фільтрації — security incident, не «погана модель».
+
+#### Неправильне використання фрагмента
+
+Два схожих інциденти в context — LLM змішує root cause або плутає `source_id` у citation. Потрібні groundedness-перевірки й trace з `chunk_id`.
+
+#### Ін’єкція в документ
+
+У wiki з’явився текст «ігноруй інструкції». Chunk потрапив у retrieval — **prompt injection через RAG**. Захист: санітизація джерел, жорсткі system/developer ролі, моніторинг документів.
+
+#### Технічний збій
+
+Таймаут retriever, порожній index після deploy, обрізання evidence посередині речення.
+
+#### Безпека на рівні політики
+
+- ACL-aware retrieval на індексації і на кожному запиті (tenant, role, project).
+- Не індексувати secrets (токени, `.env`, паролі в логах).
+- Audit: який `source_id` потрапив у який run.
+- Ліміт об’єму retrieved text, щоб не витягнути весь архів у один prompt.
+
+### Як QA це тестує?
+
+| Перевірка | Що робимо |
+|-----------|-----------|
+| **Індексація** | Після оновлення документа тестовий query повертає новий chunk; версія індексу в deploy-логах збігається з очікуваною |
+| **Retrieval без LLM** | Golden queries: фіксований запит → очікуваний набір `chunk_id` (recall@k); precision/recall на контрольному наборі |
+| **Ізоляція tenant** | Context builder не підмішує дані tenant B у run tenant A (mock LLM) |
+| **Права** | Негативні тести: роль без доступу не бачить confidential chunk |
+| **Adversarial document** | Штучний chunk з ін’єкцією не ламає політику агента |
+| **Trace run** | Query, retrieval latency, `chunk_id` + scores, розмір context, generation latency, mapping citation → chunk |
+
+**Groundedness і citations** — три окремі перевірки (A не замінює B і C):
+
+| Код | Зміст |
+|-----|-------|
+| **A** | Кожен `source_id` у відповіді ∈ **selected evidence**, переданого моделі в цьому run |
+| **B** | Твердження випливає з тексту відповідного chunk; правильний `source_id` біля хибної тези не проходить B |
+| **C** | Причину **поточного** падіння підтверджують DOM, Playwright trace, логи CI; схожий INC-318 не доводить INC-442 як root cause сьогодні |
+
+### Що потрібно для production?
+
+Логують і метрики **обох** фаз: індексація (час, розмір corpus, помилки embed); runtime (`retrieval_latency`, hits, token evidence, `generation_latency`, відсоток відповідей без citation).
+
+| Тема production | Пояснення |
+|-----------------|-----------|
+| **Свіжість індексу** | Процес reindex і версіонування |
+| **Поведінка при збої пошуку** | Явне рішення: зупинити run, деградувати без RAG з попередженням, retry з backoff — не дефолт моделі |
+| **Ліміти** | Rate limits embed API, idempotent reindex, обмеження розміру evidence |
+| **Моніторинг** | Spike latency retrieval, drop recall на golden set після deploy |
+| **Інженерія навколо RAG** | Retry, versioning, incident response — частина застосунку, не «магія LLM» |
+
+### Запам’ятати та співбесіда
+
+| Теза | Коротко |
+|------|---------|
+| **RAG** | Спочатку **знайти**, потім **додати в prompt**, потім **згенерувати** |
+| **Код vs LLM** | Пошук, ACL і збір контексту — **код**; відповідь природною мовою — **LLM** |
+| **Vector DB** | **Варіант** індексу, не визначення RAG |
+| **Retrieval ≠ правда** | Успішний пошук не гарантує правильну відповідь — перевіряйте citations, свіжість індексу й права |
+
+Нижче — інтерактивний блок **«Перевір себе перед співбесідою»** (10 запитань, цільні відповіді UK/EN, посилання «Що вивчити далі»).
+
+:::study-sources
+- *AI Engineering*, 2025 Edition (Pachaar & Chawla) — RAG: «What is RAG?», друк. с. 106; «Workflow of a RAG system», друк. с. 113–115.
+- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 3 — компоненти, failure modes, testing, observability (архів курсу).
+- Навчальний сценарій: QA Regression Investigation Agent, умовні `INC-*`, `login_spec` — для закріплення механізму.
+:::study-sources-end

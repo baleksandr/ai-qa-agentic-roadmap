@@ -43,12 +43,13 @@ policies, budgets і approvals.
 ### 3. Що фізично передається між компонентами?
 Proposed action + arguments → policy decision allow/deny/approve; sanitized input/output.
 ### 4. Що відбувається під капотом — крок за кроком
-### 114. 1) User/retrieved content проходить input checks.
-### 115. 2) Model генерує response/tool call.
-### 116. 3) Structured validator перевіряє schema.
-### 117. 4) Policy engine перевіряє actor/tool/resource/action.
-### 118. 5) Risky action може чекати human approval.
-### 119. 6) Executor запускається лише після allow.
+
+1. User/retrieved content проходить input checks.
+2. Model генерує response/tool call.
+3. Structured validator перевіряє schema.
+4. Policy engine перевіряє actor/tool/resource/action.
+5. Risky action може чекати human approval.
+6. Executor запускається лише після allow.
 
 ### 5. Де тут LLM, а де звичайний deterministic code?
 LLM відповідає за probabilistic interpretation/decision/generation там, де потрібне розуміння природної
@@ -57,8 +58,8 @@ retries, schema validation, queues, databases і policy enforcement, викон�
 кодом та інфраструктурою. Межа між цими двома світами — одна з найважливіших mental models у
 всьому курсі.
 ### 6. Повний простий приклад
-Agent може read production logs, але production DB write заборонено; create Jira bug вимагає approval;
-delete Jira issue відсутній у tool registry.
+Агент може читати production-логи. Запис у production БД заборонено. Створення bug у Jira потребує human approval.
+Видалення issue у Jira відсутнє в tool registry — такого інструменту в harness немає.
 ### 7. Де це може впасти? — failure modes
 • Policy too permissive
 • Guardrail bypass via indirect prompt injection
@@ -93,6 +94,8 @@ validation, sandboxing and approval must be enforced by trusted application code
 Не зубри визначення. Спробуй без документа намалювати flow від входу до виходу і для кожної стрілки
 відповісти: хто це виконує, що саме передається, де зберігається state, де працює LLM, а де звичайний
 код. Якщо можеш це відновити — концепція реально засвоєна.
+
+Нижче — інтерактивний блок співбесіди (10 питань).
 
 ### QA-приклад
 

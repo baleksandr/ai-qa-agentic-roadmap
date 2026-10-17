@@ -21,7 +21,8 @@ export function CompactProgress() {
         <div className="compact-progress-fill" style={{ width: `${pct}%` }} />
       </div>
       <p className="compact-progress-text">
-        <strong>{studied}</strong> з {total} тем вивчено
+        <strong>{studied}</strong> з {total} навчальних тем вивчено
+        <span className="muted"> · без довідника</span>
         {inProgress > 0 && (
           <span className="muted"> · {inProgress} у процесі</span>
         )}

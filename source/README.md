@@ -1,4 +1,6 @@
-# Джерело курсу (DOCX)
+# Джерело курсу (DOCX / PDF)
+
+**Локально (не в git):** `AI.pdf` — *AI Engineering*, 2025 Edition (Pachaar & Chawla). Використовується для звірки визначень; інвентар: `docs/AI_ENGINEERING_SOURCE_INVENTORY.md`.
 
 Покладіть сюди оригінальний файл **без змін** (DOCX або PDF з тим самим іменем):
 

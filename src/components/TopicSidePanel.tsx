@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getMapLabel } from '../data/learning-map.registry';
+import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import type { TopicMeta } from '../types/topic';
 import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
@@ -33,7 +34,13 @@ export function TopicSidePanel({ topic, onClose }: Props) {
         <p className="muted small">Review Mode</p>
         <div className="topic-badges">
           <span className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</span>
-          {(topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated') && (
+          {isStudyReadyForLearning(topic.id) && (
+            <span className="badge migration-migrated" title="Study Mode готовий для навчання">
+              Готово для навчання
+            </span>
+          )}
+          {!isStudyReadyForLearning(topic.id) &&
+            (topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated') && (
             <span
               className={`badge migration-${topic.migrationStatus}`}
               title="Частина матеріалу ще звіряється з оригіналом курсу"

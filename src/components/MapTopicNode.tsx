@@ -1,8 +1,9 @@
 import { TOPIC_BY_ID } from '../data/topics.registry';
 import { getMapHint, getMapLabel } from '../data/learning-map.registry';
+import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import type { TopicMeta } from '../types/topic';
-import { LEARNING_LABELS } from '../types/topic';
 import { useProgress } from '../hooks/useProgress';
+import { MapLearningStatus } from './MapLearningStatus';
 
 interface Props {
   topicId: string;
@@ -20,26 +21,23 @@ export function MapTopicNode({ topicId, labSublabel, selected, highlighted, onSe
   const learning = getProgress(topicId);
   const label = getMapLabel(topicId);
   const hint = getMapHint(topicId);
-  const needsContentWarning =
-    topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated';
+  const studyReady = isStudyReadyForLearning(topicId);
 
   return (
     <button
       type="button"
       id={`map-node-${topicId}`}
-      className={`map-node progress-${learning} ${selected ? 'selected' : ''} ${highlighted ? 'highlight' : ''}`}
+      className={`map-node progress-${learning} ${studyReady ? 'is-study-ready' : ''} ${selected ? 'is-selected' : ''} ${highlighted ? 'is-highlighted' : ''}`}
       onClick={() => onSelect(topic)}
       aria-pressed={selected}
       aria-describedby={hint ? `map-hint-${topicId}` : undefined}
       title={hint}
     >
+      <MapLearningStatus status={learning} />
       <span className="map-node-label">{label}</span>
       {labSublabel && <span className="map-node-sublabel">{labSublabel}</span>}
-      <span className={`map-node-status badge progress-${learning}`}>{LEARNING_LABELS[learning]}</span>
-      {needsContentWarning && (
-        <span className="map-node-warn" title="Урок ще не повністю перенесений з джерела">
-          !
-        </span>
+      {studyReady && (
+        <span className="map-node-ready-line">Повний урок готовий для навчання</span>
       )}
       {hint && (
         <span id={`map-hint-${topicId}`} className="sr-only">
