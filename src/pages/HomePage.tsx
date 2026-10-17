@@ -48,10 +48,6 @@ export function HomePage() {
               <strong>20 концепцій</strong> агентного ШІ — повний розділ PART II V10, згруповані на карті за логікою
               навчання (не окремі «короткі картки» з огляду курсу).
             </p>
-            <p className="home-map-framing-note muted">
-              <span className="home-map-framing-ready-legend" aria-hidden="true">✓</span>
-              RAG і Tool Calling — повні уроки готові для навчання.
-            </p>
           </article>
           <article className="home-map-framing-card home-map-framing-card--practice">
             <p className="home-map-framing-kicker">Практика</p>
