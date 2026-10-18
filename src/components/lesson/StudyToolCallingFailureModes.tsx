@@ -1,70 +1,29 @@
-import { useMemo, useState } from 'react';
-import { TOOL_CALLING_FAILURE_DETAILS } from '../../data/study/tool-calling-failure-details';
-import { StudyPipelineStepNav } from './StudyPipelineStepNav';
-import { StudyStepDetailLayout } from './StudyStepDetailLayout';
-import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
-import { parseLessonBold } from './lessonRichText';
+import { StudyTeachingCardsSection } from './StudyTeachingCardsSection';
+import {
+  TOOL_CALLING_FAILURE_BUNDLE,
+  TOOL_CALLING_FAILURE_INTRO_UK,
+} from '../../data/study/tool-calling-study-bundles';
+import { StudyLearnerExplanationBlocks } from './StudyLearnerExplanationBlocks';
 
-type Props = {
-  introUk?: string;
-};
+const TC_FAILURE_HINT_UK =
+  'Натисніть картку збою, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.';
 
-export function StudyToolCallingFailureModes({ introUk }: Props) {
-  const [activeId, setActiveId] = useState(TOOL_CALLING_FAILURE_DETAILS[0]?.id ?? '');
-  const active = TOOL_CALLING_FAILURE_DETAILS.find((f) => f.id === activeId) ?? TOOL_CALLING_FAILURE_DETAILS[0];
-
-  const navItems = useMemo(
-    () =>
-      TOOL_CALLING_FAILURE_DETAILS.map((f) => ({
-        key: f.id,
-        titleUk: f.titleUk,
-        teaserUk: `${f.subtitleUk} · ${f.navTeaserUk}`,
-        badgeUk: f.meta.categoryUk,
-        actorUk: `Збій ${f.meta.index}`,
-      })),
-    [],
-  );
-
+/** §5 «Де може зламатися?» — сім інтерактивних карток із структурованими панелями. */
+export function StudyToolCallingFailureModes() {
   return (
-    <div className="study-rag-failures study-tool-calling-failures study-rag-pipeline-glossary">
-      {introUk?.trim() ? (
-        <p className="study-rag-failures-intro muted">{parseLessonBold(introUk)}</p>
-      ) : null}
-      <p className="study-rag-failures-lead muted small">
-        Сім типових збоїв tool calling (навчальні приклади).
+    <section
+      className="study-tool-calling-failures study-rag-pipeline-glossary study-teaching-cards-layout"
+      aria-label="Де може зламатися tool calling"
+    >
+      <div className="study-rag-story-intro lesson-callout lesson-key-idea">
+        <span className="lesson-callout-label">Сім місць, де виклик інструмента може піти не так</span>
+        <StudyLearnerExplanationBlocks bodyUk={TOOL_CALLING_FAILURE_INTRO_UK} />
+      </div>
+      <p className="study-harness-section-cards-hint study-interaction-hint" role="note">
+        <span className="study-interaction-hint-label">Підказка</span>
+        <span className="study-interaction-hint-text">{TC_FAILURE_HINT_UK}</span>
       </p>
-      <StudyStepDetailLayout
-        navAriaLabel="Збої tool calling"
-        nav={
-          <StudyPipelineStepNav
-            items={navItems}
-            activeKey={activeId}
-            onSelect={(key) => setActiveId(String(key))}
-            ariaLabel="Збої tool calling"
-          />
-        }
-        panel={
-          active ? (
-            <div className={`study-tool-calling-failure-panel severity-${active.meta.severity} ${active.meta.categoryClass}`}>
-              <p className="study-rag-failure-tag study-tool-calling-failure-tag">{active.meta.categoryUk}</p>
-              <h4 className="study-tool-calling-failure-panel-title">
-                {active.meta.index}. {active.titleUk}
-                <span className="study-tool-calling-failure-subtitle"> — {active.subtitleUk}</span>
-              </h4>
-              <dl className="study-failure-details study-tool-calling-failure-details">
-                {active.sections.map((sec) => (
-                  <div key={sec.headingUk} className="study-failure-details-block">
-                    <dt>{sec.headingUk}</dt>
-                    <dd>{parseLessonBold(sec.bodyUk)}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          ) : (
-            <p className="muted small">{STUDY_EMPTY_PANEL_UK}</p>
-          )
-        }
-      />
-    </div>
+      <StudyTeachingCardsSection bundle={TOOL_CALLING_FAILURE_BUNDLE} />
+    </section>
   );
 }

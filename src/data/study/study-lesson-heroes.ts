@@ -5,6 +5,11 @@ export type StudyLessonHeroLetter = {
   uk: string;
 };
 
+export type StudyLessonHeroIntroCard = {
+  titleUk: string;
+  bodyUk: string;
+};
+
 export type StudyLessonHero = {
   topicId: string;
   /** Коротка назва в хедері (RAG, Tool calling) */
@@ -12,9 +17,11 @@ export type StudyLessonHero = {
   /** Повна англ. назва в <abbr> */
   abbrEn: string;
   abbrTitle?: string;
-  /** Після « — » український підзаголовок */
+  /** Підзаголовок під назвою або після abbr */
   taglineUk: string;
   letters: StudyLessonHeroLetter[];
+  /** Замість сітки літер — інформаційні картки на всю ширину (concept-10). */
+  introCards?: StudyLessonHeroIntroCard[];
   /** sr-only для <h1> */
   pageTitleUk: string;
   /** aria-label для ribbon у блоці outcomes */
@@ -96,18 +103,39 @@ const AGENT_HARNESS_HERO: StudyLessonHero = {
   ],
 };
 
+const REASONING_HERO: StudyLessonHero = {
+  topicId: 'concept-12',
+  topicLabel: 'Reasoning — як агент перевіряє свої припущення',
+  abbrEn: '',
+  abbrTitle: 'Reasoning',
+  taglineUk: 'Від повідомлення про збій до висновку, підтвердженого доступними даними',
+  pageTitleUk: 'Reasoning — перевірка припущень у investigation',
+  outcomesFlowAriaLabel: 'Reasoning у розслідуванні login_spec',
+  letters: [],
+};
+
 const TOOL_CALLING_HERO: StudyLessonHero = {
   topicId: 'concept-10',
-  topicLabel: 'Tool calling',
-  abbrEn: 'Structured tool / function calling',
-  abbrTitle: 'LLM tool calling (function calling)',
-  taglineUk: 'пропозиція моделі й виконання в коді',
-  pageTitleUk: 'Tool calling — пропозиція моделі й виконання в коді',
+  topicLabel: 'Tool Calling — виклик інструментів',
+  abbrEn: '',
+  abbrTitle: 'Tool Calling',
+  taglineUk: 'Модель пропонує дію. Код перевіряє її й лише після дозволу запускає інструмент.',
+  pageTitleUk: 'Tool Calling — виклик інструментів',
   outcomesFlowAriaLabel: 'Tool calling у run investigation',
-  letters: [
-    { char: 'T', en: 'Tool schema', uk: 'allow-list операцій і типів args' },
-    { char: 'C', en: 'Call', uk: 'структурований tool_call від LLM' },
-    { char: 'R', en: 'Run', uk: 'handler після policy; I/O не в моделі' },
+  letters: [],
+  introCards: [
+    {
+      titleUk: 'Опис інструмента',
+      bodyUk: 'Код повідомляє моделі, які інструменти доступні та які аргументи вони приймають.',
+    },
+    {
+      titleUk: 'Пропозиція моделі',
+      bodyUk: 'Модель може повернути назву інструмента й аргументи. Це ще не виконання.',
+    },
+    {
+      titleUk: 'Виконання кодом',
+      bodyUk: 'Застосунок перевіряє пропозицію. Після дозволу інструмент повертає дані або помилку.',
+    },
   ],
 };
 
@@ -169,11 +197,7 @@ const HERO_BY_TOPIC: Record<string, StudyLessonHero> = {
     { char: 'L', en: 'Loop', uk: 'execute / replan' },
     { char: 'N', en: 'Next', uk: 'harness валідує крок' },
   ]),
-  'concept-12': partIiHero('concept-12', 'Reasoning', 'Stepwise inference', 'міркування з evidence', 'Reasoning — міркування з facts', 'Reasoning у investigation', [
-    { char: 'R', en: 'Reason', uk: 'гіпотези' },
-    { char: 'E', en: 'Evidence', uk: 'tools/RAG' },
-    { char: 'F', en: 'Fix', uk: 'оновлення після facts' },
-  ]),
+  'concept-12': REASONING_HERO,
   'concept-13': partIiHero('concept-13', 'Fine-tuning', 'Weight adaptation', 'навчання на ваших прикладах', 'Fine-tuning — до навчання ваг', 'Fine-tune vs RAG', [
     { char: 'F', en: 'Fit', uk: 'стиль/формат' },
     { char: 'T', en: 'Train', uk: 'offline job' },

@@ -30,7 +30,7 @@ for (const chunk of chunks) {
 const expected = [
   'Навіщо потрібен tool calling?',
   'Один виклик tool у run investigation',
-  'З чого складається механізм?',
+  'Які дані передаються під час Tool Calling?',
   'Де код, а де LLM?',
   'Де може зламатися?',
   'Як QA це тестує?',
@@ -49,33 +49,54 @@ for (let i = 0; i < expected.length; i++) {
   }
 }
 
-if (study.includes('readPlaywrightReport')) console.log('OK: teaching tool name');
-else {
+const bundlesSrc = readFileSync(join(root, 'src/data/study/tool-calling-study-bundles.ts'), 'utf8');
+if (study.includes('readPlaywrightReport') || bundlesSrc.includes('readPlaywrightReport')) {
+  console.log('OK: teaching tool name');
+} else {
   ok = false;
   console.log('FAIL: missing readPlaywrightReport');
 }
 
-const step1 = 'Harness отримав failure summary з CI (код, не LLM).';
-if (study.includes(step1)) console.log('OK: runtime step 1 in markdown');
+const dataPanels = readFileSync(join(root, 'src/data/study/tool-calling-data-panels.ts'), 'utf8');
+const dataExports = (dataPanels.match(/export const TOOL_CALLING_DATA_/g) ?? []).length;
+if (dataExports === 3) console.log('OK: 3 data-transfer panels in data');
 else {
   ok = false;
-  console.log('FAIL: missing runtime step 1 prose');
+  console.log(`FAIL: expected 3 data panels, found ${dataExports}`);
+}
+if (
+  dataPanels.includes('Що відбувається насправді') &&
+  dataPanels.includes('Два можливі результати') &&
+  !dataPanels.includes('На пальцях')
+) {
+  console.log('OK: data panel section labels');
+} else {
+  ok = false;
+  console.log('FAIL: data panels missing expected section copy');
+}
+if (bundlesSrc.includes('TOOL_CALLING_DATA_TRANSFER_BUNDLE') && bundlesSrc.includes('Опис інструмента')) {
+  console.log('OK: data transfer teaching bundle');
+} else {
+  ok = false;
+  console.log('FAIL: missing TOOL_CALLING_DATA_TRANSFER_BUNDLE');
 }
 
-const failureHeadings = [
-  'Hallucinated tool name',
-  'Invalid arguments',
-  'Wrong tool chosen',
-  'Duplicate side effect',
-  'Huge tool result',
-  'Tool timeout / unavailable',
-  'Permission denied',
-];
-const failCount = failureHeadings.filter((h) => study.includes(`#### ${h}`)).length;
-if (failCount === 7) console.log('OK: 7 failure mode headings in markdown');
+const failPanelsSrc = readFileSync(join(root, 'src/data/study/tool-calling-failure-panels.ts'), 'utf8');
+const failPanelExports = (failPanelsSrc.match(/export const TOOL_CALLING_FAIL_/g) ?? []).length;
+if (failPanelExports === 7) console.log('OK: 7 failure mode panels in data');
 else {
   ok = false;
-  console.log(`FAIL: expected 7 failure headings, found ${failCount}`);
+  console.log(`FAIL: expected 7 failure panels, found ${failPanelExports}`);
+}
+if (
+  bundlesSrc.includes('TOOL_CALLING_FAILURE_BUNDLE') &&
+  failPanelsSrc.includes('Як QA відтворює') &&
+  failPanelsSrc.includes('Невідомий інструмент')
+) {
+  console.log('OK: failure teaching bundle');
+} else {
+  ok = false;
+  console.log('FAIL: missing TOOL_CALLING_FAILURE_BUNDLE or panel copy');
 }
 
 const detailsSrc = readFileSync(join(root, 'src/data/study/tool-calling-failure-details.ts'), 'utf8');
@@ -86,13 +107,19 @@ else {
   console.log(`FAIL: expected 7 failure details, found ${detailBlocks}`);
 }
 
-const llmCodePath = join(root, 'src/data/study/tool-calling-llm-code-flow.ts');
-const llmCodeSrc = readFileSync(llmCodePath, 'utf8');
-const llmSteps = (llmCodeSrc.match(/step:\s*\d/g) ?? []).length;
-if (llmSteps === 6) console.log('OK: 6 LLM/code boundary steps');
+const llmPanelsPath = join(root, 'src/data/study/tool-calling-llm-code-panels.ts');
+const llmPanelsSrc = readFileSync(llmPanelsPath, 'utf8');
+const llmSteps = (llmPanelsSrc.match(/export const TOOL_CALLING_LLM_CODE_STEP_/g) ?? []).length;
+if (llmSteps === 6) console.log('OK: 6 LLM/code boundary step panels');
 else {
   ok = false;
-  console.log(`FAIL: expected 6 LLM/code steps, found ${llmSteps}`);
+  console.log(`FAIL: expected 6 LLM/code step panels, found ${llmSteps}`);
+}
+if (llmPanelsSrc.includes('Хто діє') && llmPanelsSrc.includes('Що перевіряє QA')) {
+  console.log('OK: LLM/code panel section labels');
+} else {
+  ok = false;
+  console.log('FAIL: LLM/code panels missing section labels');
 }
 if (!study.includes('Never trust args')) console.log('OK: no raw Never trust args in markdown');
 else {
@@ -109,18 +136,43 @@ else {
   ok = false;
   console.log(`FAIL: expected 3 QA test levels, found ${qaLevels}`);
 }
-/** Шість категорій матриці перевірок (schema, sandbox, permission, …) — не рахувати level ids */
-const qaCats = (qaSrc.match(/id:\s*'tc-qa-(?!level)/g) ?? []).length;
-if (qaCats === 6) console.log('OK: 6 QA test categories');
+const qaPanelsPath = join(root, 'src/data/study/tool-calling-qa-panels.ts');
+const qaPanelsSrc = readFileSync(qaPanelsPath, 'utf8');
+const qaCats = (qaPanelsSrc.match(/export const TOOL_CALLING_QA_CAT_/g) ?? []).length;
+if (qaCats === 6) console.log('OK: 6 QA category panels');
 else {
   ok = false;
-  console.log(`FAIL: expected 6 QA test categories, found ${qaCats} (exclude tc-qa-level-*)`);
+  console.log(`FAIL: expected 6 QA category panels, found ${qaCats}`);
 }
-if (qaSrc.includes('TOOL_CALLING_QA_GWT_SCENARIOS') && qaSrc.includes('readPlaywrightReport')) {
-  console.log('OK: QA GWT scenarios');
+if (bundlesSrc.includes('TOOL_CALLING_QA_GWT_BUNDLE') && bundlesSrc.includes('Заборонений шлях')) {
+  console.log('OK: QA GWT teaching bundle');
 } else {
   ok = false;
-  console.log('FAIL: missing QA GWT scenarios');
+  console.log('FAIL: missing QA GWT bundle');
+}
+
+const prodPanelsPath = join(root, 'src/data/study/tool-calling-production-panels.ts');
+const prodPanelsSrc = readFileSync(prodPanelsPath, 'utf8');
+const prodExports = (prodPanelsSrc.match(/export const TOOL_CALLING_PROD_/g) ?? []).length;
+if (prodExports === 5) console.log('OK: 4 production panels + trace JSON sample');
+else {
+  ok = false;
+  console.log(`FAIL: expected 5 production exports, found ${prodExports}`);
+}
+if (
+  bundlesSrc.includes('TOOL_CALLING_PRODUCTION_BUNDLE') &&
+  prodPanelsSrc.includes('Пропозиція') &&
+  prodPanelsSrc.includes('Зворотна сумісність')
+) {
+  console.log('OK: production teaching bundle');
+} else {
+  ok = false;
+  console.log('FAIL: missing TOOL_CALLING_PRODUCTION_BUNDLE or panel copy');
+}
+if (!study.includes('| **Trace** |')) console.log('OK: no legacy production table in markdown');
+else {
+  ok = false;
+  console.log('FAIL: remove production table from markdown (use teaching cards)');
 }
 if (!study.includes('/etc')) console.log('OK: no /etc in tool-calling study markdown');
 else {
@@ -142,6 +194,18 @@ if (!questionsSrc.includes('answerBriefUk') || !questionsSrc.includes('answerDee
   console.log('FAIL: interview deck must use answerBriefUk + answerDeepUk');
 } else {
   console.log('OK: interview two-tier answers');
+}
+if (!questionsSrc.includes('```json')) console.log('OK: no raw JSON blocks in interview answers');
+else {
+  ok = false;
+  console.log('FAIL: remove JSON code blocks from tool-calling interview answers');
+}
+const rememberSrc = readFileSync(join(root, 'src/data/study/tool-calling-remember.ts'), 'utf8');
+if (rememberSrc.includes('Модель пропонує') && rememberSrc.includes('QA дивиться на докази')) {
+  console.log('OK: remember summary cards');
+} else {
+  ok = false;
+  console.log('FAIL: missing tool-calling remember cards');
 }
 
 console.log(ok ? 'RESULT: PASS' : 'RESULT: FAIL');

@@ -1,67 +1,48 @@
 import type { StudySectionAside } from './study-section-aside-types';
 
-/** Контекст concept-10 — доповнення до уроку, без дубля центрального блоку. */
+/** Concept-10: лише короткі нотатки в правій колонці (повний зміст — у центрі). */
 const BY_SECTION: Record<string, StudySectionAside> = {
   'Навіщо потрібен tool calling?': {
-    focus: 'Один тест на розуміння: чи з’явилися **факти з диска**, чи лише гарний текст?',
-    example: '`login_spec` упав — порада «відкрийте звіт» ≠ прочитаний HTML.',
-    diagram: 'Таблиця «Твердження» в цьому розділі — чеклист межі LLM і коду.',
+    sectionNoteUk:
+      'Текст моделі може підказати дію. Інструмент запускає код застосунку після перевірок.',
   },
   'Один виклик tool у run investigation': {
-    focus: 'Три пакети в одному run: опис дозволених tools → пропозиція виклику → результат після handler.',
-    example: 'Перший крок run — часто read звіту, не write в Jira.',
-    tips: ['У trace: proposed call → allow/deny → розмір snippet у messages.'],
+    sectionNoteUk:
+      'Простежте, у який момент з’являються фактичні дані зі звіту. Пропозиція моделі з’являється раніше за читання файла.',
   },
-  'З чого складається механізм?': {
-    focus:
-      'Схема зверху — **той самий** run login_spec: від CI summary до другого turn LLM; список ліворуч розкладає ролі по кроках.',
-    example: '`login_spec` → readPlaywrightReport: tool_call лише пропозиція, факти з’являються після handler.',
-    diagram: 'Список розкладає ролі по кроках того самого run login_spec.',
+  'Які дані передаються під час Tool Calling?': {
+    sectionNoteUk:
+      'Опис інструмента, пропозиція моделі й результат виконання — три різні повідомлення. Перевіряйте, яке з них справді доступне на кожному етапі.',
   },
   'Де код, а де LLM?': {
-    focus: 'Шість кроків одного read — модель пропонує, код перевіряє й читає.',
-    example: 'Після кроку 5 у context з’являється snippet звіту — лише тоді LLM може посилатися на факти.',
-    tips: ['Таблиця LLM / код / людина внизу розділу закріплює межі.'],
+    sectionNoteUk:
+      'Модель пропонує й пояснює. Код перевіряє доступ, виконує дію та керує розслідуванням.',
   },
   'Де може зламатися?': {
-    focus: 'Кожен збій — окремий навчальний сценарій: що сталося, сигнал у trace, що робить harness.',
-    example: 'Read (`login_spec`) і write (`createJiraIssue`) — різні ризики й тести.',
-    tips: ['У trace шукайте unknown_tool або deny, а не лише формулювання відповіді LLM.'],
+    sectionNoteUk:
+      'Спершу визначте місце збою: пропозиція, перевірка, виконання чи обробка результату. Від цього залежить перевірка QA.',
   },
   'Як QA це тестує?': {
-    focus: 'Кожна категорія — не назва, а план: підготовка → дія → assert → доказ у trace.',
-    example: 'Спочатку handler з фікстурою файлу, потім harness з фейковим tool_call.',
-    tips: ['Два GWT внизу розділу — шаблони; у repo курсу немає live harness tests.'],
+    sectionNoteUk:
+      'Виберіть категорію в центральному блоці. Її панель показує вхідні дані, дію QA й очікуваний результат.',
   },
   'Production і observability': {
-    focus: 'Trace має пояснювати **рішення** (allow/deny), не лише красиву відповідь чату.',
-    example: 'Після зміни tool schema — регресія на backward compatibility.',
-    jsonCard: {
-      label: 'Приклад полів trace (навчальний)',
-      json: `{
-  "toolName": "readPlaywrightReport",
-  "decision": "allow",
-  "durationMs": 42,
-  "resultBytes": 8192
-}`,
-      note: 'Умовний формат для навчання, не контракт вашого продакшену.',
-    },
+    sectionNoteUk:
+      'За trace відрізняйте пропозицію моделі від рішення коду й виконання інструмента. Повне пояснення кожної метрики — у картках ліворуч.',
   },
   'Запам’ятати та співбесіда': {
-    focus: 'Спочатку чотири тези в таблиці, потім десять питань «Перевір себе».',
-    example: 'Питання про createJiraIssue: approval і захист від дубля тікета.',
-    tips: ['Позначки «Можу пояснити» зберігаються лише в цьому браузері.'],
+    sectionNoteUk:
+      'Спробуйте пояснити відповідь своїми словами до відкриття підказки. Для прикладу використайте один збій login_spec.',
   },
 };
 
 export function getToolCallingSectionAside(navTitle: string): StudySectionAside {
-  const hit = Object.entries(BY_SECTION).find(
-    ([key]) => navTitle.startsWith(key) || key.startsWith(navTitle),
-  );
+  const exact = BY_SECTION[navTitle];
+  if (exact) return exact;
+  const hit = Object.entries(BY_SECTION).find(([key]) => navTitle.startsWith(key));
   if (hit) return hit[1];
   return {
-    focus: 'Коротка підказка до обраного розділу; повний зміст — у розгорнутому блоці уроку.',
-    example: 'Навчальний сценарій: `login_spec`, `readPlaywrightReport`.',
+    sectionNoteUk: 'Повний зміст розділу — у центральному блоці уроку.',
   };
 }
 
@@ -72,4 +53,5 @@ export const TOOL_CALLING_ASIDE_META = {
   schemaBlurb: 'Інтерактивний ланцюг з поясненнями на кожному кроці:',
   atlasTo: '/agent-architecture?tab=tool-calling',
   atlasLinkLabel: 'Відкрити схему Tool Calling',
+  compactAside: true,
 } as const;

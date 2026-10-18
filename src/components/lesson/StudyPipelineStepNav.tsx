@@ -16,6 +16,7 @@ export type StudyPipelineNavItem = {
   badgeUk?: string;
   actorUk?: string;
   cardNumberUk?: string;
+  optionalRouteStep?: boolean;
 };
 
 type Props = {
@@ -120,7 +121,16 @@ export function StudyPipelineStepNav({
   return (
     <ol className="study-rag-pipeline-steps-col" aria-label={ariaLabel}>
       {items.map((item, i) => (
-        <li key={item.key}>
+        <li
+          key={item.key}
+          className={item.optionalRouteStep ? 'study-pipeline-step-li--optional-route' : undefined}
+        >
+          {item.optionalRouteStep ? (
+            <p className="study-pipeline-optional-route-connector muted small" role="note">
+              <span className="study-pipeline-optional-route-connector-line" aria-hidden="true" />
+              Лише якщо код продовжив розслідування й знову викликав модель
+            </p>
+          ) : null}
           <NavCard
             item={item}
             index={i}

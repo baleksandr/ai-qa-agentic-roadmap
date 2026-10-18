@@ -19,6 +19,8 @@ export type StudyTeachingCardStep = {
   teaserUk: string;
   cardActorUk?: string;
   cardBadgeUk?: string;
+  /** Крок ланцюга лише на одній гілці (напр. другий виклик моделі після harness). */
+  optionalRouteStep?: boolean;
   detail: ChainStageDetail;
   /** Структурна панель Fundamentals (пріоритет над markdown у detail). */
   fundamentalsPanel?: FundamentalsCardPanel;
@@ -37,6 +39,10 @@ export type StudyAfterInteractiveSummaryCard = {
   titleUk: string;
   bodyUk: string;
   noteUk?: string;
+  /** Підпис перед маркованим списком у картці. */
+  listLeadUk?: string;
+  /** Окремі пункти списку (не в один рядок). */
+  listItems?: string[];
 };
 
 export type StudyAfterInteractiveSummary = {
@@ -55,6 +61,12 @@ export type StudyTeachingIntroScenarioCard = {
   noteUk?: string;
 };
 
+/** Дві компактні картки під вступом розділу (Reasoning §7). */
+export type StudyTeachingIntroMiniCard = {
+  titleUk: string;
+  bodyUk: string;
+};
+
 export type StudyTeachingCourseContinueLink = {
   sentenceUk: string;
   topicId: string;
@@ -65,9 +77,18 @@ export type StudyTeachingCardsBundle = {
   ariaLabel: string;
   /** Картка «один run» / умовний сценарій під визначенням розділу. */
   introScenarioCard?: StudyTeachingIntroScenarioCard;
+  introMiniCards?: StudyTeachingIntroMiniCard[];
+  /** Коротка нотатка поруч із introMiniCards (не дублює панелі карток). */
+  sectionAsideNoteUk?: string;
   leadUk?: string;
   /** Короткий рядок кроків для компактної схеми зверху (лише presentation `process`). */
   flowArrowLine?: string;
+  /** `vertical` — один стовпчик кроків зверху вниз (наприклад §4 tool calling). */
+  flowTrackLayout?: 'ribbon' | 'vertical';
+  /** Не показувати оглядову схему кроків над картками (дублює інтерактив). */
+  hideFlowOverview?: boolean;
+  /** Не показувати «Картка N» над заголовком у правій панелі (назва картки лишається в h4). */
+  hidePanelMainCardLabel?: boolean;
   /** `concepts` — аспекти теми, без «Крок N з M» і стрілкового процесу. */
   presentation?: StudyTeachingCardsPresentation;
   conceptsHeadingUk?: string;

@@ -284,6 +284,7 @@ function peFlowStepPanel(
 export const PROMPT_PE_INVESTIGATION_FLOW: StudyTeachingCardsBundle = {
   ariaLabel: 'Що відбувається після падіння login_spec у run-42',
   presentation: 'process',
+  hideFlowOverview: true,
   introScenarioCard: {
     titleUk: 'Один приклад',
     bodyUk:
@@ -691,6 +692,7 @@ export const PROMPT_PE_PARTS_BUNDLE: StudyTeachingCardsBundle = {
 export const PROMPT_PE_SEQUENCE_BUNDLE: StudyTeachingCardsBundle = {
   ariaLabel: 'Один виклик моделі для run-42: від запиту до перевірки',
   presentation: 'process',
+  hideFlowOverview: true,
   steps: [
     fundamentalsConceptStep(
       'assemble',
@@ -1078,18 +1080,21 @@ export const PROMPT_PE_LLM_CODE_BUNDLE: StudyTeachingCardsBundle = {
     ),
   ],
   afterInteractiveSummary: {
-    sectionTitleUk: 'Одна пропозиція — дві різні ролі',
+    sectionTitleUk: '',
     cards: [
       {
-        titleUk: 'Модель',
-        bodyUk: '«Пропоную прочитати Playwright-звіт run-42».',
+        titleUk: 'Що робить модель',
+        bodyUk:
+          'Код передав моделі відомий факт: login_spec завершився timeout під час очікування #login-btn. Модель може відповісти гіпотезою або запропонувати прочитати Playwright-звіт. Її пропозиція readPlaywrightReport ще не означає, що файл відкрито. Модель не встановлює собі права доступу й не знає вмісту звіту, якого їй не передали.',
       },
       {
-        titleUk: 'Код',
+        titleUk: 'Що робить код',
         bodyUk:
-          '«Перевірю назву інструмента, run id і права. Якщо дозволено — запущу читання та збережу результат або помилку».',
+          'Код отримує відповідь моделі. Якщо вона запропонувала readPlaywrightReport, код перевіряє назву інструмента, аргументи й доступ до звіту потрібного запуску. Лише після дозволу він викликає інструмент. Потім записує фактично отриманий фрагмент або помилку та вирішує, чи звертатися до моделі знову.',
       },
     ],
+    footnoteUk:
+      'Модель пропонує наступний крок. Код перевіряє пропозицію, виконує дозволену дію та контролює результат.',
   },
 };
 

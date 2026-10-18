@@ -50,6 +50,7 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
         detail: s.detail,
         navBadgeUk: s.cardBadgeUk,
         navActorUk: s.cardActorUk,
+        optionalRouteStep: s.optionalRouteStep,
         clickable: true,
       })),
     [bundle.steps],
@@ -93,6 +94,36 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
         </div>
       ) : null}
 
+      {bundle.introMiniCards?.length || bundle.sectionAsideNoteUk?.trim() ? (
+        <div
+          className={`study-teaching-intro-mini-grid${
+            !bundle.introMiniCards?.length ? ' study-teaching-intro-mini-grid--aside-only' : ''
+          }`}
+        >
+          {bundle.introMiniCards?.length ? (
+            <ul className="study-teaching-intro-mini-cards" aria-label="Два шари перевірки">
+              {bundle.introMiniCards.map((card) => (
+                <li key={card.titleUk} className="study-teaching-intro-mini-card">
+                  <p className="study-teaching-intro-mini-card-title">{card.titleUk}</p>
+                  <LessonRichParagraphs
+                    text={card.bodyUk}
+                    className="study-teaching-intro-mini-card-body study-learner-explanation"
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {bundle.sectionAsideNoteUk?.trim() ? (
+            <aside className="study-teaching-section-aside-note lesson-callout" role="note">
+              <LessonRichParagraphs
+                text={bundle.sectionAsideNoteUk}
+                className="study-teaching-section-aside-note-p study-learner-explanation"
+              />
+            </aside>
+          ) : null}
+        </div>
+      ) : null}
+
       {bundle.leadUk ? (
         <div className="study-rag-story-intro lesson-callout lesson-key-idea">
           <span className="lesson-callout-label">
@@ -114,9 +145,13 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
         <h3 className="study-teaching-concepts-heading">{bundle.conceptsHeadingUk}</h3>
       ) : null}
 
-      {flowStages.length >= 3 ? (
+      {!bundle.hideFlowOverview && flowStages.length >= 3 ? (
         <div className="study-teaching-cards-flow-overview">
-          <StudyLearnerFlowTrack stages={flowStages} ariaLabel={bundle.ariaLabel} />
+          <StudyLearnerFlowTrack
+            stages={flowStages}
+            ariaLabel={bundle.ariaLabel}
+            layout={bundle.flowTrackLayout === 'vertical' ? 'vertical' : 'default'}
+          />
         </div>
       ) : null}
 
@@ -138,13 +173,15 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
         panel={
           activeStep && (activeFundamentalsPanel || panelMarkdown) ? (
             <>
-              <p className="study-rag-qa-panel-label">
-                {mainCardNumber
-                  ? studyCardPanelLabel(mainCardNumber)
-                  : isConcepts
-                    ? 'Поняття'
-                    : `Крок ${activeStepIndex + 1} з ${bundle.steps.length}`}
-              </p>
+              {!bundle.hidePanelMainCardLabel ? (
+                <p className="study-rag-qa-panel-label">
+                  {mainCardNumber
+                    ? studyCardPanelLabel(mainCardNumber)
+                    : isConcepts
+                      ? 'Поняття'
+                      : `Крок ${activeStepIndex + 1} з ${bundle.steps.length}`}
+                </p>
+              ) : null}
               <h4 className="study-rag-qa-panel-title">{activeStep.titleUk}</h4>
               {!activeFundamentalsPanel && activeStep.teaserUk ? (
                 <p className="study-tc-lesson-line">{activeStep.teaserUk}</p>

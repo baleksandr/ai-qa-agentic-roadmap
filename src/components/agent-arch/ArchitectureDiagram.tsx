@@ -10,6 +10,8 @@ import type {
   SimStep,
   SimStepPanel,
 } from '../../types/architecture-simulation';
+import { ArchitectureConceptLayersDiagram } from './ArchitectureConceptLayersDiagram';
+import { ArchitectureVerticalSimDiagram } from './ArchitectureVerticalSimDiagram';
 
 function getNode(schema: ArchitectureSchema, id: string) {
   return schema.nodes.find((n) => n.id === id);
@@ -158,6 +160,12 @@ type Props = {
 };
 
 export function ArchitectureDiagram({ schema }: Props) {
+  if (schema.diagramLayout === 'concept-layers') {
+    return <ArchitectureConceptLayersDiagram schema={schema} />;
+  }
+  if (schema.diagramLayout === 'vertical-sim') {
+    return <ArchitectureVerticalSimDiagram schema={schema} />;
+  }
   const [stepIndex, setStepIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [showOptional, setShowOptional] = useState(false);

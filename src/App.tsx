@@ -13,8 +13,11 @@ import './styles/study-teaching-cards-layout.css';
 import './styles/study-interactive-cards.css';
 import './styles/fundamentals-study-layout.css';
 import './styles/study-learner-panel.css';
+import './styles/study-outcome-cards.css';
+import './styles/study-progress.css';
 import './styles/study-remember-takeaways.css';
 import './styles/study-after-interactive-summary.css';
+import './styles/study-role-colors.css';
 import './styles/study-term-accent.css';
 
 function App() {

@@ -8,6 +8,7 @@ import { StudyLabeledExplanationStack } from './StudyLabeledExplanationStack';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { formatStudyCardNumber, studyCardPanelLabel } from '../../lib/studyCardNumber';
+import { studyOutcomeShellToneFromStepKey } from '../../lib/studyOutcomeShellTone';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
 import { parseLessonBold } from './lessonRichText';
 import { StudyPanelTerms } from './StudyPanelTerms';
@@ -33,10 +34,13 @@ type Props = Pick<
   | 'modelResponseExample'
   | 'showActorInPanel'
   | 'showStepIndexInPanel'
+  | 'showNestedCardNumberInPanel'
+  | 'pickPanelDetailVariant'
   | 'conceptGroups'
   | 'pickConclusionLabelUk'
   | 'pickConclusionUk'
   | 'navLayout'
+  | 'interactionHintUk'
 > & {
   parentCardNumber?: string;
 };
@@ -54,10 +58,13 @@ export function StudyLearnerPanelProcessStepPick({
   parentCardNumber,
   showActorInPanel = true,
   showStepIndexInPanel = true,
+  showNestedCardNumberInPanel = true,
+  pickPanelDetailVariant,
   conceptGroups,
   pickConclusionLabelUk,
   pickConclusionUk,
   navLayout = 'sidebar',
+  interactionHintUk,
 }: Props) {
   const firstKey = steps[0]?.key ?? '';
   const [activeKey, setActiveKey] = useState<string>(firstKey);
@@ -93,26 +100,54 @@ export function StudyLearnerPanelProcessStepPick({
     />
   );
 
+  const outcomeShellTone = active ? studyOutcomeShellToneFromStepKey(active.key) : 'neutral';
+  const outcomeBlockClass =
+    pickPanelDetailVariant === 'outcome'
+      ? 'study-learner-panel-block study-explainer-block'
+      : 'study-learner-panel-block';
+
   const detailPanel = active ? (
     <>
-      {activeCardNumber ? (
+      {activeCardNumber && showNestedCardNumberInPanel ? (
         <p className="study-rag-qa-panel-label">{studyCardPanelLabel(activeCardNumber)}</p>
       ) : showStepIndexInPanel ? (
         <p className="study-rag-qa-panel-label">
           {presentation === 'concepts' ? 'Питання' : 'Крок'} {activeStepIndex + 1} з {steps.length}
         </p>
       ) : null}
-      <h5 className="study-learner-panel-step-pick-panel-title">{active.titleUk}</h5>
-      {showActorInPanel && active.actorUk?.trim() ? (
-        <p className="study-learner-panel-step-pick-actor muted small">
-          Виконує: <span className="study-term-accent">{active.actorUk}</span>
-        </p>
-      ) : null}
-      <div className="study-learner-panel-step-pick-panel-body">
-        {active.detailSections?.length ? (
-          <dl className="study-learner-panel study-learner-panel--step-pick-detail">
-            {active.detailSections.map((sec) => (
-              <div key={sec.labelUk} className="study-learner-panel-block">
+      <div
+        className={
+          pickPanelDetailVariant === 'outcome'
+            ? `study-learner-panel-outcome-detail-shell study-learner-panel-outcome-detail-shell--${outcomeShellTone}`
+            : undefined
+        }
+      >
+        <h5
+          className={[
+            'study-learner-panel-step-pick-panel-title',
+            pickPanelDetailVariant === 'outcome'
+              ? `study-learner-panel-step-pick-panel-title--outcome study-learner-panel-step-pick-panel-title--tone-${outcomeShellTone}`
+              : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {active.titleUk}
+        </h5>
+        {showActorInPanel && active.actorUk?.trim() ? (
+          <p className="study-learner-panel-step-pick-actor muted small">
+            Виконує: <span className="study-term-accent">{active.actorUk}</span>
+          </p>
+        ) : null}
+        <div className="study-learner-panel-step-pick-panel-body">
+          {active.detailSections?.length ? (
+            <>
+              {active.detailUk?.trim() ? (
+                <StudyLearnerExplanationBlocks bodyUk={active.detailUk} />
+              ) : null}
+              <dl className="study-learner-panel study-learner-panel--step-pick-detail">
+                {active.detailSections.map((sec) => (
+                  <div key={sec.labelUk} className={outcomeBlockClass}>
                 <dt className="study-learner-panel-label">{sec.labelUk}</dt>
                 <dd className="study-learner-panel-value">
                           {sec.labeledLead ? (
@@ -131,6 +166,7 @@ export function StudyLearnerPanelProcessStepPick({
               </div>
             ))}
           </dl>
+          </>
         ) : active.detailUk?.trim() ? (
           <StudyLearnerExplanationBlocks bodyUk={active.detailUk} />
         ) : null}
@@ -143,21 +179,33 @@ export function StudyLearnerPanelProcessStepPick({
         {active.qaCheckUk?.trim() ? (
           <StudyLearnerPanelQaCheck bodyUk={active.qaCheckUk} />
         ) : null}
-        {active.terms?.length ? <StudyPanelTerms terms={active.terms} /> : null}
+          {active.terms?.length ? <StudyPanelTerms terms={active.terms} /> : null}
+        </div>
       </div>
     </>
   ) : (
     <p className="study-rag-qa-panel-empty muted small">{STUDY_EMPTY_PANEL_UK}</p>
   );
 
-  const layoutClassName =
-    navLayout === 'rowAbovePanel'
-      ? 'study-learner-panel-step-pick-layout study-learner-panel-step-pick-layout--row-above-panel'
-      : 'study-learner-panel-step-pick-layout';
+  const layoutClassName = [
+    'study-learner-panel-step-pick-layout',
+    navLayout === 'rowAbovePanel' ? 'study-learner-panel-step-pick-layout--row-above-panel' : '',
+    pickPanelDetailVariant === 'outcome'
+      ? 'study-learner-panel-step-pick-layout--outcome-detail'
+      : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className="study-learner-panel-step-pick">
       <p className="study-learner-panel-step-pick-heading">{labelUk}</p>
+      {interactionHintUk?.trim() ? (
+        <p className="study-learner-panel-step-pick-hint study-interaction-hint" role="note">
+          <span className="study-interaction-hint-label">Підказка</span>
+          <span className="study-interaction-hint-text">{interactionHintUk}</span>
+        </p>
+      ) : null}
       {modelResponseExample ? (
         <div className="study-learner-panel-step-pick-lead">
           <StudyModelResponseExampleBlock block={modelResponseExample} />
@@ -191,9 +239,11 @@ export function StudyLearnerPanelProcessStepPick({
           panel={detailPanel}
         />
       )}
-      {pickConclusionLabelUk?.trim() && pickConclusionUk?.trim() ? (
+      {pickConclusionUk?.trim() ? (
         <div className="study-learner-term-pair-conclusion study-learner-panel-step-pick-conclusion">
-          <p className="study-learner-term-pair-conclusion-label">{pickConclusionLabelUk}</p>
+          {pickConclusionLabelUk?.trim() ? (
+            <p className="study-learner-term-pair-conclusion-label">{pickConclusionLabelUk}</p>
+          ) : null}
           <p className="study-learner-term-pair-conclusion-body study-learner-explanation">
             {parseLessonBold(pickConclusionUk)}
           </p>

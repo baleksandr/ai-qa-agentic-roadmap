@@ -3,6 +3,7 @@ import { RAG_INTERVIEW_DECK } from './rag-interview-self-check';
 import { TOOL_CALLING_INTERVIEW_DECK } from './tool-calling-interview-self-check';
 import { GUARDRAILS_INTERVIEW_DECK } from './guardrails-interview-self-check';
 import { PROMPT_PE_INTERVIEW_DECK } from './prompt-engineering-interview-self-check';
+import { REASONING_INTERVIEW_DECK } from './reasoning-interview-self-check';
 import { PART_II_INTERVIEW_BY_TOPIC } from './part-ii-interview-decks';
 import { PART_II_INTERVIEW_REST } from './part-ii-interview-decks-rest';
 
@@ -13,6 +14,7 @@ const BY_TOPIC: Record<string, StudyInterviewDeck> = {
   'concept-10': TOOL_CALLING_INTERVIEW_DECK,
   'concept-17': GUARDRAILS_INTERVIEW_DECK,
   'concept-14': PROMPT_PE_INTERVIEW_DECK,
+  'concept-12': REASONING_INTERVIEW_DECK,
 };
 
 /** Чи показувати deck співбесіди в цьому розділі Study Mode */

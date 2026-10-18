@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { getMapLabel } from '../data/learning-map.registry';
 import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import type { TopicMeta } from '../types/topic';
-import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
+import { MIGRATION_LABELS } from '../types/topic';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
 import { ReviewMarkdownBody } from './ReviewMarkdownBody';
 import { getEnrichedReviewMarkdown } from '../data/review/review-mode-by-topic';
+import { getRouteTopicSidePanel } from '../data/review/route-topic-side-panels';
+import { RouteTopicSidePanelBody } from './RouteTopicSidePanelBody';
 import { ProgressPicker } from './ProgressPicker';
 import { useProgress } from '../hooks/useProgress';
 
@@ -18,6 +20,7 @@ interface Props {
 export function TopicSidePanel({ topic, onClose }: Props) {
   const { getProgress, setProgress } = useProgress();
   const learning = getProgress(topic.id);
+  const routePanel = getRouteTopicSidePanel(topic.id);
 
   const reviewMarkdown = useMemo(() => {
     const raw = loadMarkdownByPath(topic.contentPath);
@@ -33,9 +36,8 @@ export function TopicSidePanel({ topic, onClose }: Props) {
           ×
         </button>
         <h2>{getMapLabel(topic.id)}</h2>
-        <p className="muted small">Review Mode</p>
-        <div className="topic-badges">
-          <span className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</span>
+        {!routePanel ? <p className="muted small">Review Mode</p> : null}
+        <div className="topic-badges topic-badges--route-panel">
           {isStudyReadyForLearning(topic.id) && (
             <span className="badge migration-migrated" title="Study Mode готовий для навчання">
               Готово для навчання
@@ -60,6 +62,8 @@ export function TopicSidePanel({ topic, onClose }: Props) {
       <div className="topic-side-body markdown-body">
         {topic.migrationStatus === 'not_migrated' ? (
           <p className="muted">Матеріал ще не перенесено з DOCX.</p>
+        ) : routePanel ? (
+          <RouteTopicSidePanelBody panel={routePanel} />
         ) : (
           <ReviewMarkdownBody markdown={reviewMarkdown} />
         )}

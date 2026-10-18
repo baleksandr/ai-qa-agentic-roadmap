@@ -21,6 +21,12 @@ export function StudyDefinitionAccent({ termUk, termEn, leadUk }: Props) {
         <div className="study-definition-accent-lead">
           <p className="study-definition-accent-term">
             <StudyTermAccent>{termUk}</StudyTermAccent>
+            {termEn?.trim() ? (
+              <span className="study-definition-accent-term-en" lang="en">
+                {' '}
+                <span className="muted">({termEn.trim()})</span>
+              </span>
+            ) : null}
           </p>
           <p className="study-definition-accent-definition study-learner-explanation">
             {parseLessonBold(leadUk)}

@@ -15,13 +15,41 @@ export type StudyLearnerPanelProseSection = {
   labeledPairs?: StudyLabeledPair[];
 };
 
+export type StudyLearnerPanelMiniCardTone =
+  | 'neutral'
+  | 'allow'
+  | 'deny'
+  /** Спростування гіпотези — стриманий рожевий акцент (Reasoning §4). */
+  | 'refute'
+  /** Інструмент запускався, але повернув помилку (корал, Reasoning §5). */
+  | 'readFail'
+  /** Завершення run без помилки (не «успіх» і не «відмова»). */
+  | 'end'
+  /** @deprecated використовуй `allow` */
+  | 'investigationContinue'
+  /** @deprecated використовуй `end` */
+  | 'investigationEnd';
+
 export type StudyLearnerPanelMiniCardsSection = {
   type: 'miniCards';
   labelUk: string;
   captionUk?: string;
-  /** `flow` — вертикальний ланцюг зі стрілками між мінікартками (киберпанк у панелі). */
-  layout?: 'stack' | 'flow';
-  items: Array<{ titleUk: string; bodyUk: string }>;
+  /** Лише картки — заголовок секції не дублювати над карткою. */
+  hideSectionLabel?: boolean;
+  /**
+   * `flow` — ланцюг зі стрілками;
+   * `titledStack` — outcome-картки;
+   * `numberedStack` — номер + назва + текст (Reasoning §7 «Що робить QA»).
+   */
+  layout?: 'stack' | 'flow' | 'titledStack' | 'numberedStack';
+  framed?: boolean;
+  framedVariant?: 'default' | 'why' | 'expect' | 'limit';
+  items: Array<{
+    titleUk: string;
+    bodyUk: string;
+    footnoteUk?: string;
+    tone?: StudyLearnerPanelMiniCardTone;
+  }>;
 };
 
 /** Дві мінікартки термінів у ряд + спільний підсумок (не для довільного тексту). */
@@ -56,6 +84,21 @@ export type StudyLearnerPanelPlainSection = {
   bodyUk: string;
   /** Підблок «QA-перевірка» після основного тексту (не дублювати в bodyUk). */
   qaCheckUk?: string;
+  /** Окрема темна рамка навколо заголовка й тексту блоку. */
+  framed?: boolean;
+  /** Акцент рамки (§6 why, §7 expect/limit). */
+  framedVariant?: 'default' | 'why' | 'expect' | 'limit';
+};
+
+/** Нумерований список дій у панелі (справжній `<ol>`, не `\n` у plain). */
+export type StudyLearnerPanelOrderedListSection = {
+  type: 'orderedList';
+  labelUk: string;
+  items: string[];
+  /** Короткий текст після списку. */
+  noteUk?: string;
+  framed?: boolean;
+  framedVariant?: 'default' | 'why' | 'expect' | 'limit';
 };
 
 /** Лише текст перевірки; заголовок «QA-перевірка» — у `StudyLearnerPanelQaCheck`. */
@@ -67,9 +110,22 @@ export type StudyLearnerPanelQaCheckSection = {
 export type StudyLearnerPanelLabeledLinesSection = {
   type: 'labeledLines';
   labelUk: string;
+  /** Короткий вступ над парами (наприклад примітка до прикладу). */
+  leadUk?: string;
   items: StudyLabeledPair[];
   /** Повноширинна внутрішня картка з читабельними частинами (§19 VLM). */
   panelCard?: boolean;
+  framed?: boolean;
+  framedVariant?: 'default' | 'why' | 'expect' | 'limit';
+};
+
+/** Термін акцентом + пояснення блоком (виконавець кроку, визначення). */
+export type StudyLearnerPanelDefinitionAccentSection = {
+  type: 'definitionAccent';
+  labelUk: string;
+  termUk: string;
+  termEn?: string;
+  leadUk: string;
 };
 
 export type StudyModelResponseCheckStatus = 'yes' | 'pending' | 'no';
@@ -128,6 +184,10 @@ export type StudyLearnerPanelProcessStepPickSection = {
   interactionHintUk?: string;
   showActorInPanel?: boolean;
   showStepIndexInPanel?: boolean;
+  /** Коли є `parentCardNumber`, не показувати «Картка N» у панелі вкладеного вибору. */
+  showNestedCardNumberInPanel?: boolean;
+  /** Оформлення блоків `detailSections` (кольори статусу, рамки). */
+  pickPanelDetailVariant?: 'outcome';
   /** Для `presentation: 'concepts'` — список `ul` без стрілок процесу між картками. */
   conceptGroups?: Array<{ headingUk: string; stepKeys: string[] }>;
   steps: Array<{
@@ -175,6 +235,24 @@ export type StudyLearnerPanelModelResponseExampleSection = {
   block: StudyModelResponseExample;
 };
 
+/** Умовний зведений trace у `<details>` (Tool Calling §7). */
+export type StudyLearnerPanelCollapsibleTraceSampleSection = {
+  type: 'collapsibleTraceSample';
+  summaryUk: string;
+  jsonExample: string;
+  fieldExplanations: StudyLabeledPair[];
+  calloutUk: string;
+};
+
+/** Короткий вступ панелі інтерактивної картки («Що я зрозумію з цієї картки?»). */
+export type StudyLearnerPanelCardIntentSection = {
+  type: 'cardIntent';
+  bodyUk: string;
+  labelUk?: string;
+  /** Без підпису «Що я зрозумію…» — лише текст вступу (Reasoning §6). */
+  hideLabel?: boolean;
+};
+
 export type StudyLearnerPanelSection =
   | StudyLearnerPanelProseSection
   | StudyLearnerPanelMiniCardsSection
@@ -182,8 +260,12 @@ export type StudyLearnerPanelSection =
   | StudyLearnerPanelTaxonomySection
   | StudyLearnerPanelMechanismChecksSection
   | StudyLearnerPanelPlainSection
+  | StudyLearnerPanelOrderedListSection
   | StudyLearnerPanelQaCheckSection
   | StudyLearnerPanelLabeledLinesSection
+  | StudyLearnerPanelDefinitionAccentSection
   | StudyLearnerPanelProcessStepPickSection
   | StudyLearnerPanelModelResponseExampleSection
-  | StudyLearnerPanelCourseLessonLinkSection;
+  | StudyLearnerPanelCollapsibleTraceSampleSection
+  | StudyLearnerPanelCourseLessonLinkSection
+  | StudyLearnerPanelCardIntentSection;

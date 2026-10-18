@@ -5,6 +5,7 @@
 export const STUDY_READY_FOR_LEARNING_TOPIC_IDS: readonly string[] = [
   'fundamentals',
   'concept-03',
+  'concept-04',
   'concept-10',
   'concept-14',
 ];

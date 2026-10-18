@@ -3,6 +3,8 @@ type Props = {
   ariaLabel?: string;
   /** Після скількох кроків переносити на другий ряд (за замовчуванням — приблизно половина). */
   firstRowCount?: number;
+  /** `vertical` — один стовпчик на всіх ширинах екрана. */
+  layout?: 'default' | 'vertical';
 };
 
 function splitRows(stages: string[], firstRowCount?: number): [string[], string[]] {
@@ -66,16 +68,33 @@ function FlowRow({
   );
 }
 
-function FlowTimeline({ stages, ariaLabel }: { stages: string[]; ariaLabel: string }) {
+function FlowTimeline({
+  stages,
+  ariaLabel,
+  variant = 'default',
+}: {
+  stages: string[];
+  ariaLabel: string;
+  variant?: 'default' | 'vertical';
+}) {
+  const vertical = variant === 'vertical';
   return (
-    <ol className="study-learner-flow-timeline" aria-label={ariaLabel}>
+    <ol
+      className={`study-learner-flow-timeline${vertical ? ' study-learner-flow-timeline--vertical' : ''}`}
+      aria-label={ariaLabel}
+    >
       {stages.map((stage, i) => (
         <li
           key={`${i}-${stage}`}
           className={`study-learner-flow-timeline-step ${i === 0 ? 'is-first' : ''} ${i === stages.length - 1 ? 'is-last' : ''}`}
         >
           <span className="study-learner-flow-timeline-num">{i + 1}</span>
-          <span className="study-learner-flow-timeline-label">{stage}</span>
+          <div className="study-learner-flow-timeline-body">
+            <span className="study-learner-flow-timeline-label">{stage}</span>
+            {vertical && i < stages.length - 1 ? (
+              <span className="study-learner-flow-timeline-down" aria-hidden="true">↓</span>
+            ) : null}
+          </div>
         </li>
       ))}
     </ol>
@@ -83,8 +102,24 @@ function FlowTimeline({ stages, ariaLabel }: { stages: string[]; ariaLabel: stri
 }
 
 /** Довгі навчальні ланцюги: два ряди на широкому екрані, таймлайн на вузькому — без горизонтального скролу. */
-export function StudyLearnerFlowTrack({ stages, ariaLabel = 'Послідовність кроків', firstRowCount }: Props) {
+export function StudyLearnerFlowTrack({
+  stages,
+  ariaLabel = 'Послідовність кроків',
+  firstRowCount,
+  layout = 'default',
+}: Props) {
   if (stages.length < 2) return null;
+
+  if (layout === 'vertical') {
+    return (
+      <div
+        className="study-learner-flow-track study-learner-flow-track--vertical"
+        data-stage-count={stages.length}
+      >
+        <FlowTimeline stages={stages} ariaLabel={ariaLabel} variant="vertical" />
+      </div>
+    );
+  }
 
   const [rowA, rowB] = splitRows(stages, firstRowCount);
 

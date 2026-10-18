@@ -48,9 +48,9 @@ export const LESSON_ENRICHMENT: LessonEnrichmentEntry[] = [
   },
   {
     topicId: 'concept-04',
-    tier: 'minimal',
-    teachingThread: false,
-    notes: 'Пакет 1 PART II: 8§ MD + hero/outcomes; UI/deck — далі',
+    tier: 'partial',
+    teachingThread: true,
+    notes: '9§ Study: login_spec картки, deck співбесіди, route panel',
   },
   {
     topicId: 'concept-10',

@@ -8,13 +8,22 @@ const HASH_SELECTOR_RE = /(#[\w][\w-]*)/g;
 export type StudyBoldToken =
   | { type: 'text'; value: string }
   | { type: 'bold'; value: string }
-  | { type: 'code'; value: string };
+  | { type: 'code'; value: string }
+  | { type: 'term'; value: string };
 
 /** Розбір рядка на токени (перший прохід — ** і `). */
 export function tokenizeStudyLessonInline(text: string): StudyBoldToken[] {
   const tokens: StudyBoldToken[] = [];
   let i = 0;
   while (i < text.length) {
+    if (text.startsWith('[[', i)) {
+      const close = text.indexOf(']]', i + 2);
+      if (close !== -1) {
+        tokens.push({ type: 'term', value: text.slice(i + 2, close) });
+        i = close + 2;
+        continue;
+      }
+    }
     if (text.startsWith('**', i)) {
       const close = text.indexOf('**', i + 2);
       if (close !== -1) {
@@ -32,8 +41,10 @@ export function tokenizeStudyLessonInline(text: string): StudyBoldToken[] {
       }
     }
     let next = text.length;
+    const nTerm = text.indexOf('[[', i);
     const nBold = text.indexOf('**', i);
     const nCode = text.indexOf('`', i);
+    if (nTerm !== -1) next = Math.min(next, nTerm);
     if (nBold !== -1) next = Math.min(next, nBold);
     if (nCode !== -1) next = Math.min(next, nCode);
     if (next > i) {
@@ -66,5 +77,7 @@ export function findStudyInlineMarkupArtifacts(text: string): string[] {
   if (/\\[*`]/.test(text)) issues.push('escaped \\* or \\` in source');
   const plain = renderStudyLessonInlinePlain(text);
   if (/\*\*/.test(plain)) issues.push('unparsed ** in rendered output');
+  if (/\[\[/.test(text) && !text.includes(']]')) issues.push('unclosed [[ term markup');
+  if (/\]\]/.test(plain)) issues.push('unparsed ]] in rendered output');
   return issues;
 }

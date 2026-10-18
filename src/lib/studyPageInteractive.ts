@@ -4,8 +4,10 @@ export const STUDY_PAGE_CARDS_INTERACTION_HINT_UK =
 
 const LEGACY_INTERACTIVE_STUDY_TOPIC_IDS = new Set([
   'concept-03',
+  'concept-04',
   'concept-10',
   'concept-14',
+  'concept-12',
   'concept-17',
 ]);
 

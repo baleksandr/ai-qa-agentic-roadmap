@@ -11,9 +11,45 @@ export type StudySectionAsideJsonCard = {
   note?: string;
 };
 
+export type StudySectionAsideTermRow = {
+  term: string;
+  textUk: string;
+};
+
+export type StudySectionAsideContextCard = {
+  titleUk: string;
+  bodyUk?: string;
+  termRows?: StudySectionAsideTermRow[];
+  footnoteUk?: string;
+};
+
+/** Компактні рядки «назва — пояснення» у нотатці правої колонки (Harness: один run). */
+export type StudySectionAsideTrackRow = {
+  labelUk: string;
+  bodyUk: string;
+};
+
+export type StudySectionAsideTrackCard = {
+  titleUk: string;
+  rows: StudySectionAsideTrackRow[];
+  footnoteUk?: string;
+};
+
 export type StudySectionAside = {
-  focus: string;
-  example: string;
+  /** Коротка орієнтація (1–2 речення), замість розгорнутого контексту — etalon Tool Calling. */
+  sectionNoteUk?: string;
+  /** Компактна нотатка: темний фон і бірюзова смуга зліва (Reasoning §8). */
+  sectionNoteStyle?: 'compact-strip';
+  /** Компактна картка з окремими рядками замість суцільного `sectionNoteUk`. */
+  sectionNoteTrackCard?: StudySectionAsideTrackCard;
+  /** Термін окремим рядком (акцент), пояснення — у `sectionNoteExplanationUk`. */
+  sectionNoteTermUk?: string;
+  sectionNoteExplanationUk?: string;
+  /** Не показувати блок контексту (лише прогрес і схема курсу). */
+  suppressSectionContext?: boolean;
+  focus?: string;
+  example?: string;
+  contextCards?: StudySectionAsideContextCard[];
   diagram?: string;
   tips?: string[];
   table?: StudySectionAsideTable;
@@ -27,4 +63,6 @@ export type StudyLessonAsideMeta = {
   schemaBlurb: string;
   atlasTo: string;
   atlasLinkLabel: string;
+  /** Вужча права колонка без окремої прокрутки нотатки (Tool Calling). */
+  compactAside?: boolean;
 };

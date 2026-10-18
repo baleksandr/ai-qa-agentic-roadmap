@@ -46,7 +46,7 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   text-transform: none;
-  color: var(--study-term-accent, #b8c9ff);
+  color: var(--study-term-accent, #7ee8d8);
 }
 
 .review-card-body {
@@ -85,7 +85,7 @@
 .review-step-title {
   font-size: 0.86rem;
   font-weight: 600;
-  color: var(--study-term-accent, #b8c9ff);
+  color: var(--study-term-accent, #7ee8d8);
 }
 
 .review-step-who {
@@ -124,4 +124,89 @@
 
 .review-card--compare {
   border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* «Увесь маршрут» — структурована бічна панель теми */
+
+.topic-side-header .topic-badges--route-panel {
+  gap: 0.5rem 0.7rem;
+  margin-top: 0.55rem;
+  margin-bottom: 0.35rem;
+}
+
+.route-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.route-side-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.route-side-panel-section-heading {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.route-side-panel-prose-card,
+.route-side-panel-step-card {
+  border-radius: 10px;
+  border: 1px solid rgba(126, 232, 216, 0.22);
+  background: rgba(12, 20, 36, 0.88);
+  padding: 0.55rem 0.65rem;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.route-side-panel-prose {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--study-explanation-text, #dce4f8);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.route-side-panel-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.route-side-panel-step-title {
+  margin: 0 0 0.3rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--study-term-accent, #7ee8d8);
+}
+
+.route-side-panel-step-index {
+  margin-right: 0.2rem;
+  color: var(--study-term-accent, #7ee8d8);
+}
+
+.route-side-panel-step-body {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.42;
+  color: var(--study-explanation-text, #dce4f8);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.route-side-panel-section--remember .route-side-panel-prose-card {
+  border-color: rgba(91, 140, 255, 0.28);
 }

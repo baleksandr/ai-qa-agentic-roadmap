@@ -33,8 +33,15 @@ export function StudyPromptEngineeringWhy() {
   );
 }
 
+const PE_TEACHING_CARDS_CLASS = 'study-prompt-pe-teaching-cards';
+
 export function StudyPromptEngineeringInvestigation() {
-  return <StudyTeachingCardsSection bundle={PROMPT_PE_INVESTIGATION_FLOW} />;
+  return (
+    <StudyTeachingCardsSection
+      bundle={PROMPT_PE_INVESTIGATION_FLOW}
+      className={PE_TEACHING_CARDS_CLASS}
+    />
+  );
 }
 
 export function StudyPromptEngineeringParts() {
@@ -42,11 +49,21 @@ export function StudyPromptEngineeringParts() {
 }
 
 export function StudyPromptEngineeringSequence() {
-  return <StudyTeachingCardsSection bundle={PROMPT_PE_SEQUENCE_BUNDLE} />;
+  return (
+    <StudyTeachingCardsSection
+      bundle={PROMPT_PE_SEQUENCE_BUNDLE}
+      className={PE_TEACHING_CARDS_CLASS}
+    />
+  );
 }
 
 export function StudyPromptEngineeringLlmCode() {
-  return <StudyTeachingCardsSection bundle={PROMPT_PE_LLM_CODE_BUNDLE} />;
+  return (
+    <StudyTeachingCardsSection
+      bundle={PROMPT_PE_LLM_CODE_BUNDLE}
+      className={PE_TEACHING_CARDS_CLASS}
+    />
+  );
 }
 
 export function StudyPromptEngineeringFailures() {

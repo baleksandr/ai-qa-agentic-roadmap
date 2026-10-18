@@ -9,6 +9,9 @@ import { StudyLearnerPanelQaCheck } from './StudyLearnerPanelQaCheck';
 import { StudyLearnerPanelTermPairCards } from './StudyLearnerPanelTermPairCards';
 import { StudyLearnerPanelCourseLessonLink } from './StudyLearnerPanelCourseLessonLink';
 import { StudyModelResponseExampleBlock } from './StudyModelResponseExampleBlock';
+import { StudyLearnerPanelCollapsibleTraceSample } from './StudyLearnerPanelCollapsibleTraceSample';
+import { StudyDefinitionAccent } from './StudyDefinitionAccent';
+import { StudyLearnerPanelOutcomeCard } from './StudyLearnerPanelOutcomeCard';
 
 type Props = {
   sections: StudyLearnerPanelSection[];
@@ -39,10 +42,28 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
                   parentCardNumber={parentCardNumber}
                   showActorInPanel={section.showActorInPanel}
                   showStepIndexInPanel={section.showStepIndexInPanel}
+                  showNestedCardNumberInPanel={section.showNestedCardNumberInPanel}
+                  pickPanelDetailVariant={section.pickPanelDetailVariant}
                   conceptGroups={section.conceptGroups}
                   pickConclusionLabelUk={section.pickConclusionLabelUk}
                   pickConclusionUk={section.pickConclusionUk}
                   navLayout={section.navLayout}
+                  interactionHintUk={section.interactionHintUk}
+                />
+              </dd>
+            </div>
+          );
+        }
+
+        if (section.type === 'collapsibleTraceSample') {
+          return (
+            <div key={section.summaryUk} className="study-learner-panel-block">
+              <dd className="study-learner-panel-value study-learner-panel-value--flush">
+                <StudyLearnerPanelCollapsibleTraceSample
+                  summaryUk={section.summaryUk}
+                  jsonExample={section.jsonExample}
+                  fieldExplanations={section.fieldExplanations}
+                  calloutUk={section.calloutUk}
                 />
               </dd>
             </div>
@@ -76,6 +97,43 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
           );
         }
 
+        if (section.type === 'cardIntent') {
+          const intentLabel =
+            section.labelUk?.trim() || 'Що я зрозумію з цієї картки';
+          return (
+            <div
+              key={`cardIntent-${sectionIndex}`}
+              className="study-learner-panel-block study-learner-panel-block--card-intent"
+            >
+              <dd className="study-learner-panel-value study-learner-panel-value--flush">
+                <div className="study-learner-panel-card-intent" role="note">
+                  {section.hideLabel ? null : (
+                    <p className="study-learner-panel-card-intent-label">{intentLabel}</p>
+                  )}
+                  <p className="study-learner-panel-card-intent-body study-learner-explanation">
+                    {parseLessonBold(section.bodyUk)}
+                  </p>
+                </div>
+              </dd>
+            </div>
+          );
+        }
+
+        if (section.type === 'definitionAccent') {
+          return (
+            <div key={section.labelUk} className="study-learner-panel-block">
+              <dt className="study-learner-panel-label">{section.labelUk}</dt>
+              <dd className="study-learner-panel-value">
+                <StudyDefinitionAccent
+                  termUk={section.termUk}
+                  termEn={section.termEn}
+                  leadUk={section.leadUk}
+                />
+              </dd>
+            </div>
+          );
+        }
+
         if (section.type === 'qaCheck') {
           return (
             <div
@@ -89,10 +147,47 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
           );
         }
 
+        const hideMiniCardsSectionLabel =
+          section.type === 'miniCards' && section.hideSectionLabel;
+        const framedPlainBlock =
+          (section.type === 'plain' && section.framed === true) ||
+          (section.type === 'orderedList' && section.framed === true) ||
+          (section.type === 'labeledLines' && section.framed === true) ||
+          (section.type === 'miniCards' && section.framed === true);
+        const framedVariant =
+          section.type === 'plain' ||
+          section.type === 'orderedList' ||
+          section.type === 'labeledLines' ||
+          section.type === 'miniCards'
+            ? section.framedVariant
+            : undefined;
+        const framedAccentClass =
+          framedVariant === 'why'
+            ? 'study-learner-panel-block--framed-why'
+            : framedVariant === 'expect'
+              ? 'study-learner-panel-block--framed-expect'
+              : framedVariant === 'limit'
+                ? 'study-learner-panel-block--framed-limit'
+                : '';
         return (
-        <div key={section.labelUk} className="study-learner-panel-block">
-          <dt className="study-learner-panel-label">{section.labelUk}</dt>
-          <dd className="study-learner-panel-value">
+        <div
+          key={`${section.labelUk}-${sectionIndex}`}
+          className={[
+            'study-learner-panel-block',
+            framedPlainBlock ? 'study-learner-panel-block--framed' : '',
+            framedAccentClass,
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {hideMiniCardsSectionLabel ? null : (
+            <dt className="study-learner-panel-label">{section.labelUk}</dt>
+          )}
+          <dd
+            className={`study-learner-panel-value${
+              hideMiniCardsSectionLabel ? ' study-learner-panel-value--flush' : ''
+            }`}
+          >
             {section.type === 'prose' ? (
               <div className="study-learner-panel-prose">
                 {section.labeledLead ? (
@@ -129,35 +224,70 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
                     {parseLessonBold(section.captionUk)}
                   </p>
                 ) : null}
-                <ul
-                  className={
+                {(() => {
+                  const outcomeStack =
+                    section.layout !== 'numberedStack' &&
+                    (section.layout === 'titledStack' ||
+                      (section.layout !== 'flow' && section.items.some((item) => item.tone)));
+                  const listClass =
                     section.layout === 'flow'
                       ? 'study-learner-panel-mini-list study-learner-panel-mini-list--flow'
-                      : 'study-learner-panel-mini-list'
-                  }
-                >
-                  {section.items.map((item) => (
-                    <li
-                      key={item.titleUk}
-                      className={
-                        section.layout === 'flow'
-                          ? 'study-learner-panel-mini-card study-learner-panel-mini-card--flow-step'
-                          : 'study-learner-panel-mini-card'
-                      }
-                    >
-                      {section.layout === 'flow' ? (
-                        <div className="study-panel-flow-step-inner">
-                          <span className="study-panel-flow-step-badge">{item.titleUk}</span>
-                          <span className="study-panel-flow-step-text study-learner-explanation">
+                      : section.layout === 'numberedStack'
+                        ? 'study-learner-panel-mini-list study-learner-panel-mini-list--numbered-stack'
+                        : outcomeStack
+                          ? 'study-learner-panel-mini-list study-learner-panel-mini-list--outcome-stack'
+                          : 'study-learner-panel-mini-list';
+                  return (
+                <ul className={listClass}>
+                  {section.items.map((item, itemIndex) => (
+                    <li key={item.titleUk}>
+                      {section.layout === 'numberedStack' ? (
+                        <div className="study-learner-panel-mini-card study-learner-panel-mini-card--numbered">
+                          <div className="study-learner-panel-mini-card-numbered-head">
+                            <span
+                              className="study-learner-panel-mini-card-step-badge"
+                              aria-hidden="true"
+                            >
+                              {itemIndex + 1}
+                            </span>
+                            <p className="study-learner-panel-mini-card-heading">{item.titleUk}</p>
+                          </div>
+                          <p className="study-learner-panel-mini-card-body study-learner-explanation">
                             {parseLessonBold(item.bodyUk)}
-                          </span>
+                          </p>
                         </div>
+                      ) : section.layout === 'flow' ? (
+                        <div className="study-learner-panel-mini-card study-learner-panel-mini-card--flow-step">
+                          <div className="study-panel-flow-step-inner">
+                            <span className="study-panel-flow-step-badge">{item.titleUk}</span>
+                            <span className="study-panel-flow-step-text study-learner-explanation">
+                              {parseLessonBold(item.bodyUk)}
+                            </span>
+                          </div>
+                        </div>
+                      ) : outcomeStack || item.tone ? (
+                        <StudyLearnerPanelOutcomeCard
+                          titleUk={item.titleUk}
+                          bodyUk={item.bodyUk}
+                          footnoteUk={item.footnoteUk}
+                          tone={
+                            item.tone !== undefined
+                              ? item.tone
+                              : section.layout === 'titledStack'
+                                ? 'neutral'
+                                : undefined
+                          }
+                        />
                       ) : (
-                        <StudyLabeledExplanation termUk={item.titleUk} explanationUk={item.bodyUk} />
+                        <div className="study-learner-panel-mini-card">
+                          <StudyLabeledExplanation termUk={item.titleUk} explanationUk={item.bodyUk} />
+                        </div>
                       )}
                     </li>
                   ))}
                 </ul>
+                  );
+                })()}
                 {section.captionUk && section.layout === 'flow' ? (
                   <p className="study-learner-panel-caption study-learner-panel-flow-footnote study-learner-explanation muted small">
                     {parseLessonBold(section.captionUk)}
@@ -191,7 +321,29 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
                   section.panelCard ? 'study-learner-panel-focus-card' : undefined
                 }
               >
+                {section.leadUk?.trim() ? (
+                  <p className="study-learner-panel-focus-card-lead study-learner-explanation muted small">
+                    {parseLessonBold(section.leadUk)}
+                  </p>
+                ) : null}
                 <StudyLabeledExplanationStack items={section.items} />
+              </div>
+            ) : null}
+
+            {section.type === 'orderedList' ? (
+              <div className="study-learner-panel-ordered-list-wrap">
+                <ol className="study-learner-panel-ordered-list study-learner-explanation">
+                  {section.items.map((item) => (
+                    <li key={item} className="study-learner-panel-ordered-list-item">
+                      {parseLessonBold(item)}
+                    </li>
+                  ))}
+                </ol>
+                {section.noteUk?.trim() ? (
+                  <p className="study-learner-panel-ordered-list-note study-learner-explanation">
+                    {parseLessonBold(section.noteUk)}
+                  </p>
+                ) : null}
               </div>
             ) : null}
 

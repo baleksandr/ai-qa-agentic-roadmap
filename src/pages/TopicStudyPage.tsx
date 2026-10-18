@@ -12,7 +12,7 @@ import { loadStructuredStudy } from '../lib/structuredStudy';
 import { buildStudyLearningOutcomes } from '../data/study/study-lesson-intros';
 import { parseStudyDocument } from '../lib/studySections';
 import { useProgress } from '../hooks/useProgress';
-import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
+import { LEARNING_LABELS } from '../types/topic';
 import { StudyLessonAcronymHero } from '../components/lesson/StudyLessonAcronymHero';
 import { hasStudyLessonAside } from '../data/study/study-lesson-aside.registry';
 import { getStudyLessonHero } from '../data/study/study-lesson-heroes';
@@ -67,7 +67,7 @@ export function TopicStudyPage() {
   const showPageCardsHint = topicStudyPageHasInteractiveCards(topic.id);
 
   return (
-    <div className="page topic-study-page topic-study-page-wide">
+    <div className={`page topic-study-page topic-study-page-wide topic-study-page--${topic.id}`}>
       <Link className="back-link" to="/">← До карти курсу</Link>
       <SiteNav />
 
@@ -87,9 +87,6 @@ export function TopicStudyPage() {
         </h1>
         <p className="lead study-lead">Study Mode</p>
         <div className="topic-badges">
-          <span className={`badge migration-${topic.migrationStatus}`}>
-            Перенесення: {MIGRATION_LABELS[topic.migrationStatus]}
-          </span>
           <span className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</span>
         </div>
       </header>

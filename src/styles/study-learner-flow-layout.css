@@ -15,6 +15,20 @@
   hyphens: none;
 }
 
+.study-learning-outcomes .study-outcomes-body:has(.study-harness-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-pe-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-reasoning-outcomes-block) {
+  max-width: none;
+  width: 100%;
+}
+
+.study-outcomes-with-flows .study-harness-outcomes-block,
+.study-outcomes-with-flows .study-pe-outcomes-block,
+.study-outcomes-with-flows .study-reasoning-outcomes-block {
+  max-width: none;
+  width: 100%;
+}
+
 .study-outcomes-with-flows .study-md-flow-block .markdown-body p {
   line-height: 1.5;
 }
@@ -137,4 +151,56 @@
   max-width: 40rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Вертикальний маршрут (Tool Calling §4) — таймлайн на всіх ширинах */
+.study-learner-flow-track--vertical {
+  max-width: min(100%, 28rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.study-learner-flow-track--vertical .study-learner-flow-timeline--vertical .study-learner-flow-timeline-step {
+  padding: 0.35rem 0.25rem 0.15rem;
+}
+
+.study-learner-flow-track--vertical .study-learner-flow-timeline-body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.study-learner-flow-track--vertical .study-learner-flow-timeline-label {
+  display: block;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid rgba(91, 140, 255, 0.35);
+  background: rgba(12, 18, 36, 0.75);
+}
+
+.study-learner-flow-track--vertical .study-learner-flow-timeline-step:not(:last-child)::before {
+  display: none;
+}
+
+.study-learner-flow-track--vertical .study-learner-flow-timeline-down {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.15rem 0 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  line-height: 1;
+}
+
+@media (min-width: 520px) {
+  .study-learner-flow-track--vertical .study-learner-flow-desktop {
+    display: none;
+  }
+
+  .study-learner-flow-track--vertical .study-learner-flow-timeline {
+    display: flex;
+  }
 }

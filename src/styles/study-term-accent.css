@@ -1,13 +1,12 @@
 /* Термін / назва механізму / коротка теза всередині пояснень Study Mode */
 
 :root {
-  --study-term-accent: #b8c9ff;
-  --study-explanation-text: #dce4f8;
+  --study-explanation-text: rgba(232, 240, 252, 0.94);
 }
 
 .study-term-accent {
-  font-weight: 600;
-  color: var(--study-term-accent);
+  font-weight: 650;
+  color: var(--study-term-accent, #7ee8d8);
 }
 
 .study-learner-explanation,

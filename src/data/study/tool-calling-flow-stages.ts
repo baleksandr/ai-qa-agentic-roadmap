@@ -9,11 +9,11 @@ export type ToolCallingStage = {
 };
 
 const MECHANISM_TITLES = [
-  'Harness і tool schemas',
-  'LLM: tool_call',
-  'Validation і policy',
-  'Tool handler і I/O',
-  'Tool result у context',
+  'Код готує доступні інструменти',
+  'Модель пропонує виклик',
+  'Код перевіряє пропозицію',
+  'Інструмент намагається прочитати звіт',
+  'Код передає результат моделі',
 ] as const;
 
 const QA_BY_STEP: Record<number, string> = {

@@ -4,10 +4,10 @@ import {
   getStudySectionAside,
 } from '../../data/study/study-lesson-aside.registry';
 import type { StudySection } from '../../lib/studySections';
-import { ProgressPicker } from '../ProgressPicker';
+import { StudyProgressAsideCard } from './StudyProgressAsideCard';
 import type { LearningStatus } from '../../types/topic';
-import { LEARNING_LABELS } from '../../types/topic';
 import { parseLessonBold } from './lessonRichText';
+import { StudyTermAccent } from './StudyTermAccent';
 
 type Props = {
   topicId: string;
@@ -30,33 +30,117 @@ export function StudyLessonAside({
 
   if (!meta) return null;
 
+  const useSectionNote = Boolean(
+    aside.sectionNoteUk?.trim() ||
+      (aside.sectionNoteTermUk?.trim() && aside.sectionNoteExplanationUk?.trim()) ||
+      (aside.sectionNoteTrackCard?.rows?.length ?? 0) > 0,
+  );
+  const useContextCards = Boolean(aside.contextCards && aside.contextCards.length > 0);
   const hasSupplement =
+    useContextCards ||
     (aside.table && aside.table.rows.length > 0) ||
     aside.jsonCard ||
     (aside.tips && aside.tips.length > 0) ||
     aside.diagram;
 
   return (
-    <aside className="study-col-aside study-lesson-aside" aria-label="Контекст уроку">
-      <div className="study-lesson-aside-pinned">
-        <div className="study-aside-card study-aside-card-compact">
-          <p className="study-aside-label">Ваш прогрес</p>
-          <p className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</p>
-          <ProgressPicker value={learning} onChange={onLearningChange} />
-        </div>
+    <aside
+      className={`study-col-aside study-lesson-aside${meta.compactAside ? ' study-lesson-aside--compact' : ''}`}
+      aria-label="Контекст уроку"
+    >
+      <div className="study-lesson-aside-pinned study-progress-aside-desktop">
+        <StudyProgressAsideCard learning={learning} onLearningChange={onLearningChange} />
       </div>
 
       <div className="study-lesson-aside-scroll">
-        {active && (
+        {active && !aside.suppressSectionContext && useSectionNote && (
+          <div
+            className={`study-aside-card study-aside-section-note${
+              aside.sectionNoteStyle === 'compact-strip' ? ' study-aside-section-note--compact-strip' : ''
+            }`}
+          >
+            <p className="study-aside-label">Нотатка до розділу</p>
+            {aside.sectionNoteTrackCard?.rows?.length ? (
+              <div className="study-aside-track-card">
+                <p className="study-aside-track-card-title">{aside.sectionNoteTrackCard.titleUk}</p>
+                <ul className="study-aside-track-card-rows">
+                  {aside.sectionNoteTrackCard.rows.map((row) => (
+                    <li key={row.labelUk} className="study-aside-track-card-row">
+                      <p className="study-aside-track-card-row-label">{row.labelUk}</p>
+                      <p className="study-aside-track-card-row-body study-learner-explanation">
+                        {parseLessonBold(row.bodyUk)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+                {aside.sectionNoteTrackCard.footnoteUk?.trim() ? (
+                  <p className="study-aside-track-card-footnote study-learner-explanation">
+                    {parseLessonBold(aside.sectionNoteTrackCard.footnoteUk)}
+                  </p>
+                ) : null}
+              </div>
+            ) : aside.sectionNoteTermUk?.trim() ? (
+              <>
+                <p className="study-aside-section-note-term">
+                  <StudyTermAccent>{aside.sectionNoteTermUk}</StudyTermAccent>
+                </p>
+                <p className="study-aside-section-note-body">
+                  {parseLessonBold(aside.sectionNoteExplanationUk ?? '')}
+                </p>
+              </>
+            ) : (
+              <p className="study-aside-section-note-body">{parseLessonBold(aside.sectionNoteUk!)}</p>
+            )}
+          </div>
+        )}
+
+        {active && !aside.suppressSectionContext && !useSectionNote && (
           <div className="study-aside-card study-rag-aside-context">
             <p className="study-aside-label">Контекст · розділ {active.readerNumber}</p>
             <p className="study-rag-aside-section-title">{active.navTitle}</p>
-            <p className="study-rag-aside-focus">{parseLessonBold(aside.focus)}</p>
-            <p className="study-rag-aside-example muted small">
-              <span className="study-component-qa-label">Приклад:</span> {parseLessonBold(aside.example)}
-            </p>
-            {aside.diagram && (
-              <p className="study-rag-aside-diagram muted small">{parseLessonBold(aside.diagram)}</p>
+
+            {useContextCards ? (
+              <div className="study-aside-context-cards">
+                {aside.contextCards!.map((card) => (
+                  <div key={card.titleUk} className="study-aside-context-card">
+                    <p className="study-aside-context-card-title">{card.titleUk}</p>
+                    {card.bodyUk ? (
+                      <p className="study-aside-context-card-body">{parseLessonBold(card.bodyUk)}</p>
+                    ) : null}
+                    {card.termRows && card.termRows.length > 0 ? (
+                      <ul className="study-aside-term-rows">
+                        {card.termRows.map((row) => (
+                          <li key={row.term} className="study-aside-term-row">
+                            <StudyTermAccent>{row.term}</StudyTermAccent>
+                            <span className="study-aside-term-row-sep" aria-hidden="true"> — </span>
+                            <span>{row.textUk}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {card.footnoteUk ? (
+                      <p className="study-aside-context-card-footnote muted small">
+                        {parseLessonBold(card.footnoteUk)}
+                      </p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {aside.focus ? (
+                  <p className="study-rag-aside-focus">{parseLessonBold(aside.focus)}</p>
+                ) : null}
+                {aside.example ? (
+                  <p className="study-rag-aside-example muted small">
+                    <span className="study-component-qa-label">Приклад:</span>{' '}
+                    {parseLessonBold(aside.example)}
+                  </p>
+                ) : null}
+                {aside.diagram && (
+                  <p className="study-rag-aside-diagram muted small">{parseLessonBold(aside.diagram)}</p>
+                )}
+              </>
             )}
 
             {aside.table && aside.table.rows.length > 0 && (

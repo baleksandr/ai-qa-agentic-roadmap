@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useStudySectionsOpen } from '../hooks/useStudySectionsOpen';
 import { StudySectionsToolbar } from './lesson/StudySectionsToolbar';
 import type { StudySection } from '../lib/studySections';
@@ -39,6 +39,7 @@ import { extractRagProductionSection } from '../lib/ragProductionSection';
 import { StudyRagProductionCards } from './lesson/StudyRagProductionCards';
 import { StudyRagPipelineComponents } from './lesson/StudyRagPipelineComponents';
 import { StudyLessonAside } from './lesson/StudyLessonAside';
+import { StudyProgressAsideCard } from './lesson/StudyProgressAsideCard';
 import { hasStudyLessonAside } from '../data/study/study-lesson-aside.registry';
 import { stripRagPipelineInlineList } from '../lib/ragPrepSection';
 import { stripRagInterviewTablesFromRememberSection } from '../lib/ragRememberSection';
@@ -47,9 +48,39 @@ import { STUDY_LEARNER_MARKDOWN } from '../lib/studyLearnerMarkdown';
 import { StudyInterviewSelfCheck } from './lesson/StudyInterviewSelfCheck';
 import { StudyToolCallingComponents } from './lesson/StudyToolCallingComponents';
 import { StudyToolCallingOneFlow } from './lesson/StudyToolCallingOneFlow';
+import { StudyToolCallingWhySection } from './lesson/StudyToolCallingWhySection';
 import { StudyToolCallingFailureModes } from './lesson/StudyToolCallingFailureModes';
 import { StudyToolCallingQaTesting } from './lesson/StudyToolCallingQaTesting';
 import { StudyToolCallingLlmCodeBoundary } from './lesson/StudyToolCallingLlmCodeBoundary';
+import { StudyToolCallingProduction } from './lesson/StudyToolCallingProduction';
+import { StudyToolCallingRememberInterview } from './lesson/StudyToolCallingRememberInterview';
+import {
+  StudyHarnessComponents,
+  StudyHarnessCycle,
+  StudyHarnessFailureModesSection,
+  StudyHarnessLlmCode,
+  StudyHarnessOneRun,
+  StudyHarnessProduction,
+  StudyHarnessQaTestingSection,
+  StudyHarnessRememberInterview,
+} from './lesson/StudyHarnessSections';
+import {
+  StudyHarnessLearningOutcomes,
+  StudyHarnessWhySection,
+} from './lesson/StudyHarnessIntroBlocks';
+import { StudyPromptEngineeringLearningOutcomes } from './lesson/StudyPromptEngineeringLearningOutcomes';
+import { StudyReasoningLearningOutcomes } from './lesson/StudyReasoningLearningOutcomes';
+import {
+  StudyReasoningFailures,
+  StudyReasoningInvestigation,
+  StudyReasoningLlmCode,
+  StudyReasoningMechanism,
+  StudyReasoningProduction,
+  StudyReasoningQaTesting,
+  StudyReasoningRememberInterview,
+  StudyReasoningSequence,
+  StudyReasoningWhy,
+} from './lesson/StudyReasoningSections';
 import {
   StudyPromptEngineeringIntroOverview,
   StudyPromptEngineeringInvestigation,
@@ -81,7 +112,6 @@ import { topicStudyPageHasInteractiveCards } from '../lib/studyPageInteractive';
 import { getMapLabel } from '../data/learning-map.registry';
 import { MarkdownBody } from './MarkdownBody';
 import { StudyMarkdownWithFlows } from './lesson/StudyMarkdownWithFlows';
-import { stripFencedArrowFlowBlock } from '../lib/studyArrowFlow';
 import { StudyFlowRibbon } from './lesson/StudyFlowRibbon';
 import { parseArrowFlowParagraph, splitMarkdownWithArrowFlows } from '../lib/studyArrowFlow';
 
@@ -117,13 +147,34 @@ export function StudyModeSections({
     allExpanded,
     allCollapsed,
   } = useStudySectionsOpen(allIds, { initialOpenId: initialOpenId });
-  const [activeNavId, setActiveNavId] = useState(sections[0]?.id ?? '');
+  const [activeNavId, setActiveNavId] = useState(() => {
+    if (initialOpenId && sections.some((s) => s.id === initialOpenId)) return initialOpenId;
+    return sections[0]?.id ?? '';
+  });
+
+  useEffect(() => {
+    if (initialOpenId && sections.some((s) => s.id === initialOpenId)) {
+      setActiveNavId(initialOpenId);
+    }
+  }, [initialOpenId, sections]);
+
+  useEffect(() => {
+    if (openIds.size === 1) {
+      const onlyOpen = [...openIds][0];
+      if (onlyOpen) setActiveNavId(onlyOpen);
+    }
+  }, [openIds]);
 
   const navBlurb = topicId ? getLessonNavBlurb(topicId) : null;
   const lessonLabel = topicId ? getMapLabel(topicId) : null;
   const outcomesFlowAriaLabel = topicId ? getLessonOutcomesFlowAriaLabel(topicId) : 'Схема з уроку';
   const outcomesLessonHint = topicId ? getStudyOutcomesLessonHint(topicId) : null;
-  const showPageCardsHint = topicId ? topicStudyPageHasInteractiveCards(topicId) : false;
+  const showPageCardsHint =
+    topicId
+      ? topicStudyPageHasInteractiveCards(topicId) &&
+        topicId !== 'concept-04' &&
+        topicId !== 'concept-12'
+      : false;
 
   const toggle = (id: string) => {
     setActiveNavId(id);
@@ -144,7 +195,7 @@ export function StudyModeSections({
 
   return (
     <div
-      className={`structured-study-layout study-mode-layout${asideLayout ? ' study-mode-with-aside' : ''}`}
+      className={`structured-study-layout study-mode-layout${asideLayout ? ' study-mode-with-aside' : ''}${topicId === 'concept-10' || topicId === 'concept-04' || topicId === 'concept-12' ? ' study-mode-aside-compact' : ''}`}
     >
       <nav className="study-col-nav study-col-nav-sticky" aria-label="Зміст уроку">
         {lessonLabel && <p className="study-col-nav-title">{lessonLabel}</p>}
@@ -171,14 +222,28 @@ export function StudyModeSections({
             <h2 className="study-chapter-title">{chapterTitle}</h2>
           </header>
         )}
-        {introMarkdown && (
-          <aside className="study-learning-outcomes" aria-label="Що я зрозумію після цього уроку">
+        {(introMarkdown?.trim() ||
+          topicId === 'concept-04' ||
+          topicId === 'concept-12' ||
+          topicId === 'concept-14') && (
+          <aside
+            className={`study-learning-outcomes${topicId === 'concept-12' ? ' study-learning-outcomes--reasoning-compact' : ''}`}
+            aria-label="Що я зрозумію після цього уроку"
+          >
             <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
             <div className="markdown-body study-outcomes-body study-outcomes-with-flows">
-              <StudyMarkdownWithFlows
-                markdown={introMarkdown}
-                flowAriaLabel={outcomesFlowAriaLabel}
-              />
+              {topicId === 'concept-04' ? (
+                <StudyHarnessLearningOutcomes />
+              ) : topicId === 'concept-12' ? (
+                <StudyReasoningLearningOutcomes />
+              ) : topicId === 'concept-14' ? (
+                <StudyPromptEngineeringLearningOutcomes />
+              ) : (
+                <StudyMarkdownWithFlows
+                  markdown={introMarkdown}
+                  flowAriaLabel={outcomesFlowAriaLabel}
+                />
+              )}
               {outcomesLessonHint ? (
                 <StudyOutcomesLessonHint
                   labelUk={outcomesLessonHint.labelUk}
@@ -190,6 +255,14 @@ export function StudyModeSections({
         )}
 
         {showPageCardsHint ? <StudyPageCardsHint /> : null}
+
+        {asideLayout && onLearningChange ? (
+          <StudyProgressAsideCard
+            className="study-progress-aside-mobile"
+            learning={learning}
+            onLearningChange={onLearningChange}
+          />
+        ) : null}
 
         {topicId === 'concept-14' ? (
           <div className="study-prompt-pe-intro-overview">
@@ -262,6 +335,11 @@ function LessonBodyEnhancements({
   sectionTitle?: string;
 }) {
   const parts = useMemo(() => splitContentBlocks(markdown), [markdown]);
+  if (parts.length === 0) {
+    return (
+      <StudyMarkdownSegment text="" topicId={topicId} sectionTitle={sectionTitle} />
+    );
+  }
   return (
     <>
       {parts.map((part, i) => {
@@ -277,6 +355,87 @@ function LessonBodyEnhancements({
   );
 }
 
+function renderConcept10StudySection(sectionTitle?: string, _text = '') {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) return <StudyToolCallingWhySection />;
+  if (t.includes('один виклик')) return <StudyToolCallingOneFlow />;
+  if (t.includes('дані передаються') || t.includes('які дані')) {
+    return <StudyToolCallingComponents />;
+  }
+  if (t.includes('зламатися')) {
+    return <StudyToolCallingFailureModes />;
+  }
+  if (t.includes('qa це тестує')) {
+    return <StudyToolCallingQaTesting />;
+  }
+  if (t.includes('production')) {
+    return <StudyToolCallingProduction />;
+  }
+  if (/де код.*llm/i.test(t)) {
+    return <StudyToolCallingLlmCodeBoundary />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-10');
+    return (
+      <>
+        <StudyToolCallingRememberInterview />
+        {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </>
+    );
+  }
+  return null;
+}
+
+function renderConcept04StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) return <StudyHarnessWhySection />;
+  if (t.includes('один run')) return <StudyHarnessOneRun />;
+  if (t.includes('складається')) return <StudyHarnessComponents />;
+  if (t.includes('послідовність')) return <StudyHarnessCycle />;
+  if (/де код.*llm/i.test(t)) return <StudyHarnessLlmCode />;
+  if (t.includes('зламатися')) return <StudyHarnessFailureModesSection />;
+  if (/qa.*тестує/i.test(t.trim())) return <StudyHarnessQaTestingSection />;
+  if (t.includes('production')) return <StudyHarnessProduction />;
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-04');
+    return (
+      <>
+        <StudyHarnessRememberInterview />
+        {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </>
+    );
+  }
+  return null;
+}
+
+function renderConcept12StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) return <StudyReasoningWhy />;
+  if (t.includes('розслідуванні login_spec') || t.includes('run investigation')) {
+    return <StudyReasoningInvestigation />;
+  }
+  if (t.includes('складається')) return <StudyReasoningMechanism />;
+  if (t.includes('послідовність')) return <StudyReasoningSequence />;
+  if (/де код.*llm/i.test(t)) return <StudyReasoningLlmCode />;
+  if (t.includes('зламатися')) return <StudyReasoningFailures />;
+  if (/як qa(\s+це)?\s+тестує/i.test(t.trim())) return <StudyReasoningQaTesting />;
+  if (t.includes('production')) return <StudyReasoningProduction />;
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-12');
+    return (
+      <div className="study-reasoning-interview-section">
+        <StudyReasoningRememberInterview />
+        {deck ? (
+          <div className="study-reasoning-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  return null;
+}
+
 function StudyMarkdownSegment({
   text,
   topicId,
@@ -286,6 +445,21 @@ function StudyMarkdownSegment({
   topicId?: string;
   sectionTitle?: string;
 }) {
+  if (topicId === 'concept-04') {
+    const harnessSection = renderConcept04StudySection(sectionTitle);
+    if (harnessSection) return harnessSection;
+  }
+
+  if (topicId === 'concept-12') {
+    const reasoningSection = renderConcept12StudySection(sectionTitle);
+    if (reasoningSection) return reasoningSection;
+  }
+
+  if (topicId === 'concept-10') {
+    const toolCallingSection = renderConcept10StudySection(sectionTitle, text);
+    if (toolCallingSection) return toolCallingSection;
+  }
+
   if (!text.trim()) return null;
 
   if (topicId === 'concept-03' && (sectionTitle ?? '').toLowerCase().includes('production')) {
@@ -332,46 +506,13 @@ function StudyMarkdownSegment({
 
   if (
     topicId === 'concept-14' &&
-    /як qa тестує/i.test((sectionTitle ?? '').trim())
+    /як qa(\s+це)?\s+тестує/i.test((sectionTitle ?? '').trim().toLowerCase())
   ) {
     return <StudyPromptEngineeringQaTesting />;
   }
 
   if (topicId === 'concept-14' && (sectionTitle ?? '').toLowerCase().includes('production')) {
     return <StudyPromptEngineeringProduction />;
-  }
-
-  if (topicId === 'concept-10' && (sectionTitle ?? '').toLowerCase().includes('один виклик')) {
-    return <StudyToolCallingOneFlow />;
-  }
-
-  if (topicId === 'concept-10' && (sectionTitle ?? '').toLowerCase().includes('складається')) {
-    let intro = stripFencedArrowFlowBlock(text.split(/Оберіть крок/i)[0]?.trim() ?? text);
-    intro = intro.replace(/^Типовий ланцюг[^\n]*\n+/im, '').trim();
-    return (
-      <>
-        {intro ? (
-          <StudyMarkdownWithFlows
-            markdown={intro}
-            flowAriaLabel="Ланцюг tool calling"
-          />
-        ) : null}
-        <StudyToolCallingComponents />
-      </>
-    );
-  }
-
-  if (topicId === 'concept-10' && (sectionTitle ?? '').toLowerCase().includes('зламатися')) {
-    const intro = text.split(/^####\s+/m)[0]?.trim();
-    return <StudyToolCallingFailureModes introUk={intro} />;
-  }
-
-  if (topicId === 'concept-10' && (sectionTitle ?? '').toLowerCase().includes('qa це тестує')) {
-    return <StudyToolCallingQaTesting introUk={text.trim()} />;
-  }
-
-  if (topicId === 'concept-10' && /де код.*llm/i.test((sectionTitle ?? '').toLowerCase())) {
-    return <StudyToolCallingLlmCodeBoundary introMarkdown={text.trim()} />;
   }
 
   if (topicId === 'concept-03' && (sectionTitle ?? '').toLowerCase().includes('одному запиті')) {
@@ -405,6 +546,22 @@ function StudyMarkdownSegment({
         return (
           <>
             <StudyPromptEngineeringRememberInterview />
+            <StudyInterviewSelfCheck deck={deck} />
+          </>
+        );
+      }
+      if (topicId === 'concept-12') {
+        return (
+          <>
+            <StudyReasoningRememberInterview />
+            <StudyInterviewSelfCheck deck={deck} />
+          </>
+        );
+      }
+      if (topicId === 'concept-10') {
+        return (
+          <>
+            <StudyToolCallingRememberInterview />
             <StudyInterviewSelfCheck deck={deck} />
           </>
         );

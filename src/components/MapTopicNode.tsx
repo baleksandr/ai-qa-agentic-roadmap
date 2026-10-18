@@ -2,6 +2,7 @@ import { TOPIC_BY_ID } from '../data/topics.registry';
 import { getMapHint, getMapLabel } from '../data/learning-map.registry';
 import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import type { TopicMeta } from '../types/topic';
+import { LEARNING_LABELS } from '../types/topic';
 import { useProgress } from '../hooks/useProgress';
 import { MapLearningStatus } from './MapLearningStatus';
 
@@ -32,6 +33,7 @@ export function MapTopicNode({ topicId, labSublabel, selected, highlighted, onSe
       aria-pressed={selected}
       aria-describedby={hint ? `map-hint-${topicId}` : undefined}
       title={hint}
+      aria-label={`${label}. ${LEARNING_LABELS[learning]}`}
     >
       <MapLearningStatus status={learning} />
       <span className="map-node-label">{label}</span>

@@ -1,4 +1,5 @@
 import type { ArchitectureSchema } from '../../types/architecture-simulation';
+import { CONCEPT_LAYERS_SCHEMA } from './schema-concept-layers';
 import { AGENT_SCHEMA } from './schema-agent';
 import { HARNESS_SCHEMA } from './schema-harness';
 import { TOOL_CALLING_SCHEMA } from './schema-tool-calling';
@@ -8,6 +9,7 @@ import { MCP_SCHEMA } from './schema-mcp';
 import { COMBINED_SCHEMA } from './schema-combined';
 
 export type ArchitectureTabId =
+  | 'concept-layers'
   | 'agent'
   | 'tool-calling'
   | 'harness'
@@ -18,6 +20,7 @@ export type ArchitectureTabId =
   | 'compare';
 
 export const ARCHITECTURE_TABS: { id: ArchitectureTabId; label: string }[] = [
+  { id: 'concept-layers', label: 'LLM · RAG · Agent · System' },
   { id: 'agent', label: 'Агент: загальний цикл' },
   { id: 'tool-calling', label: 'Tool Calling' },
   { id: 'harness', label: 'Agent Harness' },
@@ -29,6 +32,7 @@ export const ARCHITECTURE_TABS: { id: ArchitectureTabId; label: string }[] = [
 ];
 
 export const SCHEMA_BY_TAB: Record<Exclude<ArchitectureTabId, 'compare'>, ArchitectureSchema> = {
+  'concept-layers': CONCEPT_LAYERS_SCHEMA,
   agent: AGENT_SCHEMA,
   'tool-calling': TOOL_CALLING_SCHEMA,
   harness: HARNESS_SCHEMA,

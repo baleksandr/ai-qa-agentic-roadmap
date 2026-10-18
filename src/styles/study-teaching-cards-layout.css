@@ -131,6 +131,99 @@
   margin: 0.75rem 0 0.5rem;
 }
 
+/* Prompt Engineering / Reasoning — один бірюзовий акцент заголовків; рожевий лише на обраній картці */
+.study-prompt-pe-teaching-cards .study-rag-qa-panel-title,
+.study-reasoning-teaching-cards .study-rag-qa-panel-title,
+.study-prompt-pe-teaching-cards .study-interactive-card-title,
+.study-reasoning-teaching-cards .study-interactive-card-title,
+.study-prompt-pe-teaching-cards .study-flow-stage-title,
+.study-reasoning-teaching-cards .study-flow-stage-title {
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-prompt-pe-teaching-cards .study-flow-stage-glyph,
+.study-reasoning-teaching-cards .study-flow-stage-glyph {
+  background: rgba(28, 34, 52, 0.65);
+  border-color: var(--study-explainer-border, rgba(72, 88, 118, 0.48));
+  color: var(--study-muted-text, rgba(200, 212, 232, 0.82));
+}
+
+.study-prompt-pe-teaching-cards .study-flow-stage-actor,
+.study-prompt-pe-teaching-cards .study-flow-stage-actor.is-llm,
+.study-reasoning-teaching-cards .study-flow-stage-actor,
+.study-reasoning-teaching-cards .study-flow-stage-actor.is-llm {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(200, 212, 232, 0.88);
+}
+
+.study-prompt-pe-teaching-cards .study-after-interactive-summary-card,
+.study-reasoning-teaching-cards .study-after-interactive-summary-card {
+  border: 1px solid var(--study-explainer-border, rgba(72, 88, 118, 0.48));
+  border-left-width: 3px;
+  border-left-color: var(--study-explainer-border-left, rgba(58, 70, 96, 0.85));
+  background: var(
+    --study-explainer-bg,
+    linear-gradient(158deg, rgba(16, 20, 34, 0.94) 0%, rgba(9, 12, 22, 0.92) 100%)
+  );
+  box-shadow: var(--study-explainer-shadow);
+}
+
+.study-prompt-pe-teaching-cards .study-after-interactive-summary-card-title,
+.study-reasoning-teaching-cards .study-after-interactive-summary-card-title {
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-prompt-pe-teaching-cards .study-after-interactive-summary-card-body,
+.study-reasoning-teaching-cards .study-after-interactive-summary-card-body {
+  color: var(--study-body-text, rgba(232, 240, 252, 0.94));
+}
+
+.study-prompt-pe-teaching-cards .study-after-interactive-summary-footnote,
+.study-reasoning-teaching-cards .study-learner-panel-block--card-intent {
+  margin: 0 0 0.85rem;
+}
+
+.study-reasoning-teaching-cards .study-learner-panel-card-intent {
+  width: 100%;
+  max-width: none;
+  padding: 0.55rem 0.7rem 0.6rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-reasoning-teaching-cards .study-learner-panel-card-intent-label {
+  margin: 0 0 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-reasoning-teaching-cards .study-learner-panel-card-intent-body {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+}
+
+.study-reasoning-teaching-cards .study-after-interactive-summary-footnote {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--study-explainer-border, rgba(72, 88, 118, 0.48));
+  border-left-width: 3px;
+  border-left-color: var(--study-explainer-border-left, rgba(58, 70, 96, 0.85));
+  background: var(
+    --study-explainer-bg,
+    linear-gradient(158deg, rgba(16, 20, 34, 0.94) 0%, rgba(9, 12, 22, 0.92) 100%)
+  );
+  color: var(--study-body-text, rgba(232, 240, 252, 0.94));
+  font-size: 0.95rem;
+  line-height: 1.52;
+}
+
 .study-teaching-cards-layout .study-step-detail-layout {
   margin-top: 0.65rem;
   width: 100%;
@@ -305,4 +398,654 @@
   margin-top: 0.65rem;
   max-width: 46rem;
   color: #dce4f8;
+}
+
+/* Tool Calling §4 — три картки ролей у сітці на широкому екрані */
+.study-tool-calling-llm-code-roles.study-teaching-cards {
+  margin-top: 0.85rem;
+}
+
+.study-tool-calling-llm-code-roles .study-step-detail-layout {
+  grid-template-columns: 1fr;
+}
+
+.study-tool-calling-llm-code-roles .study-step-detail-nav {
+  max-width: none;
+  width: 100%;
+}
+
+.study-tool-calling-llm-code-roles .study-rag-pipeline-steps-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+
+@media (min-width: 769px) {
+  .study-tool-calling-llm-code-roles .study-step-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .study-tool-calling-llm-code-roles .study-step-detail-nav {
+    max-width: none;
+  }
+
+  .study-tool-calling-llm-code-roles .study-rag-pipeline-steps-col {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.study-tool-calling-llm-code .study-teaching-cards + .study-teaching-cards {
+  margin-top: 1rem;
+}
+
+/* Reasoning §4 / §6 — зліва вузький стовпчик карток, справа панель */
+.study-reasoning-sequence-trio .study-teaching-intro-run-card {
+  margin-bottom: 0.65rem;
+  padding: 0.6rem 0.8rem 0.65rem;
+}
+
+.study-reasoning-sequence-trio .study-rag-pipeline-steps-col,
+.study-reasoning-failure-risks .study-rag-pipeline-steps-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.study-reasoning-sequence-trio .study-flow-stage-card--pipeline .study-flow-stage-card-label,
+.study-reasoning-sequence-trio .study-flow-stage-card--pipeline .study-flow-stage-title,
+.study-reasoning-failure-risks .study-flow-stage-card--pipeline .study-flow-stage-card-label,
+.study-reasoning-failure-risks .study-flow-stage-card--pipeline .study-flow-stage-title {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.study-reasoning-sequence-trio .study-flow-stage-card--pipeline .study-flow-stage-teaser,
+.study-reasoning-failure-risks .study-flow-stage-card--pipeline .study-flow-stage-teaser {
+  overflow-wrap: anywhere;
+}
+
+.study-reasoning-sequence-trio .study-flow-stage-card--pipeline,
+.study-reasoning-failure-risks .study-flow-stage-card--pipeline {
+  border-left-width: 3px;
+  border-left-color: var(--study-explainer-border-left, rgba(58, 70, 96, 0.85));
+  background: rgba(18, 22, 36, 0.72);
+}
+
+.study-reasoning-sequence-trio .study-flow-stage-card--pipeline.is-active,
+.study-reasoning-failure-risks .study-flow-stage-card--pipeline.is-active {
+  border-color: var(--study-interactive-card-active-border, rgba(255, 120, 180, 0.72));
+  box-shadow:
+    0 0 0 1px rgba(255, 120, 180, 0.22),
+    0 0 16px rgba(255, 120, 180, 0.14);
+}
+
+@media (min-width: 769px) {
+  .study-reasoning-sequence-trio .study-step-detail-layout,
+  .study-reasoning-failure-risks .study-step-detail-layout {
+    grid-template-columns: minmax(200px, 248px) minmax(0, 1fr);
+    gap: 1rem 1.25rem;
+    align-items: start;
+  }
+
+  .study-reasoning-sequence-trio .study-step-detail-nav,
+  .study-reasoning-failure-risks .study-step-detail-nav {
+    max-width: 248px;
+    width: 100%;
+  }
+
+  .study-reasoning-sequence-trio .study-step-detail-panel,
+  .study-reasoning-failure-risks .study-step-detail-panel {
+    max-width: none;
+  }
+
+  .study-reasoning-failure-risks .study-step-detail-layout {
+    grid-template-columns: minmax(220px, 272px) minmax(0, 1fr);
+  }
+
+  .study-reasoning-failure-risks .study-step-detail-nav {
+    max-width: 272px;
+  }
+}
+
+@media (max-width: 768px) {
+  .study-reasoning-sequence-trio .study-step-detail-layout,
+  .study-reasoning-failure-risks .study-step-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .study-reasoning-sequence-trio .study-step-detail-nav,
+  .study-reasoning-failure-risks .study-step-detail-nav {
+    max-width: none;
+    width: 100%;
+  }
+
+  .study-reasoning-sequence-trio .study-step-detail-panel,
+  .study-reasoning-failure-risks .study-step-detail-panel {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Reasoning §4 — вкладені «Що може статися далі»: м’яке світіння, без обрізання в вузькій панелі */
+.study-reasoning-sequence-trio .study-step-detail-panel,
+.study-reasoning-sequence-trio .study-rag-qa-panel-body,
+.study-reasoning-sequence-trio .study-learner-panel-mini-wrap {
+  overflow: visible;
+}
+
+.study-reasoning-sequence-trio .study-outcome-card--allow {
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 12px rgba(61, 214, 195, 0.06);
+}
+
+.study-reasoning-sequence-trio .study-outcome-card--deny,
+.study-reasoning-sequence-trio .study-outcome-card--end {
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 10px rgba(232, 200, 120, 0.06);
+}
+
+.study-reasoning-sequence-trio .study-outcome-card--refute {
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 10px rgba(255, 120, 180, 0.06);
+}
+
+/* Reasoning §6 — чотири блоки в панелі ризику */
+.study-reasoning-failure-risks .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-reasoning-failure-risks .study-learner-panel-block--framed:last-child {
+  margin-bottom: 0;
+}
+
+.study-reasoning-failure-risks .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-reasoning-failure-risks .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  color: rgba(230, 235, 250, 0.92);
+  font-size: 0.92rem;
+  line-height: 1.48;
+}
+
+.study-reasoning-failure-risks .study-learner-panel-block--framed-why {
+  border-color: rgba(232, 200, 120, 0.38);
+  border-left-width: 3px;
+  border-left-color: rgba(232, 200, 120, 0.58);
+}
+
+.study-reasoning-failure-risks .study-learner-panel-block--framed-why .study-learner-panel-label {
+  color: var(--study-status-warn, #e8c878);
+}
+
+/* Reasoning §5 — QA-мінікартки на картці «Код застосунку» */
+.study-reasoning-llm-code .study-outcome-card--deny {
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 10px rgba(232, 200, 120, 0.06);
+}
+
+.study-reasoning-llm-code .study-outcome-card--read-fail {
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 10px rgba(255, 130, 110, 0.06);
+}
+
+/* Reasoning §8 — вкладений pick «Що шукати в trace» у панелі Trace */
+.study-reasoning-production .study-learner-panel-block--step-pick {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+}
+
+.study-reasoning-production .study-learner-panel-step-pick-layout .study-step-detail-layout {
+  grid-template-columns: minmax(11.5rem, 248px) minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+  align-items: start;
+}
+
+.study-reasoning-production .study-learner-panel-step-pick-layout .study-rag-pipeline-steps-col > li {
+  min-width: 0;
+  width: 100%;
+}
+
+.study-reasoning-production .study-learner-panel-step-pick-layout .study-flow-stage-card--pipeline {
+  border-left-width: 3px;
+  border-left-color: rgba(58, 70, 96, 0.85);
+  background: rgba(18, 22, 36, 0.72);
+}
+
+.study-reasoning-production .study-learner-panel-step-pick-layout .study-flow-stage-card--pipeline.is-active {
+  border-color: var(--study-interactive-card-active-border, rgba(255, 120, 180, 0.72));
+  box-shadow:
+    0 0 0 1px rgba(255, 120, 180, 0.22),
+    0 0 16px rgba(255, 120, 180, 0.14);
+}
+
+.study-reasoning-production .study-learner-panel--step-pick-detail .study-learner-panel-block {
+  margin: 0 0 0.65rem;
+  padding: 0.55rem 0.68rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(100, 120, 200, 0.22);
+  background: rgba(14, 18, 30, 0.65);
+  box-sizing: border-box;
+}
+
+.study-reasoning-production .study-learner-panel--step-pick-detail .study-learner-panel-block:last-child {
+  margin-bottom: 0;
+}
+
+.study-reasoning-production .study-learner-panel--step-pick-detail .study-learner-panel-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-reasoning-production .study-learner-panel--step-pick-detail .study-learner-panel-value {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(230, 238, 250, 0.92);
+}
+
+.study-reasoning-production .study-learner-panel-step-pick-panel-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: #e8eef8;
+}
+
+@media (max-width: 768px) {
+  .study-reasoning-production .study-learner-panel-step-pick-layout .study-step-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .study-reasoning-production .study-learner-panel-step-pick-layout .study-step-detail-panel {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Reasoning §8 — після «Огляд» одразу split-nav (без проміжної нотатки в центрі) */
+.study-reasoning-production > .study-teaching-intro-run-card {
+  margin-bottom: 0.65rem;
+}
+
+.study-reasoning-production > .study-rag-pipeline-with-panel.study-teaching-cards-layout {
+  margin-top: 0;
+}
+
+/* Reasoning §7 — п’ять QA-карток, той самий split-nav що §6 */
+.study-reasoning-qa-checks .study-rag-pipeline-steps-col,
+.study-reasoning-production .study-rag-pipeline-steps-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.study-reasoning-qa-checks .study-flow-stage-card--pipeline .study-flow-stage-title,
+.study-reasoning-qa-checks .study-flow-stage-card--pipeline .study-flow-stage-teaser,
+.study-reasoning-production .study-flow-stage-card--pipeline .study-flow-stage-title,
+.study-reasoning-production .study-flow-stage-card--pipeline .study-flow-stage-teaser {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.study-reasoning-qa-checks .study-flow-stage-card--pipeline,
+.study-reasoning-production .study-flow-stage-card--pipeline {
+  border-left-width: 3px;
+  border-left-color: var(--study-explainer-border-left, rgba(58, 70, 96, 0.85));
+  background: rgba(18, 22, 36, 0.72);
+}
+
+.study-reasoning-qa-checks .study-flow-stage-card--pipeline.is-active,
+.study-reasoning-production .study-flow-stage-card--pipeline.is-active {
+  border-color: var(--study-interactive-card-active-border, rgba(255, 120, 180, 0.72));
+  box-shadow:
+    0 0 0 1px rgba(255, 120, 180, 0.22),
+    0 0 16px rgba(255, 120, 180, 0.14);
+}
+
+@media (min-width: 769px) {
+  .study-reasoning-qa-checks .study-step-detail-layout,
+  .study-reasoning-production .study-step-detail-layout {
+    grid-template-columns: minmax(220px, 288px) minmax(0, 1fr);
+    gap: 1rem 1.25rem;
+    align-items: start;
+  }
+
+  .study-reasoning-qa-checks .study-step-detail-nav,
+  .study-reasoning-production .study-step-detail-nav {
+    max-width: 288px;
+    width: 100%;
+  }
+
+  .study-reasoning-qa-checks .study-step-detail-panel,
+  .study-reasoning-production .study-step-detail-panel {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .study-reasoning-qa-checks .study-step-detail-layout,
+  .study-reasoning-production .study-step-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .study-reasoning-qa-checks .study-step-detail-nav,
+  .study-reasoning-production .study-step-detail-nav {
+    max-width: none;
+    width: 100%;
+  }
+
+  .study-reasoning-qa-checks .study-step-detail-panel,
+  .study-reasoning-production .study-step-detail-panel {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Reasoning §7 — вступ і дві картки шарів перевірки */
+.study-teaching-intro-mini-grid {
+  display: grid;
+  gap: 0.75rem 1rem;
+  margin: 0 0 0.75rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .study-teaching-intro-mini-grid {
+    grid-template-columns: 1fr minmax(200px, 260px);
+  }
+
+  .study-teaching-intro-mini-grid--aside-only {
+    grid-template-columns: 1fr minmax(200px, 280px);
+    justify-items: end;
+  }
+
+  .study-teaching-intro-mini-grid--aside-only .study-teaching-section-aside-note {
+    max-width: 280px;
+  }
+}
+
+.study-teaching-intro-mini-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+@media (min-width: 640px) {
+  .study-teaching-intro-mini-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.study-teaching-intro-mini-card {
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.65rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.study-teaching-intro-mini-card-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 650;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-teaching-intro-mini-card-body {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+  overflow-wrap: anywhere;
+}
+
+.study-teaching-section-aside-note {
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.65rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.22);
+  background: rgba(16, 20, 34, 0.72);
+}
+
+.study-teaching-section-aside-note-p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.48;
+  color: rgba(220, 228, 248, 0.9);
+}
+
+/* Reasoning §7 — обрамлені блоки панелі тесту */
+.study-reasoning-qa-checks .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed:last-child {
+  margin-bottom: 0;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  color: rgba(230, 235, 250, 0.92);
+  font-size: 0.92rem;
+  line-height: 1.48;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed-expect {
+  border-color: rgba(61, 214, 195, 0.38);
+  border-left-width: 3px;
+  border-left-color: rgba(61, 214, 195, 0.55);
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed-expect .study-learner-panel-label {
+  color: var(--study-status-positive, #6ee4d4);
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed-limit {
+  border-color: rgba(232, 200, 120, 0.38);
+  border-left-width: 3px;
+  border-left-color: rgba(232, 200, 120, 0.55);
+}
+
+.study-reasoning-qa-checks .study-learner-panel-block--framed-limit .study-learner-panel-label {
+  color: var(--study-status-warn, #e8c878);
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-list--numbered-stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-list--numbered-stack > li {
+  margin: 0;
+  min-width: 0;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-card--numbered {
+  margin: 0;
+  padding: 0.65rem 0.72rem 0.7rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.26);
+  border-left: 3px solid rgba(110, 228, 212, 0.52);
+  background: rgba(14, 18, 30, 0.88);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-card-numbered-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin-bottom: 0.4rem;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-card-step-badge {
+  flex-shrink: 0;
+  min-width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  background: rgba(110, 228, 212, 0.12);
+  color: rgba(150, 235, 220, 0.95);
+  border: 1px solid rgba(110, 228, 212, 0.32);
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-card--numbered .study-learner-panel-mini-card-heading {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #e8eef8;
+}
+
+.study-reasoning-qa-checks .study-learner-panel-mini-card--numbered .study-learner-panel-mini-card-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(230, 238, 250, 0.92);
+  overflow-wrap: anywhere;
+}
+
+/* Reasoning §8 — обрамлені блоки панелі production */
+.study-reasoning-production .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-reasoning-production .study-learner-panel-block--framed:last-child {
+  margin-bottom: 0;
+}
+
+.study-reasoning-production .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-reasoning-production .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  color: rgba(230, 235, 250, 0.92);
+  font-size: 0.92rem;
+  line-height: 1.48;
+}
+
+.study-reasoning-production .study-learner-labeled-line .study-term-accent {
+  font-weight: 650;
+}
+
+.study-reasoning-remember-trio-wrap {
+  margin: 0 0 1rem;
+}
+
+.study-reasoning-remember-trio {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .study-reasoning-remember-trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.study-reasoning-interview-block .study-rag-interview-answer-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.study-reasoning-interview-block .study-interview-deep-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.study-reasoning-interview-block .study-interview-deep-info-card {
+  margin: 0;
+}
+
+.study-reasoning-interview-block .study-interview-deep-info-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.study-reasoning-interview-block .study-interview-deep-info-card-title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 650;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-reasoning-interview-block .study-interview-deep-info-card-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+}
+
+.study-reasoning-interview-block .study-rag-interview-pitfall-standalone {
+  margin-top: 0.65rem;
 }

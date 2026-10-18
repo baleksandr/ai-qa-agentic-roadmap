@@ -32,24 +32,23 @@ export type ToolCallingGwtScenario = {
 export const TOOL_CALLING_QA_LEVELS: ToolCallingQaTestLevel[] = [
   {
     id: 'tc-qa-level-handler',
-    badgeUk: 'Handler',
-    titleUk: 'Tool handler окремо',
-    bodyUk:
-      'Тестуєте лише функцію читання/запису: фікстура файлу в тестовій теці, виклик handler з контрольованими args. Мета — довести, що валідний path повертає snippet, а небезпечний — помилку без читання за межами sandbox.',
+    badgeUk: '',
+    titleUk: 'Одна функція',
+    bodyUk: 'Перевіряємо, що функція читання повертає вміст тестового файлу або зрозумілу помилку.',
   },
   {
     id: 'tc-qa-level-harness',
-    badgeUk: 'Harness',
-    titleUk: 'Harness без реальної LLM',
+    badgeUk: '',
+    titleUk: 'Код навколо моделі',
     bodyUk:
-      'Підставляєте готовий tool_call (ім’я + JSON) у harness.runToolStep або еквівалент. Перевіряєте validation, policy, виклик handler (mock/spy), формування tool message і запис у trace. LLM у цьому шарі не потрібна.',
+      'Підставляємо готову пропозицію інструмента й дивимося, як застосунок перевіряє її та виконує або відхиляє.',
   },
   {
     id: 'tc-qa-level-llm',
-    badgeUk: '+ LLM',
-    titleUk: 'Сценарій із реальною LLM',
+    badgeUk: '',
+    titleUk: 'Модель у повному сценарії',
     bodyUk:
-      'Фіксований контекст після `login_spec`: чи модель обирає доречний read-tool, чи run завершується з корисним snippet у messages. Не вимагайте побайтово однакової відповіді — оцінюйте trace, наявність доказу в context і відсутність заборонених side effects.',
+      'Перевіряємо, чи модель обирає доречну дію та чи її відповідь спирається на фактично отриманий результат.',
   },
 ];
 

@@ -142,6 +142,14 @@ function tokenizeStudyLessonInline(text) {
   const tokens = [];
   let i = 0;
   while (i < text.length) {
+    if (text.startsWith('[[', i)) {
+      const close = text.indexOf(']]', i + 2);
+      if (close !== -1) {
+        tokens.push({ type: 'term', value: text.slice(i + 2, close) });
+        i = close + 2;
+        continue;
+      }
+    }
     if (text.startsWith('**', i)) {
       const close = text.indexOf('**', i + 2);
       if (close !== -1) {
@@ -159,8 +167,10 @@ function tokenizeStudyLessonInline(text) {
       }
     }
     let next = text.length;
+    const nTerm = text.indexOf('[[', i);
     const nBold = text.indexOf('**', i);
     const nCode = text.indexOf('`', i);
+    if (nTerm !== -1) next = Math.min(next, nTerm);
     if (nBold !== -1) next = Math.min(next, nBold);
     if (nCode !== -1) next = Math.min(next, nCode);
     if (next > i) {

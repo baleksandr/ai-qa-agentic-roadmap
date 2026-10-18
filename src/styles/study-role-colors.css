@@ -1,0 +1,129 @@
+/**
+ * Study Mode — обмежена палітра за роллю (Harness, Tool Calling, спільні панелі).
+ * Кольор: рамка, смуга, бейдж, заголовок. Основний текст — світлий, без фарбування.
+ */
+
+:root {
+  --study-body-text: rgba(232, 240, 252, 0.94);
+  --study-muted-text: rgba(200, 212, 232, 0.82);
+  --study-teaser-text: #c5d2ea;
+
+  --study-heading-accent: #6ee4d4;
+  --study-heading-accent-strong: #7ee8d8;
+  --study-term-accent: #7ee8d8;
+
+  --study-explainer-bg: linear-gradient(
+    158deg,
+    rgba(16, 20, 34, 0.94) 0%,
+    rgba(9, 12, 22, 0.92) 100%
+  );
+  --study-explainer-border: rgba(72, 88, 118, 0.48);
+  --study-explainer-border-left: rgba(58, 70, 96, 0.85);
+  --study-explainer-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 4px 12px rgba(0, 0, 0, 0.2);
+
+  --study-status-positive: #6ee4d4;
+  --study-status-positive-border: rgba(61, 214, 195, 0.42);
+  --study-status-positive-glow: rgba(61, 214, 195, 0.1);
+
+  --study-status-warn: #e8c878;
+  --study-status-warn-border: rgba(232, 200, 120, 0.42);
+  --study-status-warn-glow: rgba(232, 200, 120, 0.09);
+
+  --study-card-selected-accent: #f472b6;
+  --study-card-selected-glow: rgba(244, 114, 182, 0.22);
+
+  --study-interactive-card-title: var(--study-heading-accent);
+  --study-interactive-card-title-active: var(--study-heading-accent-strong);
+}
+
+/* Звичайна картка пояснення в панелі */
+.study-explainer-block {
+  margin: 0;
+  padding: 0.58rem 0.65rem 0.62rem;
+  border-radius: 8px;
+  border: 1px solid var(--study-explainer-border);
+  border-left-width: 3px;
+  border-left-color: var(--study-explainer-border-left);
+  background: var(--study-explainer-bg);
+  box-shadow: var(--study-explainer-shadow);
+}
+
+.study-explainer-block .study-learner-panel-label,
+.study-explainer-block__label {
+  color: var(--study-heading-accent);
+}
+
+.study-explainer-block .study-learner-panel-value,
+.study-explainer-block__body {
+  color: var(--study-body-text);
+}
+
+/* Обгортка обраного варіанта (дозволено / відмовлено / дані / помилка) */
+.study-learner-panel-outcome-detail-shell {
+  margin-top: 0.15rem;
+  padding: 0.55rem 0.6rem 0.65rem;
+  padding-left: calc(0.6rem + 3px);
+  border-radius: 10px;
+  border: 1px solid var(--study-explainer-border);
+  background: var(--study-explainer-bg);
+  box-shadow: var(--study-explainer-shadow);
+  border-left-width: 3px;
+  border-left-style: solid;
+}
+
+.study-learner-panel-outcome-detail-shell--positive {
+  border-left-color: var(--study-status-positive-border);
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 18px var(--study-status-positive-glow);
+}
+
+.study-learner-panel-outcome-detail-shell--warn {
+  border-left-color: var(--study-status-warn-border);
+  box-shadow:
+    var(--study-explainer-shadow),
+    0 0 16px var(--study-status-warn-glow);
+}
+
+.study-learner-panel-outcome-detail-shell--neutral {
+  border-left-color: var(--study-explainer-border-left);
+}
+
+.study-learner-panel-step-pick-panel-title--outcome {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.study-learner-panel-step-pick-panel-title--outcome::before {
+  content: '';
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--study-explainer-border-left);
+}
+
+.study-learner-panel-step-pick-panel-title--tone-positive {
+  color: var(--study-status-positive);
+}
+
+.study-learner-panel-step-pick-panel-title--tone-positive::before {
+  background: var(--study-status-positive);
+  box-shadow: 0 0 8px var(--study-status-positive-glow);
+}
+
+.study-learner-panel-step-pick-panel-title--tone-warn {
+  color: var(--study-status-warn);
+}
+
+.study-learner-panel-step-pick-panel-title--tone-warn::before {
+  background: var(--study-status-warn);
+  box-shadow: 0 0 8px var(--study-status-warn-glow);
+}
+
+.study-learner-panel-step-pick-panel-title--tone-neutral {
+  color: var(--study-body-text);
+}

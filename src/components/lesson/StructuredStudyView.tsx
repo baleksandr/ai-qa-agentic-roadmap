@@ -6,7 +6,6 @@ import { LessonBlocks } from './LessonBlockRenderer';
 import { ProgressPicker } from '../ProgressPicker';
 import { StudySectionsToolbar } from './StudySectionsToolbar';
 import type { LearningStatus } from '../../types/topic';
-import { LEARNING_LABELS } from '../../types/topic';
 
 interface Props {
   study: StructuredStudy;
@@ -106,9 +105,7 @@ export function StructuredStudyView({ study, learning, onLearningChange }: Props
       </div>
 
       <aside className="study-col-aside" aria-label="Прогрес і підказки">
-        <div className="study-aside-card">
-          <p className="study-aside-label">Ваш прогрес</p>
-          <p className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</p>
+        <div className="study-aside-card study-aside-card--progress">
           <ProgressPicker value={learning} onChange={onLearningChange} />
         </div>
         <div className="study-aside-card muted small">

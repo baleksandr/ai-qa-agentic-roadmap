@@ -1,5 +1,4 @@
 import { getStudyLessonHero } from './study-lesson-heroes';
-import { TOOL_CALLING_LEARNER_FLOW_ARROW_LINE } from './tool-calling-learner-flow';
 
 const PART_II_OUTCOMES: Record<string, string> = {
   'concept-05': `**Evals** — регресія на golden set після зміни prompt, RAG або моделі; harness запускає кейси з метриками, не один demo run.
@@ -92,11 +91,7 @@ export function buildStudyLearningOutcomes(topicId: string, quickViewRaw: string
 CI artifacts ready → investigation task → гілка fix / retry / escalate → approve?`;
   }
   if (topicId === 'concept-04') {
-    return `**Harness** — програмний runtime навколо LLM: збирає context, викликає model API, перевіряє policy і виконує tools.
-
-Без harness investigation після \`login_spec\` лишається чатом — немає Playwright, state між кроками й trace для QA.
-
-goal → loop → model → tool decision → handler → state → stop`;
+    return '';
   }
   if (topicId === 'concept-03') {
     return `Перед відповіддю застосунок **знаходить** доречні фрагменти ваших документів і **додає** їх у запит до моделі. Модель не має прямого доступу до внутрішньої wiki чи архіву інцидентів — пошук виконує код.
@@ -108,11 +103,7 @@ goal → loop → model → tool decision → handler → state → stop`;
 підготовка знань → індексація → searchable store`;
   }
   if (topicId === 'concept-10') {
-    return `Модель може **запропонувати** виклик tool (ім’я й JSON args), але **не виконує** читання звітів і HTTP — це harness, policy і tool handler після перевірок.
-
-Один run після \`login_spec\` (наприклад \`readPlaywrightReport\`) — це весь ланцюг нижче: CI summary і schemas готує код, модель повертає tool_call, після перевірок handler читає файл, snippet потрапляє в messages, далі — наступний turn LLM.
-
-${TOOL_CALLING_LEARNER_FLOW_ARROW_LINE}`;
+    return 'Після уроку ви відрізняєте пропозицію моделі від виконання в коді та пояснюєте один прохід readPlaywrightReport після login_spec без плутання тексту з дією.';
   }
   if (topicId === 'concept-17') {
     return `**Guardrails** — шар **детермінованого коду** навколо LLM: політики, перевірки, sandbox і підтвердження людиною. Модель може запропонувати tool call або текст, але **не вирішує**, чи можна читати prod, писати в БД чи створювати Jira.
@@ -127,8 +118,8 @@ ${TOOL_CALLING_LEARNER_FLOW_ARROW_LINE}`;
 
 ${trimmed ? `\nКоротке формулювання курсу: ${trimmed}` : ''}`;
   }
-  if (topicId === 'concept-14') {
-    return 'Ви навчитеся складати запит до моделі для розбору падіння тесту: передавати факти, формулювати задачу, задавати формат відповіді й перевіряти результат.';
+  if (topicId === 'concept-14' || topicId === 'concept-12') {
+    return '';
   }
   if (PART_II_OUTCOMES[topicId]) return PART_II_OUTCOMES[topicId];
   return quickViewRaw;
