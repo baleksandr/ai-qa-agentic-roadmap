@@ -7,6 +7,7 @@ import type { StudySection } from '../../lib/studySections';
 import { StudyProgressAsideCard } from './StudyProgressAsideCard';
 import type { LearningStatus } from '../../types/topic';
 import { parseLessonBold } from './lessonRichText';
+import { StudySectionAsideNote } from './StudySectionAsideNote';
 import { StudyTermAccent } from './StudyTermAccent';
 
 type Props = {
@@ -32,6 +33,7 @@ export function StudyLessonAside({
 
   const useSectionNote = Boolean(
     aside.sectionNoteUk?.trim() ||
+      (aside.sectionNoteLabeledLines?.length ?? 0) > 0 ||
       (aside.sectionNoteTermUk?.trim() && aside.sectionNoteExplanationUk?.trim()) ||
       (aside.sectionNoteTrackCard?.rows?.length ?? 0) > 0,
   );
@@ -54,44 +56,21 @@ export function StudyLessonAside({
 
       <div className="study-lesson-aside-scroll">
         {active && !aside.suppressSectionContext && useSectionNote && (
-          <div
-            className={`study-aside-card study-aside-section-note${
-              aside.sectionNoteStyle === 'compact-strip' ? ' study-aside-section-note--compact-strip' : ''
-            }`}
-          >
-            <p className="study-aside-label">Нотатка до розділу</p>
-            {aside.sectionNoteTrackCard?.rows?.length ? (
-              <div className="study-aside-track-card">
-                <p className="study-aside-track-card-title">{aside.sectionNoteTrackCard.titleUk}</p>
-                <ul className="study-aside-track-card-rows">
-                  {aside.sectionNoteTrackCard.rows.map((row) => (
-                    <li key={row.labelUk} className="study-aside-track-card-row">
-                      <p className="study-aside-track-card-row-label">{row.labelUk}</p>
-                      <p className="study-aside-track-card-row-body study-learner-explanation">
-                        {parseLessonBold(row.bodyUk)}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-                {aside.sectionNoteTrackCard.footnoteUk?.trim() ? (
-                  <p className="study-aside-track-card-footnote study-learner-explanation">
-                    {parseLessonBold(aside.sectionNoteTrackCard.footnoteUk)}
-                  </p>
-                ) : null}
-              </div>
-            ) : aside.sectionNoteTermUk?.trim() ? (
-              <>
-                <p className="study-aside-section-note-term">
-                  <StudyTermAccent>{aside.sectionNoteTermUk}</StudyTermAccent>
-                </p>
-                <p className="study-aside-section-note-body">
-                  {parseLessonBold(aside.sectionNoteExplanationUk ?? '')}
-                </p>
-              </>
-            ) : (
-              <p className="study-aside-section-note-body">{parseLessonBold(aside.sectionNoteUk!)}</p>
-            )}
-          </div>
+          <StudySectionAsideNote
+            labeledLines={
+              aside.sectionNoteLabeledLines?.length
+                ? aside.sectionNoteLabeledLines
+                : aside.sectionNoteTermUk?.trim()
+                  ? [{ term: aside.sectionNoteTermUk, textUk: aside.sectionNoteExplanationUk ?? '' }]
+                  : undefined
+            }
+            trackCard={aside.sectionNoteTrackCard}
+            bodyUk={
+              aside.sectionNoteLabeledLines?.length || aside.sectionNoteTermUk?.trim()
+                ? undefined
+                : aside.sectionNoteUk
+            }
+          />
         )}
 
         {active && !aside.suppressSectionContext && !useSectionNote && (

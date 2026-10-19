@@ -20,6 +20,8 @@ export type ProcessCompareCard = {
 export type StudyProcessCompareBundle = {
   ariaLabel: string;
   questionUk?: string;
+  sectionCardsInteractionHintUk?: string;
+  hideSectionCardsInteractionHint?: boolean;
   cards: ProcessCompareCard[];
   footerUk?: string;
 };

@@ -17,14 +17,22 @@
 
 .study-learning-outcomes .study-outcomes-body:has(.study-harness-outcomes-block),
 .study-learning-outcomes .study-outcomes-body:has(.study-pe-outcomes-block),
-.study-learning-outcomes .study-outcomes-body:has(.study-reasoning-outcomes-block) {
+.study-learning-outcomes .study-outcomes-body:has(.study-reasoning-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-memory-state-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-vector-db-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-mcp-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-fine-tuning-outcomes-block) {
   max-width: none;
   width: 100%;
 }
 
 .study-outcomes-with-flows .study-harness-outcomes-block,
 .study-outcomes-with-flows .study-pe-outcomes-block,
-.study-outcomes-with-flows .study-reasoning-outcomes-block {
+.study-outcomes-with-flows .study-reasoning-outcomes-block,
+.study-outcomes-with-flows .study-memory-state-outcomes-block,
+.study-outcomes-with-flows .study-vector-db-outcomes-block,
+.study-outcomes-with-flows .study-mcp-outcomes-block,
+.study-outcomes-with-flows .study-fine-tuning-outcomes-block {
   max-width: none;
   width: 100%;
 }

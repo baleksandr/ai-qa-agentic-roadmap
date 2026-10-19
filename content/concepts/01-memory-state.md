@@ -113,22 +113,11 @@ run створено → кроки investigation → checkpoint state → conte
 
 ### Production і observability
 
-Логують переходи state (`step`, `status`), `checkpointId`, факти **читання** memory (без секретів у відкритому вигляді), причину inclusion/exclusion у context builder. Retention і encryption at rest — вимоги продукту; книга описує типи memory загально, деталі сховища — **архітектура вашого harness**.
-
-| Тема | Навіщо |
-|------|--------|
-| Versioning state schema | Сумісність після deploy |
-| Tenant isolation | Memory не змішується між клієнтами |
-| Degraded mode | Якщо memory store недоступний — явна деградація, не hallucinated «пам’ять» |
+Повний зміст розділу — у навчальних картках Study Mode (події та trace, формат state, ізоляція клієнтів, недоступна memory).
 
 ### Запам’ятати та співбесіда
 
-| Теза | Коротко |
-|------|---------|
-| State vs memory | State — **зараз**; memory — **з минулого** для повторного використання |
-| Хто керує | Harness зберігає і **вибирає**, що показати LLM |
-| LLM | Не має прямого доступу до сховища |
-| QA | Restore, ізоляція, вміст prompt перед model call |
+Повний зміст розділу — у навчальних картках Study Mode (блок «Запам’ятати», п’ять питань для самоперевірки, цільна відповідь і посилання далі).
 
 :::study-sources
 - *AI Engineering*, 2025 — memory types, друк. с. 195–196; RAG and AI Memory, друк. с. 143 (контекст для агентів).

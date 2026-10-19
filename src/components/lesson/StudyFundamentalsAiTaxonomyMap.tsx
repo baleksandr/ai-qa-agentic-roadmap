@@ -32,8 +32,13 @@ function ConceptNode({
       <StudyInteractiveCardTitle as="span" className="fundamentals-concept-node-title">
         {node.titleUk}
       </StudyInteractiveCardTitle>
-      <br className="fundamentals-concept-node-break" aria-hidden="true" />
-      <span className="fundamentals-concept-node-teaser">{node.teaserUk}</span>
+      <div className="fundamentals-concept-node-foot">
+        <span className="fundamentals-concept-node-teaser">{node.teaserUk}</span>
+        <span className="study-flow-stage-cta fundamentals-concept-node-cta">
+          Деталі
+          <span className="study-flow-stage-cta-arrow" aria-hidden="true">→</span>
+        </span>
+      </div>
     </button>
   );
 }

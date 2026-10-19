@@ -20,6 +20,10 @@ export type StudyInterviewQuestion = {
   answerUk?: string;
   /** 2–3 речення для співбесіди (або продовження після `answerBriefDefinition`). */
   answerBriefUk?: string;
+  /** Коротка відповідь англійською (окремий блок у UI, не в одному рядку з UA). */
+  answerBriefEn?: string;
+  /** Детальна відповідь англійською (окремий блок після `answerDeepUk`). */
+  answerDeepEn?: string;
   answerBriefDefinition?: StudyInterviewBriefDefinition;
   /** Детальне пояснення (markdown: абзаци, списки) */
   answerDeepUk?: string;
@@ -47,8 +51,14 @@ export type StudyInterviewDeck = {
   leadUk: string;
   /** За замовчуванням — «Коротко для співбесіди». */
   answerBriefLabelUk?: string;
+  /** Підпис блоку `answerBriefEn` (за замовчуванням — «Short answer in English»). */
+  answerBriefEnLabelUk?: string;
   /** За замовчуванням — «Розберімо до гвинтиків». */
   answerDeepLabelUk?: string;
+  /** Підпис блоку `answerDeepEn` (за замовчуванням — «Detailed answer in English»). */
+  answerDeepEnLabelUk?: string;
+  /** За замовчуванням — «Цільна відповідь (~30–45 с)». */
+  pitchHeadingUk?: string;
   questions: StudyInterviewQuestion[];
   pitchUk: string;
   pitchEn: string;

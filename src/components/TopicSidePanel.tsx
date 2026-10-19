@@ -29,47 +29,81 @@ export function TopicSidePanel({ topic, onClose }: Props) {
     return getEnrichedReviewMarkdown(topic.id, fromFile);
   }, [topic.contentPath, topic.id]);
 
-  return (
-    <aside className="topic-side-panel" role="dialog" aria-label={topic.title}>
-      <header className="topic-side-header">
-        <button type="button" className="topic-side-close" onClick={onClose} aria-label="Закрити">
-          ×
-        </button>
-        <h2>{getMapLabel(topic.id)}</h2>
-        {!routePanel ? <p className="muted small">Review Mode</p> : null}
-        <div className="topic-badges topic-badges--route-panel">
-          {isStudyReadyForLearning(topic.id) && (
-            <span className="badge migration-migrated" title="Study Mode готовий для навчання">
-              Готово для навчання
-            </span>
-          )}
-          {!isStudyReadyForLearning(topic.id) &&
-            (topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated') && (
-            <span
-              className={`badge migration-${topic.migrationStatus}`}
-              title="Частина матеріалу ще звіряється з оригіналом курсу"
-            >
-              {MIGRATION_LABELS[topic.migrationStatus]}
-            </span>
-          )}
-        </div>
-      </header>
-
-      <Link className="study-open-btn study-open-btn-compact" to={`/topic/${topic.id}/study`}>
-        Study Mode — повна сторінка
-      </Link>
-
-      <div className="topic-side-body markdown-body">
-        {topic.migrationStatus === 'not_migrated' ? (
-          <p className="muted">Матеріал ще не перенесено з DOCX.</p>
-        ) : routePanel ? (
-          <RouteTopicSidePanelBody panel={routePanel} />
-        ) : (
-          <ReviewMarkdownBody markdown={reviewMarkdown} />
+  const titleUk = getMapLabel(topic.id);
+  const badges = (
+    <div className="topic-badges topic-badges--route-panel">
+      {isStudyReadyForLearning(topic.id) && (
+        <span className="badge migration-migrated" title="Study Mode готовий для навчання">
+          Готово для навчання
+        </span>
+      )}
+      {!isStudyReadyForLearning(topic.id) &&
+        (topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated') && (
+          <span
+            className={`badge migration-${topic.migrationStatus}`}
+            title="Частина матеріалу ще звіряється з оригіналом курсу"
+          >
+            {MIGRATION_LABELS[topic.migrationStatus]}
+          </span>
         )}
-      </div>
+    </div>
+  );
 
-      <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
+  const studyLink = (
+    <Link className="study-open-btn study-open-btn-compact" to={`/topic/${topic.id}/study`}>
+      Study Mode — повна сторінка
+    </Link>
+  );
+
+  const bodyContent =
+    topic.migrationStatus === 'not_migrated' ? (
+      <p className="muted">Матеріал ще не перенесено з DOCX.</p>
+    ) : routePanel ? (
+      <RouteTopicSidePanelBody panel={routePanel} />
+    ) : (
+      <ReviewMarkdownBody markdown={reviewMarkdown} />
+    );
+
+  return (
+    <aside
+      className={`topic-side-panel${routePanel ? ' topic-side-panel--route' : ''}`}
+      role="dialog"
+      aria-label={topic.title}
+    >
+      {routePanel ? (
+        <div className="route-topic-panel-shell">
+          <div className="route-topic-panel-hero">
+            <header className="topic-side-header route-topic-panel-header">
+              <button type="button" className="topic-side-close" onClick={onClose} aria-label="Закрити">
+                ×
+              </button>
+              <div className="route-topic-panel-title-row">
+                <h2 className="route-topic-panel-title">{titleUk}</h2>
+                {badges}
+              </div>
+            </header>
+            {studyLink}
+          </div>
+          <div className="topic-side-body route-topic-panel-body">{bodyContent}</div>
+          <div className="route-topic-panel-footer">
+            <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
+          </div>
+        </div>
+      ) : (
+        <>
+          <header className="topic-side-header">
+            <button type="button" className="topic-side-close" onClick={onClose} aria-label="Закрити">
+              ×
+            </button>
+            <h2>{titleUk}</h2>
+            <p className="muted small">Review Mode</p>
+            {badges}
+          </header>
+          {studyLink}
+          <div className="topic-side-body markdown-body">{bodyContent}</div>
+          <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
+        </>
+      )}
     </aside>
   );
 }

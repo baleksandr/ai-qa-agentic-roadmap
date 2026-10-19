@@ -223,7 +223,14 @@ if (fs.existsSync(flowStageCard) && /glyphForKey/.test(read(flowStageCard))) {
 }
 
 const UI_HINT_FORBIDDEN = /Оберіть\s+(крок|картку|поняття|рівень|орієнтир|категорію|перевірку|збій|тему|поле|сценарій|принцип)\s+ліворуч/i;
-const allowHintFiles = new Set(['StudyInteractionHint.tsx', 'StudyPageCardsHint.tsx']);
+const allowHintFiles = new Set([
+  'StudyInteractionHint.tsx',
+  'StudyPageCardsHint.tsx',
+  'StudySectionCardsInteractionHint.tsx',
+  'StudyTeachingCardsSection.tsx',
+  'StudyProcessCompareSection.tsx',
+  'StudyLearnerPanelProcessStepPick.tsx',
+]);
 for (const file of walk(path.join(repo, 'src/components/lesson'), '.tsx')) {
   const base = path.basename(file);
   if (allowHintFiles.has(base)) continue;

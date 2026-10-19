@@ -38,7 +38,9 @@ export type StudySectionAsideTrackCard = {
 export type StudySectionAside = {
   /** Коротка орієнтація (1–2 речення), замість розгорнутого контексту — etalon Tool Calling. */
   sectionNoteUk?: string;
-  /** Компактна нотатка: темний фон і бірюзова смуга зліва (Reasoning §8). */
+  /** Рядки «термін — пояснення» у нотатці (cyan акцент терміна). */
+  sectionNoteLabeledLines?: StudySectionAsideTermRow[];
+  /** @deprecated Усі нотатки — Neon HUD (`StudySectionAsideNote`); поле ігнорується. */
   sectionNoteStyle?: 'compact-strip';
   /** Компактна картка з окремими рядками замість суцільного `sectionNoteUk`. */
   sectionNoteTrackCard?: StudySectionAsideTrackCard;

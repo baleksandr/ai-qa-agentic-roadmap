@@ -32,12 +32,11 @@ const rolePanel = (bodyUk: string): FundamentalsCardPanel => ({
 export const TOOL_CALLING_LLM_CODE_STEP_1: FundamentalsCardPanel = {
   sections: [
     {
-      type: 'definitionAccent',
-      labelUk: 'Хто виконує цей крок',
+      type: 'termDefinition',
       termUk: 'Код застосунку',
       termEn: 'agent harness',
-      leadUk:
-        'Після повідомлення CI про падіння login_spec цей код збирає відомі факти й готує запит до моделі. Він додає опис доступного інструмента readPlaywrightReport, щоб модель могла запропонувати його виклик. На цьому кроці код ще не читає звіт.',
+      explanationUk:
+        'після повідомлення CI про падіння login_spec цей код збирає відомі факти й готує запит до моделі. Він додає опис доступного інструмента readPlaywrightReport, щоб модель могла запропонувати його виклик. На цьому кроці код ще не читає звіт.',
     },
     {
       type: 'plain',

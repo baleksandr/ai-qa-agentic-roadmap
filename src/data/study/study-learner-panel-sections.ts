@@ -81,6 +81,8 @@ export type StudyLearnerPanelMechanismChecksSection = {
 export type StudyLearnerPanelPlainSection = {
   type: 'plain';
   labelUk: string;
+  /** Не показувати заголовок блоку (лише текст у `bodyUk`). */
+  hideLabel?: boolean;
   bodyUk: string;
   /** Підблок «QA-перевірка» після основного тексту (не дублювати в bodyUk). */
   qaCheckUk?: string;
@@ -126,6 +128,14 @@ export type StudyLearnerPanelDefinitionAccentSection = {
   termUk: string;
   termEn?: string;
   leadUk: string;
+};
+
+/** «Термін — визначення» в одній рамці (`StudyTermDefinitionCard`). */
+export type StudyLearnerPanelTermDefinitionSection = {
+  type: 'termDefinition';
+  termUk: string;
+  explanationUk: string;
+  termEn?: string;
 };
 
 export type StudyModelResponseCheckStatus = 'yes' | 'pending' | 'no';
@@ -199,6 +209,8 @@ export type StudyLearnerPanelProcessStepPickSection = {
     /** Підписані блоки в боковій панелі вкладеної картки (замість одного `detailUk`). */
     detailSections?: Array<{
       labelUk: string;
+      /** Не показувати підпис блоку (лише `labeledLead` / `bodyUk`). */
+      hideLabel?: boolean;
       bodyUk?: string;
       labeledLead?: StudyLabeledPair;
       labeledPairs?: StudyLabeledPair[];
@@ -219,6 +231,8 @@ export type StudyLearnerPanelProcessStepPickSection = {
    * `rowAbovePanel` — картки в ряд зверху, пояснення обраної під ними.
    */
   navLayout?: 'sidebar' | 'rowAbovePanel';
+  /** Ліва навігація: назва + короткий підпис + «Деталі», без номерів і бейджів «Вхід/Крок/Код». */
+  navCompactTitleOnly?: boolean;
 };
 
 /** Посилання на повний урок теми в «Увесь маршрут» (`topics.registry` → `/topic/:id/study`). */
@@ -264,6 +278,7 @@ export type StudyLearnerPanelSection =
   | StudyLearnerPanelQaCheckSection
   | StudyLearnerPanelLabeledLinesSection
   | StudyLearnerPanelDefinitionAccentSection
+  | StudyLearnerPanelTermDefinitionSection
   | StudyLearnerPanelProcessStepPickSection
   | StudyLearnerPanelModelResponseExampleSection
   | StudyLearnerPanelCollapsibleTraceSampleSection

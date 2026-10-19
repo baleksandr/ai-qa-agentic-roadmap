@@ -14,48 +14,35 @@
 
 ### Навіщо vector DB у QA-агенті?
 
-Postmortem і Confluence містять тисячі сторінок. Для питання після `login_spec` потрібні **2–5 релевантних chunks**, не весь wiki. Offline pipeline (див. RAG) ріже текст, embed model перетворює chunk у вектор, vector DB зберігає вектор + `chunk_id` + ACL metadata.
-
-| Термін | Простими словами |
-|--------|------------------|
-| **Embedding** | Числовий вектор «змісту» тексту |
-| **Similarity search** | Top-K найближчих векторів до query vector |
+Повний зміст розділу — у навчальних картках Study Mode (чотири картки з панелями, вкладені кроки підготовки в картці 2).
 
 ### Де в investigation?
 
-*Навчальний приклад.*
-
-Query: «timeout submit button login staging». Retriever embed query → vector DB повертає `chunk_id` INC-318, runbook-login, з **scores**. Context builder фільтрує по tenant → передає текст у prompt. LLM формулює гіпотезу; **правда про DOM** — у Playwright trace, не в DB.
-
-documents → chunks → vectors → index → query vector → Top-K → context
+Повний зміст розділу — у навчальних картках Study Mode (сім кроків: підготовка документів і пошук після падіння login_spec).
 
 ### Компоненти
 
-| Компонент | Роль |
-|-----------|------|
-| Collection / index | Namespace документів |
-| Metadata filters | tenant, product, date |
-| Hybrid (опційно) | BM25 + vectors |
+Повний зміст розділу — у навчальних картках Study Mode (три компоненти з вкладеними картками у панелях 2 і 3).
 
 ### Послідовність runtime
 
-**Код:** embed query, search, ACL filter. **Вихід:** chunk texts + ids. **LLM:** generation з evidence. **QA:** assert ids у trace match дозволеним ACL.
+Повний зміст розділу — у навчальних картках Study Mode (п’ять кроків одного пошукового запиту після падіння login_spec).
 
 ### Код vs LLM
 
-Пошук і ACL — код. Відповідь — LLM. Vector DB — зовнішній сервіс.
+Повний зміст розділу — у навчальних картках Study Mode (чотири ролі: код, embeddings, пошук, мовна модель).
 
 ### Збої
 
-Stale index після оновлення runbook. Wrong Top-K без rerank. **QA:** golden query → expected chunk ids; reindex regression.
+Повний зміст розділу — у навчальних картках Study Mode (чотири типові збої пошуку з QA-перевірками).
 
 ### Production
 
-Reindex versioning, monitoring recall@K, cost embed API. Альтернатива vector DB — інші індекси (BM25); RAG не = vector only.
+Повний зміст розділу — у навчальних картках Study Mode (чотири теми production-пошуку для RAG).
 
 ### Запам’ятати та співбесіда
 
-Vector DB — **інструмент retrieval**, не визначення RAG. Перевіряйте chunks у prompt і groundedness.
+Повний зміст розділу — у блоці «Запам’ятати», п’яти питаннях самоперевірки та цільній відповіді для співбесіди в Study Mode.
 
 :::study-sources
 - *AI Engineering*, 2025 — embeddings, vector search (inventory).

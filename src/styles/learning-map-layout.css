@@ -4,6 +4,334 @@
   align-items: center;
 }
 
+/* Заголовок етапу «Увесь маршрут» — кіберпанк-картка */
+.map-stage {
+  --map-stage-accent: #00e8ff;
+  --map-stage-accent-dim: rgba(0, 232, 255, 0.42);
+}
+
+.map-stage[data-stage-id='foundations'] {
+  --map-stage-accent: #00e8ff;
+  --map-stage-accent-dim: rgba(0, 232, 255, 0.42);
+}
+
+.map-stage[data-stage-id='agent-action'] {
+  --map-stage-accent: #b86bff;
+  --map-stage-accent-dim: rgba(184, 107, 255, 0.45);
+}
+
+.map-stage[data-stage-id='knowledge'] {
+  --map-stage-accent: #3dffd0;
+  --map-stage-accent-dim: rgba(61, 255, 208, 0.4);
+}
+
+.map-stage[data-stage-id='complex-tasks'] {
+  --map-stage-accent: #ff6bcb;
+  --map-stage-accent-dim: rgba(255, 107, 203, 0.42);
+}
+
+.map-stage[data-stage-id='quality'] {
+  --map-stage-accent: #ffb347;
+  --map-stage-accent-dim: rgba(255, 179, 71, 0.45);
+}
+
+.map-stage[data-stage-id='practice'] {
+  --map-stage-accent: #5b8cff;
+  --map-stage-accent-dim: rgba(91, 140, 255, 0.48);
+}
+
+.map-stage[data-stage-id='production'] {
+  --map-stage-accent: #7ee8d8;
+  --map-stage-accent-dim: rgba(126, 232, 216, 0.45);
+}
+
+.map-stage-header {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.map-stage-hero-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem 1rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.8rem 1rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid var(--map-stage-accent-dim);
+  background:
+    linear-gradient(125deg, rgba(255, 255, 255, 0.04) 0%, transparent 42%),
+    linear-gradient(158deg, rgba(12, 18, 36, 0.98) 0%, rgba(6, 8, 18, 0.94) 55%, rgba(14, 6, 28, 0.92) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 0 28px color-mix(in srgb, var(--map-stage-accent) 18%, transparent),
+    0 6px 22px rgba(0, 0, 0, 0.38);
+  overflow: hidden;
+}
+
+.map-stage-hero-card::before,
+.map-stage-hero-card::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.map-stage-hero-card::before {
+  top: 6px;
+  left: 6px;
+  border-top: 2px solid var(--map-stage-accent);
+  border-left: 2px solid var(--map-stage-accent);
+}
+
+.map-stage-hero-card::after {
+  right: 6px;
+  bottom: 6px;
+  border-right: 2px solid var(--map-stage-accent);
+  border-bottom: 2px solid var(--map-stage-accent);
+}
+
+.map-stage-hero-card__scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.07) 2px,
+    rgba(0, 0, 0, 0.07) 3px
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent 70%);
+}
+
+.map-stage-hero-card__index {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.65rem;
+  padding: 0.15rem 0.25rem;
+  font-size: clamp(1.65rem, 4vw, 2.05rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--map-stage-accent);
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--map-stage-accent) 55%, transparent),
+    0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.map-stage-hero-card__copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.map-stage-hero-card .map-stage-title {
+  margin: 0 0 0.28rem;
+  font-size: clamp(1rem, 2.4vw, 1.12rem);
+  font-weight: 750;
+  line-height: 1.32;
+  letter-spacing: 0.01em;
+  color: #f0f4ff;
+  text-wrap: balance;
+}
+
+.map-stage-title__prefix {
+  margin-right: 0.35em;
+  font-weight: 800;
+  color: color-mix(in srgb, var(--map-stage-accent) 72%, #f0f4ff);
+}
+
+.map-stage-hero-card__subtitle,
+.map-stage-hero-card .map-stage-sub {
+  margin: 0;
+  max-width: none;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: rgba(186, 198, 228, 0.92);
+  letter-spacing: 0.02em;
+}
+
+.route-stage-block--map {
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.route-stage-block--map .map-stage-hero-card {
+  margin-bottom: 0.65rem;
+}
+
+/* Клікабельні картки тем на маршруті */
+.learning-map .map-node.map-node--route-card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  min-height: 5.65rem;
+  padding: 0.62rem 0.75rem 0.68rem;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--map-stage-accent) 32%, rgba(255, 255, 255, 0.1));
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--map-stage-accent) 10%, transparent) 0%, transparent 48%),
+    linear-gradient(168deg, rgba(16, 22, 42, 0.98) 0%, rgba(6, 8, 16, 0.96) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 0 18px color-mix(in srgb, var(--map-stage-accent) 12%, transparent),
+    0 3px 14px rgba(0, 0, 0, 0.32);
+}
+
+.learning-map .map-node.map-node--route-card::before,
+.learning-map .map-node.map-node--route-card::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  opacity: 0.75;
+  transition: opacity 0.16s ease;
+}
+
+.learning-map .map-node.map-node--route-card::before {
+  top: 5px;
+  left: 5px;
+  border-top: 1.5px solid var(--map-stage-accent);
+  border-left: 1.5px solid var(--map-stage-accent);
+}
+
+.learning-map .map-node.map-node--route-card::after {
+  right: 5px;
+  bottom: 5px;
+  border-right: 1.5px solid var(--map-stage-accent);
+  border-bottom: 1.5px solid var(--map-stage-accent);
+}
+
+.learning-map .map-node.map-node--route-card .map-node-label {
+  position: relative;
+  z-index: 1;
+  font-weight: 650;
+  font-size: 0.9rem;
+  color: #f2f6ff;
+  text-shadow: 0 0 20px color-mix(in srgb, var(--map-stage-accent) 25%, transparent);
+}
+
+.learning-map .map-node.map-node--route-card .map-learning-badge {
+  position: relative;
+  z-index: 1;
+}
+
+.learning-map .map-node.map-node--route-card .map-node-ready-line {
+  position: relative;
+  z-index: 1;
+  border-top-color: color-mix(in srgb, var(--map-stage-accent) 28%, rgba(94, 224, 168, 0.25));
+  color: color-mix(in srgb, var(--map-stage-accent) 55%, #9ef5dc);
+}
+
+.learning-map .map-node-open-hint {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--map-stage-accent) 70%, #b8c8e8);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+
+.learning-map .map-node.map-node--route-card:hover .map-node-open-hint,
+.learning-map .map-node.map-node--route-card.is-selected .map-node-open-hint,
+.learning-map .map-node.map-node--route-card:focus-visible .map-node-open-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.learning-map .map-node.map-node--route-card:hover {
+  border-color: color-mix(in srgb, var(--map-stage-accent) 58%, rgba(255, 255, 255, 0.15));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--map-stage-accent) 22%, transparent) inset,
+    0 0 26px color-mix(in srgb, var(--map-stage-accent) 22%, transparent),
+    0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.learning-map .map-node.map-node--route-card:hover::before,
+.learning-map .map-node.map-node--route-card:hover::after,
+.learning-map .map-node.map-node--route-card.is-selected::before,
+.learning-map .map-node.map-node--route-card.is-selected::after {
+  opacity: 1;
+}
+
+.learning-map .map-node.map-node--route-card.is-selected {
+  border-color: color-mix(in srgb, var(--map-stage-accent) 72%, #7ee8d8);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--map-stage-accent) 35%, transparent) inset,
+    0 0 28px color-mix(in srgb, var(--map-stage-accent) 28%, transparent),
+    0 4px 22px rgba(0, 0, 0, 0.32);
+}
+
+.learning-map .map-node.map-node--route-card.is-study-ready:not(.is-selected) {
+  border-color: color-mix(in srgb, var(--map-stage-accent) 42%, rgba(94, 224, 168, 0.35));
+}
+
+.learning-map .map-route-connector-line {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--map-stage-accent, #5b8cff) 12%, transparent),
+    color-mix(in srgb, var(--map-stage-accent, #5b8cff) 65%, transparent)
+  );
+}
+
+.learning-map .map-route-connector-label {
+  color: color-mix(in srgb, var(--map-stage-accent, #5b8cff) 45%, #9aa8c4);
+  letter-spacing: 0.07em;
+}
+
+.learning-map .map-flow-link-chevron {
+  color: var(--map-stage-accent);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--map-stage-accent) 45%, transparent);
+}
+
+/* Поверх study-progress.css — зберегти кіберпанк і колір етапу */
+.learning-map .map-node.map-node--route-card.progress-not_studied {
+  border-color: color-mix(in srgb, var(--map-stage-accent) 26%, rgba(168, 178, 198, 0.38));
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--map-stage-accent) 8%, transparent) 0%, transparent 48%),
+    linear-gradient(168deg, rgba(20, 24, 36, 0.98) 0%, rgba(8, 10, 18, 0.96) 100%);
+}
+
+.learning-map .map-node.map-node--route-card.progress-in_progress {
+  border-color: color-mix(in srgb, var(--map-stage-accent) 38%, rgba(160, 110, 255, 0.55));
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--map-stage-accent) 12%, transparent) 0%, transparent 45%),
+    linear-gradient(168deg, rgba(40, 24, 68, 0.55) 0%, rgba(8, 6, 20, 0.96) 100%);
+  box-shadow:
+    0 0 0 1px rgba(200, 160, 255, 0.06) inset,
+    0 0 22px color-mix(in srgb, var(--map-stage-accent) 18%, rgba(140, 90, 255, 0.2)),
+    0 3px 14px rgba(0, 0, 0, 0.32);
+}
+
+.learning-map .map-node.map-node--route-card.progress-studied {
+  border-color: color-mix(in srgb, var(--map-stage-accent) 32%, rgba(94, 224, 168, 0.5));
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--map-stage-accent) 10%, transparent) 0%, transparent 45%),
+    linear-gradient(168deg, rgba(18, 44, 40, 0.5) 0%, rgba(8, 12, 16, 0.96) 100%);
+  box-shadow:
+    0 0 0 1px rgba(126, 232, 216, 0.06) inset,
+    0 0 20px color-mix(in srgb, var(--map-stage-accent) 14%, rgba(61, 214, 195, 0.18)),
+    0 3px 14px rgba(0, 0, 0, 0.3);
+}
+
 .map-stage-block {
   width: 100%;
   max-width: 72rem;
@@ -27,7 +355,7 @@
 }
 
 .map-stage.is-single {
-  max-width: min(100%, 20rem);
+  max-width: min(100%, 36rem);
   align-self: center;
 }
 
@@ -36,8 +364,20 @@
   width: 100%;
 }
 
+.map-stage.is-single .map-stage-header,
+.map-stage.is-single .map-stage-hero-card {
+  width: 100%;
+}
+
+.map-stage.is-single .map-stage-hero-card__subtitle,
+.map-stage.is-single .map-stage-hero-card .map-stage-sub {
+  white-space: nowrap;
+}
+
 .map-stage.is-single .map-stage-track {
   width: 100%;
+  max-width: 20rem;
+  margin-inline: auto;
 }
 
 .map-stage.is-single .map-node {
@@ -253,6 +593,11 @@
 
   .learning-map .map-stage.is-lab-grid .map-stage-track {
     grid-template-columns: 1fr;
+  }
+
+  .map-stage.is-single .map-stage-hero-card__subtitle,
+  .map-stage.is-single .map-stage-hero-card .map-stage-sub {
+    white-space: normal;
   }
 }
 

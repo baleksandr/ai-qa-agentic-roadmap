@@ -40,7 +40,12 @@ import { StudyRagProductionCards } from './lesson/StudyRagProductionCards';
 import { StudyRagPipelineComponents } from './lesson/StudyRagPipelineComponents';
 import { StudyLessonAside } from './lesson/StudyLessonAside';
 import { StudyProgressAsideCard } from './lesson/StudyProgressAsideCard';
-import { hasStudyLessonAside } from '../data/study/study-lesson-aside.registry';
+import {
+  hasStudyLessonAside,
+  hasStudyProgressSidebar,
+  isStudyProgressSidebarCompact,
+} from '../data/study/study-lesson-aside.registry';
+import { StudyProgressSidebarAside } from './lesson/StudyProgressSidebarAside';
 import { stripRagPipelineInlineList } from '../lib/ragPrepSection';
 import { stripRagInterviewTablesFromRememberSection } from '../lib/ragRememberSection';
 import { stripRememberSectionNoise } from '../lib/studyRememberSection';
@@ -69,6 +74,50 @@ import {
   StudyHarnessWhySection,
 } from './lesson/StudyHarnessIntroBlocks';
 import { StudyPromptEngineeringLearningOutcomes } from './lesson/StudyPromptEngineeringLearningOutcomes';
+import { StudyMemoryStateLearningOutcomes } from './lesson/StudyMemoryStateLearningOutcomes';
+import {
+  StudyMemoryStateFailures,
+  StudyMemoryStateQaTesting,
+  StudyMemoryStateLlmCode,
+  StudyMemoryStateMechanism,
+  StudyMemoryStateRun,
+  StudyMemoryStateSequence,
+  StudyMemoryStateWhy,
+  StudyMemoryStateProduction,
+  StudyMemoryStateRememberInterview,
+} from './lesson/StudyMemoryStateSections';
+import { StudyVectorDatabaseLearningOutcomes } from './lesson/StudyVectorDatabaseLearningOutcomes';
+import {
+  StudyVectorDatabaseComponents,
+  StudyVectorDatabaseInvestigation,
+  StudyVectorDatabaseFailures,
+  StudyVectorDatabaseProduction,
+  StudyVectorDatabaseRememberInterview,
+  StudyVectorDatabaseLlmCode,
+  StudyVectorDatabaseRuntime,
+  StudyVectorDatabaseWhy,
+} from './lesson/StudyVectorDatabaseSections';
+import {
+  StudyMcpComponents,
+  StudyMcpFailures,
+  StudyMcpLlmCode,
+  StudyMcpProduction,
+  StudyMcpRememberInterview,
+  StudyMcpRun,
+  StudyMcpSequence,
+  StudyMcpWhy,
+} from './lesson/StudyMcpSections';
+import { StudyMcpLearningOutcomes } from './lesson/StudyMcpLearningOutcomes';
+import { StudyFineTuningLearningOutcomes } from './lesson/StudyFineTuningLearningOutcomes';
+import {
+  StudyFineTuningComponents,
+  StudyFineTuningFailures,
+  StudyFineTuningLlmCode,
+  StudyFineTuningProduction,
+  StudyFineTuningRememberInterview,
+  StudyFineTuningLoginSpecExample,
+  StudyFineTuningWhy,
+} from './lesson/StudyFineTuningSections';
 import { StudyReasoningLearningOutcomes } from './lesson/StudyReasoningLearningOutcomes';
 import {
   StudyReasoningFailures,
@@ -107,8 +156,6 @@ import {
   getStudyOutcomesLessonHint,
 } from '../data/study/study-lesson-intros';
 import { StudyOutcomesLessonHint } from './lesson/StudyOutcomesLessonHint';
-import { StudyPageCardsHint } from './lesson/StudyPageCardsHint';
-import { topicStudyPageHasInteractiveCards } from '../lib/studyPageInteractive';
 import { getMapLabel } from '../data/learning-map.registry';
 import { MarkdownBody } from './MarkdownBody';
 import { StudyMarkdownWithFlows } from './lesson/StudyMarkdownWithFlows';
@@ -169,13 +216,6 @@ export function StudyModeSections({
   const lessonLabel = topicId ? getMapLabel(topicId) : null;
   const outcomesFlowAriaLabel = topicId ? getLessonOutcomesFlowAriaLabel(topicId) : 'Схема з уроку';
   const outcomesLessonHint = topicId ? getStudyOutcomesLessonHint(topicId) : null;
-  const showPageCardsHint =
-    topicId
-      ? topicStudyPageHasInteractiveCards(topicId) &&
-        topicId !== 'concept-04' &&
-        topicId !== 'concept-12'
-      : false;
-
   const toggle = (id: string) => {
     setActiveNavId(id);
     toggleSection(id);
@@ -191,11 +231,13 @@ export function StudyModeSections({
     return <p className="muted">Секції Study Mode ще не структуровані для цієї теми.</p>;
   }
 
-  const asideLayout = topicId ? hasStudyLessonAside(topicId) : false;
+  const lessonAside = topicId ? hasStudyLessonAside(topicId) : false;
+  const progressSidebar = topicId ? hasStudyProgressSidebar(topicId) : false;
+  const asideCompact = topicId ? isStudyProgressSidebarCompact(topicId) : false;
 
   return (
     <div
-      className={`structured-study-layout study-mode-layout${asideLayout ? ' study-mode-with-aside' : ''}${topicId === 'concept-10' || topicId === 'concept-04' || topicId === 'concept-12' ? ' study-mode-aside-compact' : ''}`}
+      className={`structured-study-layout study-mode-layout${progressSidebar ? ' study-mode-with-aside' : ''}${asideCompact ? ' study-mode-aside-compact' : ''}`}
     >
       <nav className="study-col-nav study-col-nav-sticky" aria-label="Зміст уроку">
         {lessonLabel && <p className="study-col-nav-title">{lessonLabel}</p>}
@@ -223,21 +265,33 @@ export function StudyModeSections({
           </header>
         )}
         {(introMarkdown?.trim() ||
+          topicId === 'concept-01' ||
           topicId === 'concept-04' ||
           topicId === 'concept-12' ||
-          topicId === 'concept-14') && (
+          topicId === 'concept-14' ||
+          topicId === 'concept-06' ||
+          topicId === 'concept-15' ||
+          topicId === 'concept-13') && (
           <aside
             className={`study-learning-outcomes${topicId === 'concept-12' ? ' study-learning-outcomes--reasoning-compact' : ''}`}
             aria-label="Що я зрозумію після цього уроку"
           >
             <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
             <div className="markdown-body study-outcomes-body study-outcomes-with-flows">
-              {topicId === 'concept-04' ? (
+              {topicId === 'concept-01' ? (
+                <StudyMemoryStateLearningOutcomes />
+              ) : topicId === 'concept-04' ? (
                 <StudyHarnessLearningOutcomes />
               ) : topicId === 'concept-12' ? (
                 <StudyReasoningLearningOutcomes />
               ) : topicId === 'concept-14' ? (
                 <StudyPromptEngineeringLearningOutcomes />
+              ) : topicId === 'concept-06' ? (
+                <StudyMcpLearningOutcomes />
+              ) : topicId === 'concept-15' ? (
+                <StudyVectorDatabaseLearningOutcomes />
+              ) : topicId === 'concept-13' ? (
+                <StudyFineTuningLearningOutcomes />
               ) : (
                 <StudyMarkdownWithFlows
                   markdown={introMarkdown}
@@ -253,16 +307,6 @@ export function StudyModeSections({
             </div>
           </aside>
         )}
-
-        {showPageCardsHint ? <StudyPageCardsHint /> : null}
-
-        {asideLayout && onLearningChange ? (
-          <StudyProgressAsideCard
-            className="study-progress-aside-mobile"
-            learning={learning}
-            onLearningChange={onLearningChange}
-          />
-        ) : null}
 
         {topicId === 'concept-14' ? (
           <div className="study-prompt-pe-intro-overview">
@@ -310,9 +354,17 @@ export function StudyModeSections({
         </div>
 
         {sourcesMarkdown?.trim() && <StudySourcesCollapsible markdown={sourcesMarkdown} />}
+
+        {progressSidebar && onLearningChange ? (
+          <StudyProgressAsideCard
+            className="study-progress-aside-mobile study-progress-aside-mobile--after-content"
+            learning={learning}
+            onLearningChange={onLearningChange}
+          />
+        ) : null}
       </div>
 
-      {asideLayout && topicId && onLearningChange && (
+      {lessonAside && topicId && onLearningChange ? (
         <StudyLessonAside
           topicId={topicId}
           sections={sections}
@@ -320,7 +372,11 @@ export function StudyModeSections({
           learning={learning}
           onLearningChange={onLearningChange}
         />
-      )}
+      ) : null}
+
+      {progressSidebar && !lessonAside && onLearningChange ? (
+        <StudyProgressSidebarAside learning={learning} onLearningChange={onLearningChange} />
+      ) : null}
     </div>
   );
 }
@@ -408,6 +464,140 @@ function renderConcept04StudySection(sectionTitle?: string) {
   return null;
 }
 
+function renderConcept06StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyMcpWhy />;
+  }
+  if (t.includes('навчальний') || (t.includes('run') && !t.includes('runtime'))) {
+    return <StudyMcpRun />;
+  }
+  if (t.includes('компонент')) {
+    return <StudyMcpComponents />;
+  }
+  if (t.includes('послідовність')) {
+    return <StudyMcpSequence />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && (t.includes('llm') || t.includes('сервіс')))) {
+    return <StudyMcpLlmCode />;
+  }
+  if (t.includes('збої') || t.includes('зламати')) {
+    return <StudyMcpFailures />;
+  }
+  if (t.includes('production')) {
+    return <StudyMcpProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-06');
+    return (
+      <div className="study-mcp-interview-section study-memory-state-interview-section">
+        <StudyMcpRememberInterview />
+        {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </div>
+    );
+  }
+  return null;
+}
+
+function renderConcept13StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyFineTuningWhy />;
+  }
+  if (t.includes('складається') || t.includes('механізм')) {
+    return <StudyFineTuningComponents />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudyFineTuningLlmCode />;
+  }
+  if (t.includes('збої') || t.includes('зламати')) {
+    return <StudyFineTuningFailures />;
+  }
+  if (t.includes('production')) {
+    return <StudyFineTuningProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-13');
+    return (
+      <div className="study-fine-tuning-interview-section study-memory-state-interview-section">
+        <StudyFineTuningRememberInterview />
+        {deck ? (
+          <div className="study-memory-state-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  if (t.includes('investigation') || t.includes('login_spec') || t.includes('приклад')) {
+    return <StudyFineTuningLoginSpecExample />;
+  }
+  return null;
+}
+
+function renderConcept15StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) return <StudyVectorDatabaseWhy />;
+  if (t.includes('investigation') || t.includes('розслідуван')) {
+    return <StudyVectorDatabaseInvestigation />;
+  }
+  if (t.includes('компонент')) {
+    return <StudyVectorDatabaseComponents />;
+  }
+  if (t.includes('послідовність') || t.includes('runtime')) {
+    return <StudyVectorDatabaseRuntime />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudyVectorDatabaseLlmCode />;
+  }
+  if (t.includes('збої') || t.includes('зламати')) {
+    return <StudyVectorDatabaseFailures />;
+  }
+  if (t.includes('production')) {
+    return <StudyVectorDatabaseProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-15');
+    return (
+      <div className="study-vector-db-interview-section study-memory-state-interview-section">
+        <StudyVectorDatabaseRememberInterview />
+        {deck ? (
+          <div className="study-memory-state-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  return null;
+}
+
+function renderConcept01StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо') && t.includes('memory')) return <StudyMemoryStateWhy />;
+  if (t.includes('login_spec') || t.includes('одному run')) return <StudyMemoryStateRun />;
+  if (t.includes('складається')) return <StudyMemoryStateMechanism />;
+  if (t.includes('послідовність')) return <StudyMemoryStateSequence />;
+  if (/де код.*llm/i.test(t)) return <StudyMemoryStateLlmCode />;
+  if (t.includes('зламатися')) return <StudyMemoryStateFailures />;
+  if (/як qa(\s+це)?\s+тестує/i.test(t.trim())) return <StudyMemoryStateQaTesting />;
+  if (t.includes('production')) return <StudyMemoryStateProduction />;
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-01');
+    return (
+      <div className="study-memory-state-interview-section">
+        <StudyMemoryStateRememberInterview />
+        {deck ? (
+          <div className="study-memory-state-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  return null;
+}
+
 function renderConcept12StudySection(sectionTitle?: string) {
   const t = (sectionTitle ?? '').toLowerCase();
   if (t.includes('навіщо')) return <StudyReasoningWhy />;
@@ -445,6 +635,26 @@ function StudyMarkdownSegment({
   topicId?: string;
   sectionTitle?: string;
 }) {
+  if (topicId === 'concept-01') {
+    const memorySection = renderConcept01StudySection(sectionTitle);
+    if (memorySection) return memorySection;
+  }
+
+  if (topicId === 'concept-06') {
+    const mcpSection = renderConcept06StudySection(sectionTitle);
+    if (mcpSection) return mcpSection;
+  }
+
+  if (topicId === 'concept-15') {
+    const vectorDbSection = renderConcept15StudySection(sectionTitle);
+    if (vectorDbSection) return vectorDbSection;
+  }
+
+  if (topicId === 'concept-13') {
+    const fineTuningSection = renderConcept13StudySection(sectionTitle);
+    if (fineTuningSection) return fineTuningSection;
+  }
+
   if (topicId === 'concept-04') {
     const harnessSection = renderConcept04StudySection(sectionTitle);
     if (harnessSection) return harnessSection;

@@ -14,37 +14,35 @@
 
 ### Навіщо MCP investigation агенту?
 
-Після `login_spec` агенту потрібні Playwright report, CI API, maybe Jira. Замість N кастомних SDK у harness — MCP server «CI» і «Tracker» з описаними capabilities. Harness виступає **MCP client**: discover tools, виклик з тими ж policy, що й local handlers.
+Повний зміст розділу — у навчальних картках Study Mode (чотири картки з вкладеними панелями в картках 2–4).
 
 ### Навчальний run
 
-Harness → MCP client → `read_artifact` на CI server → structured result → state → LLM. Дозвіл на prod Jira — на server + policy, не в prompt.
-
-client → MCP server (tools/resources) → зовнішні API
+Повний зміст розділу — у навчальних картках Study Mode (шість кроків одного виклику та окремий блок про Jira).
 
 ### Компоненти
 
-MCP server, transport, tool schema, auth, client у harness.
+Повний зміст розділу — у навчальних картках Study Mode (п’ять компонентів, вкладені приклади transport 3.1–3.2).
 
 ### Послідовність
 
-Discover tools (код) → LLM tool_call → client RPC (код) → server I/O → observation.
+Повний зміст розділу — у навчальних картках Study Mode (шість кроків від discovery до observation, вкладені рішення перевірки 3.1–3.3).
 
 ### Код vs LLM vs сервіс
 
-LLM — пропозиція. Client/harness — policy. MCP server — реальний I/O до Jira/CI.
+Повний зміст розділу — у навчальних картках Study Mode (чотири ролі та підсумковий приклад без плутанини).
 
 ### Збої
 
-Server down, schema drift, over-privileged tool. **QA:** contract tests на server; deny path у client.
+Повний зміст розділу — у навчальних картках Study Mode (три типові збої та вкладені перевірки QA 1.1–3.3).
 
 ### Production
 
-Version servers, mTLS, rate limits, separate dev/prod MCP endpoints.
+Повний зміст розділу — у навчальних картках Study Mode (чотири теми production та вкладені спостереження 3.1–3.3).
 
 ### Запам’ятати та співбесіда
 
-MCP — **стандарт підключення tools**, harness лишається місцем policy.
+Повний зміст розділу — у блоці «Запам’ятати», п’яти питаннях самоперевірки та цільній відповіді для співбесіди в Study Mode.
 
 :::study-sources
 - V10 Concept 6; *AI Engineering* — інтеграції (inventory).

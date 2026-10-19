@@ -4,9 +4,6 @@ import type {
   StudyLearnerPanelSection,
 } from './study-learner-panel-sections';
 
-const PRODUCTION_NESTED_HINT_UK =
-  'Оберіть картку, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.';
-
 const productionNestedPick = (
   labelUk: string,
   pickAriaLabel: string,
@@ -19,7 +16,6 @@ const productionNestedPick = (
   showActorInPanel: false,
   showStepIndexInPanel: false,
   navLayout: 'sidebar',
-  interactionHintUk: PRODUCTION_NESTED_HINT_UK,
   steps,
 });
 

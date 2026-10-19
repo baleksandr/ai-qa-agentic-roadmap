@@ -43,11 +43,10 @@ export const HARNESS_COMPONENT_CONTEXT: FundamentalsCardPanel = harnessPartPanel
 export const HARNESS_COMPONENT_MODEL_CLIENT: FundamentalsCardPanel = {
   sections: [
     {
-      type: 'definitionAccent',
-      labelUk: 'Що це',
+      type: 'termDefinition',
       termUk: 'Model client',
-      leadUk:
-        'Шар коду, який надсилає підготовлений harness запит до API моделі й повертає відповідь або повідомлення про помилку. Це код для зв’язку з моделлю, а не сама модель.',
+      explanationUk:
+        'шар коду, який надсилає підготовлений harness запит до API моделі й повертає відповідь або повідомлення про помилку. Це код для зв’язку з моделлю, а не сама модель.',
     },
     {
       type: 'plain',

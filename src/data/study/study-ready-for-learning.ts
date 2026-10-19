@@ -4,10 +4,15 @@
  */
 export const STUDY_READY_FOR_LEARNING_TOPIC_IDS: readonly string[] = [
   'fundamentals',
+  'concept-01',
   'concept-03',
   'concept-04',
+  'concept-06',
   'concept-10',
+  'concept-12',
+  'concept-13',
   'concept-14',
+  'concept-15',
 ];
 
 const READY_SET = new Set(STUDY_READY_FOR_LEARNING_TOPIC_IDS);

@@ -7,6 +7,7 @@ import {
 } from '../data/learning-map.registry';
 import type { TopicMeta } from '../types/topic';
 import { packConceptStageRows } from '../lib/learningMapStageRows';
+import { MapStageHeroCard } from './MapStageHeroCard';
 import { MapTopicNode } from './MapTopicNode';
 
 interface Props {
@@ -103,10 +104,11 @@ export function LearningMapView({
               aria-labelledby={`stage-title-${stage.id}`}
             >
               <div className="map-stage-inner">
-                <header className="map-stage-header">
-                  <h2 id={`stage-title-${stage.id}`} className="map-stage-title">{stage.title}</h2>
-                  {stage.subtitle && <p className="map-stage-sub muted">{stage.subtitle}</p>}
-                </header>
+                <MapStageHeroCard
+                  title={stage.title}
+                  subtitle={stage.subtitle}
+                  titleId={`stage-title-${stage.id}`}
+                />
 
                 <div
                   className={`map-stage-track${multiRow ? ' map-stage-track--split' : ''}`}

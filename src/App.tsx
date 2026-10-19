@@ -19,6 +19,8 @@ import './styles/study-remember-takeaways.css';
 import './styles/study-after-interactive-summary.css';
 import './styles/study-role-colors.css';
 import './styles/study-term-accent.css';
+import './styles/study-cyber-hud.css';
+import './styles/study-neon-hud-theme.css';
 
 function App() {
   return (

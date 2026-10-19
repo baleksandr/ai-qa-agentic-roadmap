@@ -8,9 +8,6 @@ import {
   TOOL_CALLING_QA_INTRO_UK,
 } from '../../data/study/tool-calling-study-bundles';
 
-const TC_QA_CATEGORIES_HINT_UK =
-  'Натисніть категорію, щоб прочитати план перевірки поруч. На телефоні панель з’явиться під картками.';
-
 /** §6 «Як QA це тестує?» — три рівні, шість категорій, два сценарії. */
 export function StudyToolCallingQaTesting() {
   return (
@@ -36,11 +33,6 @@ export function StudyToolCallingQaTesting() {
           ))}
         </ol>
       </section>
-
-      <p className="study-harness-section-cards-hint study-interaction-hint" role="note">
-        <span className="study-interaction-hint-label">Підказка</span>
-        <span className="study-interaction-hint-text">{TC_QA_CATEGORIES_HINT_UK}</span>
-      </p>
 
       <StudyTeachingCardsSection bundle={TOOL_CALLING_QA_CATEGORIES_BUNDLE} />
 

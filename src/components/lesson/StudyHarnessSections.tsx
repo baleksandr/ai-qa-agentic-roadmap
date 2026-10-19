@@ -11,45 +11,20 @@ import {
   HARNESS_REMEMBER_SUMMARY,
 } from '../../data/study/harness-study-bundles';
 
-const HARNESS_CARDS_HINT_UK =
-  'Натисніть картку, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.';
-
-const HARNESS_CARDS_HINT_MARKUP = (
-  <p className="study-harness-section-cards-hint study-interaction-hint" role="note">
-    <span className="study-interaction-hint-label">Підказка</span>
-    <span className="study-interaction-hint-text">{HARNESS_CARDS_HINT_UK}</span>
-  </p>
-);
-
 export function StudyHarnessOneRun() {
   return <StudyTeachingCardsSection bundle={HARNESS_ONE_RUN_BUNDLE} />;
 }
 
 export function StudyHarnessComponents() {
-  return (
-    <>
-      {HARNESS_CARDS_HINT_MARKUP}
-      <StudyTeachingCardsSection bundle={HARNESS_COMPONENTS_BUNDLE} />
-    </>
-  );
+  return <StudyTeachingCardsSection bundle={HARNESS_COMPONENTS_BUNDLE} />;
 }
 
 export function StudyHarnessCycle() {
-  return (
-    <>
-      {HARNESS_CARDS_HINT_MARKUP}
-      <StudyTeachingCardsSection bundle={HARNESS_CYCLE_BUNDLE} />
-    </>
-  );
+  return <StudyTeachingCardsSection bundle={HARNESS_CYCLE_BUNDLE} />;
 }
 
 export function StudyHarnessLlmCode() {
-  return (
-    <>
-      {HARNESS_CARDS_HINT_MARKUP}
-      <StudyTeachingCardsSection bundle={HARNESS_LLM_CODE_BUNDLE} />
-    </>
-  );
+  return <StudyTeachingCardsSection bundle={HARNESS_LLM_CODE_BUNDLE} />;
 }
 
 export function StudyHarnessQaTestingSection() {
@@ -59,7 +34,6 @@ export function StudyHarnessQaTestingSection() {
 export function StudyHarnessProduction() {
   return (
     <div className="study-harness-production">
-      {HARNESS_CARDS_HINT_MARKUP}
       <StudyTeachingCardsSection bundle={HARNESS_PRODUCTION_BUNDLE} />
     </div>
   );

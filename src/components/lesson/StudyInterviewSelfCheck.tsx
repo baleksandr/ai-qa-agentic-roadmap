@@ -41,7 +41,10 @@ export function StudyInterviewSelfCheck({ deck }: Props) {
   const { getMark, setMark } = useStudySelfCheck(deck.deckId);
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
   const briefLabel = deck.answerBriefLabelUk?.trim() || 'Коротко для співбесіди';
+  const briefEnLabel = deck.answerBriefEnLabelUk?.trim() || 'Short answer in English';
   const deepLabel = deck.answerDeepLabelUk?.trim() || 'Розберімо до гвинтиків';
+  const deepEnLabel = deck.answerDeepEnLabelUk?.trim() || 'Detailed answer in English';
+  const pitchHeading = deck.pitchHeadingUk?.trim() || 'Цільна відповідь (~30–45 с)';
 
   return (
     <div className="study-rag-interview-block study-interview-self-check">
@@ -78,11 +81,105 @@ export function StudyInterviewSelfCheck({ deck }: Props) {
               ? [briefDefinition.termUk]
               : undefined;
           const briefTailInlineOpts = { suppressTermAccent, maxTermAccents: 0 as const };
-          const briefPlainInlineOpts = { suppressTermAccent, maxTermAccents: 1 as const };
+          const briefPlainInlineOpts = {
+            suppressTermAccent,
+            maxTermAccents: (q.answerBriefEn?.trim() ? 2 : 1) as 1 | 2,
+          };
           const deepInlineOpts = { suppressTermAccent, maxTermAccents: 0 as const };
           const hasDeep = Boolean(
             q.answerDeepUk?.trim() || q.deepInfoCards?.length || q.answerDeepFlowStages?.length,
           );
+          const bilingualTiers = Boolean(q.answerDeepEn?.trim());
+          const briefEnSection = q.answerBriefEn?.trim() ? (
+            <section
+              className="study-rag-interview-tier-panel study-rag-interview-tier-panel--brief-en"
+              aria-label={briefEnLabel}
+            >
+              <p className="study-rag-interview-answer-tier-label study-rag-interview-answer-tier-en">
+                {briefEnLabel}
+              </p>
+              <p className="study-rag-interview-answer study-interview-answer-en" lang="en">
+                {q.answerBriefEn.trim()}
+              </p>
+            </section>
+          ) : null;
+          const deepEnSection = q.answerDeepEn?.trim() ? (
+            <section
+              className="study-rag-interview-tier-panel study-rag-interview-tier-panel--deep-en"
+              aria-label={deepEnLabel}
+            >
+              <p className="study-rag-interview-answer-tier-label study-rag-interview-answer-tier-en">
+                {deepEnLabel}
+              </p>
+              <p className="study-rag-interview-answer study-interview-answer-en study-rag-interview-answer-deep-en" lang="en">
+                {q.answerDeepEn.trim()}
+              </p>
+            </section>
+          ) : null;
+          const deepUkSection = hasDeep ? (
+            <section
+              className="study-rag-interview-tier-panel study-rag-interview-tier-panel--deep"
+              aria-label={questionDeepLabel}
+            >
+              {questionDeepLabel ? (
+                <p className="study-rag-interview-answer-tier-label study-rag-interview-answer-tier-deep">
+                  {questionDeepLabel}
+                </p>
+              ) : null}
+              {q.deepInfoCards && q.deepInfoCards.length > 0 ? (
+                <ul
+                  className={`study-interview-deep-info-grid${
+                    q.deepInfoCardsLayout === 'scenario' ? ' study-interview-deep-info-grid--scenario' : ''
+                  }`}
+                >
+                  {q.deepInfoCards.map((card, cardIndex) => (
+                    <li
+                      key={card.titleUk}
+                      className={`study-interview-deep-info-card${
+                        q.deepInfoCardsLayout === 'scenario' ? ' study-interview-deep-info-card--scenario' : ''
+                      }`}
+                    >
+                      {q.deepInfoCardsLayout === 'scenario' ? (
+                        <span className="study-interview-deep-info-card-step" aria-hidden="true">
+                          {cardIndex + 1}
+                        </span>
+                      ) : null}
+                      <div className="study-interview-deep-info-card-inner">
+                        <p className="study-interview-deep-info-card-title">{card.titleUk}</p>
+                        <LessonRichParagraphs
+                          text={card.bodyUk}
+                          className="study-interview-deep-info-card-body"
+                          {...deepInlineOpts}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {q.answerDeepUk?.trim() ? (
+                <div className="study-rag-interview-answer-deep">
+                  <LessonRichParagraphs
+                    text={q.answerDeepUk}
+                    className="study-rag-interview-answer-p"
+                    {...deepInlineOpts}
+                  />
+                </div>
+              ) : null}
+              {q.answerDeepFlowStages && q.answerDeepFlowStages.length >= 2 ? (
+                <div className="study-rag-interview-deep-flow">
+                  {q.answerDeepFlowCaptionUk?.trim() ? (
+                    <p className="study-rag-interview-deep-flow-caption study-learner-explanation">
+                      {q.answerDeepFlowCaptionUk}
+                    </p>
+                  ) : null}
+                  <StudyLearnerFlowTrack
+                    stages={q.answerDeepFlowStages}
+                    ariaLabel="Ланцюг подій у trace"
+                  />
+                </div>
+              ) : null}
+            </section>
+          ) : null;
           return (
             <li
               key={q.id}
@@ -169,74 +266,18 @@ export function StudyInterviewSelfCheck({ deck }: Props) {
                             </div>
                           </section>
                         ) : null}
-                        {hasDeep ? (
-                          <section
-                            className="study-rag-interview-tier-panel study-rag-interview-tier-panel--deep"
-                            aria-label={questionDeepLabel}
-                          >
-                            {questionDeepLabel ? (
-                              <p className="study-rag-interview-answer-tier-label study-rag-interview-answer-tier-deep">
-                                {questionDeepLabel}
-                              </p>
-                            ) : null}
-                            {q.deepInfoCards && q.deepInfoCards.length > 0 ? (
-                              <ul
-                                className={`study-interview-deep-info-grid${
-                                  q.deepInfoCardsLayout === 'scenario'
-                                    ? ' study-interview-deep-info-grid--scenario'
-                                    : ''
-                                }`}
-                              >
-                                {q.deepInfoCards.map((card, cardIndex) => (
-                                  <li
-                                    key={card.titleUk}
-                                    className={`study-interview-deep-info-card${
-                                      q.deepInfoCardsLayout === 'scenario'
-                                        ? ' study-interview-deep-info-card--scenario'
-                                        : ''
-                                    }`}
-                                  >
-                                    {q.deepInfoCardsLayout === 'scenario' ? (
-                                      <span className="study-interview-deep-info-card-step" aria-hidden="true">
-                                        {cardIndex + 1}
-                                      </span>
-                                    ) : null}
-                                    <div className="study-interview-deep-info-card-inner">
-                                      <p className="study-interview-deep-info-card-title">{card.titleUk}</p>
-                                      <LessonRichParagraphs
-                                        text={card.bodyUk}
-                                        className="study-interview-deep-info-card-body"
-                                        {...deepInlineOpts}
-                                      />
-                                    </div>
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : null}
-                            {q.answerDeepUk?.trim() ? (
-                              <div className="study-rag-interview-answer-deep">
-                                <LessonRichParagraphs
-                                  text={q.answerDeepUk}
-                                  className="study-rag-interview-answer-p"
-                                  {...deepInlineOpts}
-                                />
-                              </div>
-                            ) : null}
-                            {q.answerDeepFlowStages && q.answerDeepFlowStages.length >= 2 ? (
-                              <div className="study-rag-interview-deep-flow">
-                                {q.answerDeepFlowCaptionUk?.trim() ? (
-                                  <p className="study-rag-interview-deep-flow-caption study-learner-explanation">
-                                    {q.answerDeepFlowCaptionUk}
-                                  </p>
-                                ) : null}
-                                <StudyLearnerFlowTrack
-                                  stages={q.answerDeepFlowStages}
-                                  ariaLabel="Ланцюг подій у trace"
-                                />
-                              </div>
-                            ) : null}
-                          </section>
-                        ) : null}
+                        {bilingualTiers ? (
+                          <>
+                            {deepUkSection}
+                            {briefEnSection}
+                            {deepEnSection}
+                          </>
+                        ) : (
+                          <>
+                            {briefEnSection}
+                            {deepUkSection}
+                          </>
+                        )}
                       </>
                     ) : (
                       <p className="study-rag-interview-answer">{parseLessonBold(q.answerUk ?? '')}</p>
@@ -288,11 +329,15 @@ export function StudyInterviewSelfCheck({ deck }: Props) {
       </ol>
 
       <aside className="lesson-callout lesson-interview study-rag-interview-pitch">
-        <span className="lesson-callout-label">Цільна відповідь (~30–45 с)</span>
+        <span className="lesson-callout-label">{pitchHeading}</span>
         <p className="study-lang-flag">
           <span className="study-lang-badge" aria-hidden="true">🇺🇦</span> Українською
         </p>
-        <p className="study-rag-interview-pitch-text">{deck.pitchUk}</p>
+        <LessonRichParagraphs
+          text={deck.pitchUk}
+          className="study-rag-interview-pitch-text"
+          maxTermAccents={2}
+        />
         <p className="study-lang-flag study-lang-flag-answer">
           <span className="study-lang-badge" aria-hidden="true">🇬🇧</span> English
         </p>

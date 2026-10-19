@@ -25,9 +25,6 @@ const HARNESS_OUTCOMES_SUMMARY: StudyAfterInteractiveSummaryData = {
   ],
 };
 
-const HARNESS_WHY_CARDS_HINT_UK =
-  'Натисніть картку, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.';
-
 /** Блок «Що я зрозумію» для concept-04 — три інформаційні картки без панелей. */
 export function StudyHarnessLearningOutcomes() {
   return (
@@ -90,10 +87,6 @@ export function StudyHarnessWhySection() {
           </ul>
         </div>
       </div>
-      <p className="study-harness-section-cards-hint study-interaction-hint" role="note">
-        <span className="study-interaction-hint-label">Підказка</span>
-        <span className="study-interaction-hint-text">{HARNESS_WHY_CARDS_HINT_UK}</span>
-      </p>
       <StudyTeachingCardsSection bundle={HARNESS_WHY_BUNDLE} />
     </div>
   );

@@ -30,6 +30,8 @@ export type StudyTeachingCardStep = {
 export type StudyTeachingConceptGroup = {
   headingUk: string;
   stepKeys: (string | number)[];
+  /** Компактна кольорова плашка над групою карток (Vector DB §2). */
+  navGroupBadge?: 'vectorDbPrep' | 'vectorDbSearch';
 };
 
 export type StudyTeachingCardsPresentation = 'process' | 'concepts';
@@ -80,6 +82,8 @@ export type StudyTeachingCardsBundle = {
   introMiniCards?: StudyTeachingIntroMiniCard[];
   /** Коротка нотатка поруч із introMiniCards (не дублює панелі карток). */
   sectionAsideNoteUk?: string;
+  /** Заголовок нотатки (за замовчуванням — «Нотатка до розділу»). */
+  sectionAsideNoteTitleUk?: string;
   leadUk?: string;
   /** Короткий рядок кроків для компактної схеми зверху (лише presentation `process`). */
   flowArrowLine?: string;
@@ -89,14 +93,20 @@ export type StudyTeachingCardsBundle = {
   hideFlowOverview?: boolean;
   /** Не показувати «Картка N» над заголовком у правій панелі (назва картки лишається в h4). */
   hidePanelMainCardLabel?: boolean;
+  /** Не дублювати назву кроку в h4, якщо вона вже на картці вибору / у визначенні. */
+  hidePanelStepTitle?: boolean;
   /** `concepts` — аспекти теми, без «Крок N з M» і стрілкового процесу. */
   presentation?: StudyTeachingCardsPresentation;
   conceptsHeadingUk?: string;
   conceptGroups?: StudyTeachingConceptGroup[];
   /** Підпис callout над картками; за замовчуванням «Розбір по кроках». */
   introCalloutLabelUk?: string;
-  /** @deprecated UI-підказка — лише `StudyPageCardsHint` на рівні сторінки. */
+  /** @deprecated Використовуйте `sectionCardsInteractionHintUk`. */
   cardsInteractionHintUk?: string;
+  /** Підказка перед картками; за замовчуванням — `STUDY_SECTION_CARDS_INTERACTION_HINT_UK`. */
+  sectionCardsInteractionHintUk?: string;
+  /** Не показувати стандартну підказку (наприклад, другий блок карток без окремого вступу). */
+  hideSectionCardsInteractionHint?: boolean;
   steps: StudyTeachingCardStep[];
   /** Підсумок після карток і панелі (наприклад «Як це перевіряти» у §15). */
   afterInteractiveSummary?: StudyAfterInteractiveSummary;

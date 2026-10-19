@@ -67,7 +67,13 @@ export function StudyAfterInteractiveSummary({ summary }: Props) {
       </ul>
       ) : null}
       {summary.footnoteUk?.trim() ? (
-        <p className="study-after-interactive-summary-footnote study-learner-explanation muted small">
+        <p
+          className={
+            hasCards
+              ? 'study-after-interactive-summary-footnote study-learner-explanation muted small'
+              : 'study-after-interactive-summary-solo-body study-learner-explanation'
+          }
+        >
           {parseLessonBold(summary.footnoteUk)}
         </p>
       ) : null}

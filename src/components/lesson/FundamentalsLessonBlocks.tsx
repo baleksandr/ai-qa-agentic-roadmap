@@ -5,7 +5,7 @@ import {
 } from '../../lib/fundamentalsStudyBlocks';
 import { getStructuredSectionTeachingCards } from '../../data/study/study-teaching-cards.registry';
 import { LessonBlockRenderer } from './LessonBlockRenderer';
-import { StudyDefinitionAccent } from './StudyDefinitionAccent';
+import { StudyTermDefinitionCard } from './StudyTermDefinitionCard';
 import { StudyFundamentalsWidget } from './StudyFundamentalsWidget';
 import { StudyTeachingCardsSection } from './StudyTeachingCardsSection';
 
@@ -30,21 +30,21 @@ export function FundamentalsLessonBlocks({ sectionId, blocks }: Props) {
         }
         if (block.type === 'definitionAccent') {
           return (
-            <StudyDefinitionAccent
+            <StudyTermDefinitionCard
               key={`d-${i}`}
               termUk={block.termUk}
               termEn={block.termEn}
-              leadUk={block.leadUk}
+              explanationUk={block.leadUk}
             />
           );
         }
         if (block.type === 'term') {
           return (
-            <StudyDefinitionAccent
+            <StudyTermDefinitionCard
               key={`t-${i}`}
               termUk={block.termUk}
               termEn={block.termEn}
-              leadUk={block.body}
+              explanationUk={block.body}
             />
           );
         }

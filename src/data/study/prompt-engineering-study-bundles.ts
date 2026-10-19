@@ -1,4 +1,5 @@
 import type { FundamentalsCardPanel, StudyPanelTermEntry } from './fundamentals-card-panels';
+import type { StudyLearnerPanelSection } from './study-learner-panel-sections';
 import { fundamentalsConceptStep } from './fundamentals-teaching-step';
 import { PE_RUN42_FORMAT_RESPONSE_EXAMPLE } from './pe-run42-format-response-example';
 import type { StudyProcessCompareBundle } from './study-process-compare-types';
@@ -395,15 +396,21 @@ export const PROMPT_PE_INVESTIGATION_FLOW: StudyTeachingCardsBundle = {
       {
         sections: [
           {
+            type: 'plain',
+            labelUk: 'Що відбувається',
+            bodyUk:
+              'Після відповіді моделі код обирає одну з двох гілок: показати текст або перевірити запропонований інструмент.',
+          },
+          {
             type: 'processStepPick',
             labelUk: 'Дві гілки після відповіді моделі',
             pickAriaLabel:
               'Альтернативні результати одного виклику моделі для run-42: текст або пропозиція інструмента',
             presentation: 'concepts',
+            navLayout: 'rowAbovePanel',
             showActorInPanel: false,
             showStepIndexInPanel: false,
-            leadUk:
-              'Після відповіді моделі код обирає одну з двох гілок: показати текст або перевірити запропонований інструмент.',
+            showNestedCardNumberInPanel: false,
             steps: [
               {
                 key: 'text-branch',
@@ -1099,7 +1106,7 @@ export const PROMPT_PE_LLM_CODE_BUNDLE: StudyTeachingCardsBundle = {
 };
 
 export const PROMPT_PE_FAILURE_BUNDLE: StudyTeachingCardsBundle = {
-  ariaLabel: 'Типові збої prompt для login_spec у run-42',
+  ariaLabel: 'Типові збої prompt для login_spec',
   presentation: 'concepts',
   steps: [
     fundamentalsConceptStep(
@@ -1115,27 +1122,72 @@ export const PROMPT_PE_FAILURE_BUNDLE: StudyTeachingCardsBundle = {
               'Команда задала короткий формат відповіді, а поточне завдання просить великий звіт. Якщо продукт не визначив потрібний формат для цього сценарію, результат може виявитися незручним: надто коротким для розслідування або занадто довгим для поля UI. Не пояснюй це універсальним правилом «модель завжди слухає system, а не user»: структура ролей залежить від API, а якість відповіді все одно потрібно перевіряти.',
           },
           {
-            type: 'miniCards',
-            labelUk: 'Приклад run-42',
-            layout: 'stack',
-            items: [
-              { titleUk: 'Інструкція', bodyUk: '«Відповідай одним реченням».' },
+            type: 'processStepPick',
+            labelUk: 'Приклад login_spec: вимоги заважають одна одній',
+            pickAriaLabel: 'Частини прикладу з конфліктом інструкцій для login_spec',
+            presentation: 'concepts',
+            showActorInPanel: false,
+            showStepIndexInPanel: false,
+            showNestedCardNumberInPanel: false,
+            pickPanelDetailVariant: 'outcome',
+            pickConclusionLabelUk: 'Як поліпшити запит',
+            pickConclusionUk:
+              'Прибрати вимогу про одне речення. Попросити окремі поля або рядки для факту, кожної гіпотези та її перевірки. Код має перевірити, що всі обов’язкові частини справді присутні.',
+            steps: [
               {
-                titleUk: 'Задача',
-                bodyUk:
-                  '«Для timeout на #login-btn наведи факт, дві гіпотези та потрібні перевірки».',
+                key: 'length-instruction',
+                titleUk: 'Інструкція про довжину',
+                teaserUk: 'Відповідь обмежено одним реченням',
+                actorUk: '',
+                detailSections: [
+                  {
+                    labelUk: 'Що отримала модель',
+                    bodyUk: '«Відповідай одним реченням».',
+                  },
+                  {
+                    labelUk: 'Чому це важливо',
+                    bodyUk:
+                      'Обмеження довжини застосовується до всієї відповіді. Моделі може бути складно чітко відокремити кілька потрібних частин, якщо інші вимоги запиту не уточнюють їхню структуру.',
+                  },
+                ],
               },
               {
-                titleUk: 'Наслідок',
-                bodyUk: 'В одному реченні ці частини можуть злитися або втратитися.',
+                key: 'investigation-task',
+                titleUk: 'Задача розслідування',
+                teaserUk: 'Потрібні факт, дві гіпотези й перевірки',
+                actorUk: '',
+                detailSections: [
+                  {
+                    labelUk: 'Що отримала модель',
+                    bodyUk:
+                      '«Для timeout на #login-btn назви відомий факт, дві можливі причини та перевірку для кожної».',
+                  },
+                  {
+                    labelUk: 'Чому це важливо',
+                    bodyUk:
+                      'Це різні типи інформації. Timeout — відомий симптом. Причини — гіпотези. Перевірки показують, які дані потрібні для підтвердження або спростування кожної гіпотези.',
+                  },
+                ],
+              },
+              {
+                key: 'failure-risk',
+                titleUk: 'Можливий збій',
+                teaserUk: 'Частини відповіді можуть загубитися',
+                actorUk: '',
+                detailSections: [
+                  {
+                    labelUk: 'Що може статися',
+                    bodyUk:
+                      'Модель умістить усе в одну фразу, пропустить одну з перевірок або подасть гіпотезу як установлений факт.',
+                  },
+                  {
+                    labelUk: 'Що перевіряє QA',
+                    bodyUk:
+                      'Чи є у відповіді всі потрібні частини та чи можна однозначно відрізнити факт від гіпотез і перевірок. Саме обмеження “одне речення” не гарантує помилки, але підвищує ризик нечіткої відповіді.',
+                  },
+                ],
               },
             ],
-          },
-          {
-            type: 'plain',
-            labelUk: 'Що виправляє команда',
-            bodyUk:
-              'Узгоджує шаблон: «Коротко, але в окремих полях: факт, гіпотези, потрібні докази». Якщо код очікує структуру, задає й перевіряє її окремо.',
           },
           {
             type: 'qaCheck',
@@ -1366,6 +1418,75 @@ function peProductionPanel(
   };
 }
 
+function peProductionFramed(labelUk: string, bodyUk: string): StudyLearnerPanelSection {
+  return { type: 'plain', labelUk, bodyUk, framed: true };
+}
+
+function peInstructionVersionTraceRecordPick(): StudyLearnerPanelSection {
+  return {
+    type: 'processStepPick',
+    labelUk: 'Що записати для розбору',
+    pickAriaLabel: 'Що записати для розбору відповіді login_spec у trace',
+    presentation: 'concepts',
+    navLayout: 'sidebar',
+    showActorInPanel: false,
+    showStepIndexInPanel: false,
+    showNestedCardNumberInPanel: false,
+    steps: [
+      {
+        key: 'instruction-version',
+        titleUk: 'Версія інструкцій',
+        teaserUk: 'Які правила отримала модель',
+        actorUk: '',
+        detailUk:
+          'Команда позначає збережений шаблон запиту номером, наприклад v2. Якщо відповідь на login_spec змінилася, за номером можна знайти точний текст інструкцій, який застосунок використав у цьому розслідуванні. Сам напис v2 без збереженого шаблону не дає змоги відтворити запит.',
+      },
+      {
+        key: 'model-id',
+        titleUk: 'Модель',
+        teaserUk: 'Кому надіслали запит',
+        actorUk: '',
+        detailUk:
+          'Застосунок записує ідентифікатор моделі, яка сформувала відповідь. Це допомагає відрізнити зміну інструкцій від зміни моделі: відповіді могли змінитися навіть за того самого шаблону, якщо викликали іншу модель.',
+      },
+      {
+        key: 'run-id',
+        titleUk: 'Run',
+        teaserUk: 'До якого розслідування належить відповідь',
+        actorUk: '',
+        detailUk:
+          'Кожне падіння тесту розбирають у межах окремого run. Його ідентифікатор пов’язує повідомлення CI, запит до моделі, версію інструкцій та отриману відповідь. Так QA не переплутає відповідь на один збій login_spec з іншим запуском тесту.',
+      },
+    ],
+  };
+}
+
+function peInstructionVersionPanel(): FundamentalsCardPanel {
+  return {
+    sections: [
+      peProductionFramed(
+        'Що таке версія інструкцій',
+        'Команда зберігає шаблон запиту до моделі. Коли змінює його текст, позначає нову редакцію номером, наприклад v1 або v2. Завдяки цьому можна дізнатися, які саме правила отримала модель під час конкретного розслідування.',
+      ),
+      peProductionFramed(
+        'Приклад login_spec',
+        'У v1 модель просили запропонувати причину timeout на #login-btn. У v2 уточнили: окремо покажи відомий факт, можливу причину та дані, яких бракує для перевірки. Після випуску v2 відповіді стали іншими. Щоб розібрати зміну, команда дивиться, з якою версією інструкцій працював кожен run.',
+      ),
+      peInstructionVersionTraceRecordPick(),
+      peProductionFramed(
+        'Що перевіряє QA',
+        'QA порівнює випадки з v1 і v2 на тому самому підготовленому повідомленні про timeout. Перевіряє, чи в v2 відповідь справді відокремлює відомий факт від гіпотези. У trace знаходить версію інструкцій і модель, які використовували для кожного запуску. Сама зміна відповіді ще не доводить, що її спричинив лише prompt: для порівняння потрібно врахувати й інші змінені умови.',
+      ),
+      {
+        type: 'termDefinition',
+        termUk: 'Prompt hash',
+        explanationUk:
+          'технічний відбиток тексту для перевірки збігу. За ним не можна прочитати сам текст інструкції.',
+      },
+    ],
+  };
+}
+
 export const PROMPT_PE_PRODUCTION_BUNDLE: StudyTeachingCardsBundle = {
   ariaLabel: 'Production-практики для prompt investigation login_spec',
   presentation: 'concepts',
@@ -1380,16 +1501,7 @@ export const PROMPT_PE_PRODUCTION_BUNDLE: StudyTeachingCardsBundle = {
       'template-version',
       'Версія інструкцій',
       'Можна визначити, з яким шаблоном працював конкретний run',
-      peProductionPanel(
-        'Команда зберігає редакції шаблону інструкцій, наприклад v1 і v2. Під час run-42 застосунок фіксує, яку редакцію використав, разом із model id. Якщо використовується prompt hash, це відбиток для звірки вмісту, а не копія інструкції й не заміна збереженої версії. Якщо результат змінився, команда може відтворити умови й знайти відповідальну зміну.',
-        'У v2 додали вимогу окремо називати невідомі факти. Trace run-42 показує, що використано v2.',
-        'Після перемикання версії перевірити її id у trace, правильний шаблон у фактичному запиті та відсутність секретів у логах.',
-        [
-          { label: 'версія шаблону', text: 'Позначення конкретної редакції інструкцій.' },
-          { label: 'prompt hash', text: 'Відбиток для звірки вмісту, не копія prompt.' },
-          { label: 'model id', text: 'Ідентифікатор моделі в цьому виклику.' },
-        ],
-      ),
+      peInstructionVersionPanel(),
     ),
     fundamentalsConceptStep(
       'pre-release-eval',

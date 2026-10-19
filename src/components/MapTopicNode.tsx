@@ -28,7 +28,7 @@ export function MapTopicNode({ topicId, labSublabel, selected, highlighted, onSe
     <button
       type="button"
       id={`map-node-${topicId}`}
-      className={`map-node progress-${learning} ${studyReady ? 'is-study-ready' : ''} ${selected ? 'is-selected' : ''} ${highlighted ? 'is-highlighted' : ''}`}
+      className={`map-node map-node--route-card progress-${learning} ${studyReady ? 'is-study-ready' : ''} ${selected ? 'is-selected' : ''} ${highlighted ? 'is-highlighted' : ''}`}
       onClick={() => onSelect(topic)}
       aria-pressed={selected}
       aria-describedby={hint ? `map-hint-${topicId}` : undefined}
@@ -41,6 +41,7 @@ export function MapTopicNode({ topicId, labSublabel, selected, highlighted, onSe
       {studyReady && (
         <span className="map-node-ready-line">Повний урок готовий для навчання</span>
       )}
+      <span className="map-node-open-hint" aria-hidden="true">Відкрити →</span>
       {hint && (
         <span id={`map-hint-${topicId}`} className="sr-only">
           {hint}

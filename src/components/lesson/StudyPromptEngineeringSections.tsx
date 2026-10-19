@@ -67,7 +67,12 @@ export function StudyPromptEngineeringLlmCode() {
 }
 
 export function StudyPromptEngineeringFailures() {
-  return <StudyTeachingCardsSection bundle={PROMPT_PE_FAILURE_BUNDLE} />;
+  return (
+    <StudyTeachingCardsSection
+      bundle={PROMPT_PE_FAILURE_BUNDLE}
+      className="study-prompt-pe-failures"
+    />
+  );
 }
 
 export function StudyPromptEngineeringQaTesting() {
@@ -75,7 +80,12 @@ export function StudyPromptEngineeringQaTesting() {
 }
 
 export function StudyPromptEngineeringProduction() {
-  return <StudyTeachingCardsSection bundle={PROMPT_PE_PRODUCTION_BUNDLE} />;
+  return (
+    <StudyTeachingCardsSection
+      bundle={PROMPT_PE_PRODUCTION_BUNDLE}
+      className={`${PE_TEACHING_CARDS_CLASS} study-prompt-pe-production`}
+    />
+  );
 }
 
 export function StudyPromptEngineeringRememberInterview() {

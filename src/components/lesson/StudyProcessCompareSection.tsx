@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { StudyProcessCompareBundle } from '../../data/study/study-process-compare-types';
 import { StudyLearnerPanelBody } from './StudyLearnerPanelBody';
 import { StudyProcessCompareCard } from './StudyProcessCompareCard';
+import { StudySectionCardsInteractionHint } from './StudySectionCardsInteractionHint';
 
 type Props = {
   bundle: StudyProcessCompareBundle;
@@ -20,7 +21,16 @@ export function StudyProcessCompareSection({ bundle }: Props) {
   return (
     <section className="study-teaching-cards study-process-compare" aria-label={bundle.ariaLabel}>
       {bundle.questionUk ? (
-        <p className="study-process-compare-question">{bundle.questionUk}</p>
+        <div className="study-process-compare-scenario lesson-callout lesson-key-idea" role="note">
+          <span className="lesson-callout-label">Спільний сценарій</span>
+          <p className="study-process-compare-question study-learner-explanation">{bundle.questionUk}</p>
+        </div>
+      ) : null}
+
+      {!bundle.hideSectionCardsInteractionHint ? (
+        <StudySectionCardsInteractionHint>
+          {bundle.sectionCardsInteractionHintUk}
+        </StudySectionCardsInteractionHint>
       ) : null}
 
       <div className="study-process-compare-primary-grid" role="group" aria-label="Основні режими">

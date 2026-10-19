@@ -29,6 +29,8 @@ type Props = {
   showStepNumber?: boolean;
   /** Ієрархічний номер картки (1, 2, 3.1 …) перед назвою. */
   cardNumberUk?: string;
+  /** Компактна навігація: лише назва, без підпису, CTA і номера. */
+  compactNav?: boolean;
 };
 
 function stepKind(index: number, total: number): string {
@@ -69,19 +71,28 @@ export function StudyFlowStageCard({
   navActorUk,
   showStepNumber = true,
   cardNumberUk,
+  compactNav = false,
 }: Props) {
   const showCardNumber = Boolean(cardNumberUk?.trim());
   const autoKind = stepKind(index, total);
-  const kind = studyFlowStageKindBadge(navBadgeUk, detail?.cardBadgeUk, autoKind, showCardNumber);
+  const kind = compactNav
+    ? null
+    : studyFlowStageKindBadge(navBadgeUk, detail?.cardBadgeUk, autoKind, showCardNumber);
   const title = detail?.titleUk ?? stageLabel;
-  const teaser =
-    listTeaserUk?.trim() ||
-    detail?.cardTeaserUk ||
-    (detail?.outputUk ? detail.outputUk.replace(/\*\*/g, '') : stageLabel);
-  const actor = studyFlowStageActorBadge(navActorUk, detail?.cardActorUk, showCardNumber);
-  const showMetaBadges = Boolean(kind?.trim() || actor?.trim());
+  const teaser = compactNav
+    ? listTeaserUk?.trim() || ''
+    : listTeaserUk?.trim() ||
+      detail?.cardTeaserUk ||
+      (detail?.outputUk ? detail.outputUk.replace(/\*\*/g, '') : stageLabel);
+  const showNavFoot = compactNav
+    ? Boolean(clickable && teaser?.trim())
+    : Boolean(teaser?.trim() || clickable);
+  const actor = compactNav
+    ? null
+    : studyFlowStageActorBadge(navActorUk, detail?.cardActorUk, showCardNumber);
+  const showMetaBadges = !compactNav && Boolean(kind?.trim() || actor?.trim());
   const visual = visualKeyFromStage(stageLabel, detail);
-  const glyphLabel = studyFlowStageGlyphLabel(visual, showCardNumber);
+  const glyphLabel = compactNav ? null : studyFlowStageGlyphLabel(visual, showCardNumber);
   const position =
     index === 0 ? 'is-input' : index === total - 1 ? 'is-output' : 'is-middle';
 
@@ -92,6 +103,7 @@ export function StudyFlowStageCard({
     showCardNumber ? 'has-card-number' : '',
     layout === 'pipeline' ? 'is-pipeline-compact' : '',
     layout === 'pipeline' && !glyphLabel ? 'is-pipeline-no-glyph' : '',
+    compactNav ? 'is-compact-nav' : '',
     clickable ? 'is-clickable study-interactive-card' : '',
     clickable ? studyInteractiveCardActiveClass(active ?? false) : '',
   ]
@@ -131,15 +143,17 @@ export function StudyFlowStageCard({
             </span>
           ) : null}
         </div>
-        <div className="study-flow-stage-card-foot">
-          <p className="study-flow-stage-teaser">{teaser}</p>
-          {clickable && (
-            <span className="study-flow-stage-cta">
-              Деталі
-              <span className="study-flow-stage-cta-arrow" aria-hidden="true">→</span>
-            </span>
-          )}
-        </div>
+        {showNavFoot ? (
+          <div className="study-flow-stage-card-foot">
+            {teaser?.trim() ? <p className="study-flow-stage-teaser">{teaser}</p> : null}
+            {clickable && (
+              <span className="study-flow-stage-cta">
+                Деталі
+                <span className="study-flow-stage-cta-arrow" aria-hidden="true">→</span>
+              </span>
+            )}
+          </div>
+        ) : null}
       </>
     ) : (
       <>
@@ -179,12 +193,18 @@ export function StudyFlowStageCard({
       </>
     );
 
+  const stepNavAriaLabel =
+    compactNav && showCardNumber && title.trim()
+      ? `Картка ${cardNumberUk}. ${title}`
+      : undefined;
+
   if (clickable) {
     return (
       <button
         type="button"
         className={className}
         onClick={onOpen}
+        aria-label={stepNavAriaLabel}
         {...studyInteractiveCardSelectionProps(active ?? false)}
       >
         {active ? (

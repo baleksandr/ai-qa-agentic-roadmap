@@ -10,7 +10,7 @@ import { StudyLearnerPanelTermPairCards } from './StudyLearnerPanelTermPairCards
 import { StudyLearnerPanelCourseLessonLink } from './StudyLearnerPanelCourseLessonLink';
 import { StudyModelResponseExampleBlock } from './StudyModelResponseExampleBlock';
 import { StudyLearnerPanelCollapsibleTraceSample } from './StudyLearnerPanelCollapsibleTraceSample';
-import { StudyDefinitionAccent } from './StudyDefinitionAccent';
+import { StudyTermDefinitionCard } from './StudyTermDefinitionCard';
 import { StudyLearnerPanelOutcomeCard } from './StudyLearnerPanelOutcomeCard';
 
 type Props = {
@@ -49,6 +49,7 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
                   pickConclusionUk={section.pickConclusionUk}
                   navLayout={section.navLayout}
                   interactionHintUk={section.interactionHintUk}
+                  navCompactTitleOnly={section.navCompactTitleOnly}
                 />
               </dd>
             </div>
@@ -119,15 +120,21 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
           );
         }
 
-        if (section.type === 'definitionAccent') {
+        if (section.type === 'termDefinition' || section.type === 'definitionAccent') {
+          const termUk = section.type === 'termDefinition' ? section.termUk : section.termUk;
+          const explanationUk =
+            section.type === 'termDefinition' ? section.explanationUk : section.leadUk;
+          const termEn = section.termEn;
           return (
-            <div key={section.labelUk} className="study-learner-panel-block">
-              <dt className="study-learner-panel-label">{section.labelUk}</dt>
-              <dd className="study-learner-panel-value">
-                <StudyDefinitionAccent
-                  termUk={section.termUk}
-                  termEn={section.termEn}
-                  leadUk={section.leadUk}
+            <div
+              key={`termDef-${sectionIndex}-${termUk}`}
+              className="study-learner-panel-block study-learner-panel-block--term-definition"
+            >
+              <dd className="study-learner-panel-value study-learner-panel-value--flush">
+                <StudyTermDefinitionCard
+                  termUk={termUk}
+                  explanationUk={explanationUk}
+                  termEn={termEn}
                 />
               </dd>
             </div>
@@ -149,6 +156,9 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
 
         const hideMiniCardsSectionLabel =
           section.type === 'miniCards' && section.hideSectionLabel;
+        const hidePlainSectionLabel =
+          section.type === 'plain' && section.hideLabel === true;
+        const hideSectionLabel = hideMiniCardsSectionLabel || hidePlainSectionLabel;
         const framedPlainBlock =
           (section.type === 'plain' && section.framed === true) ||
           (section.type === 'orderedList' && section.framed === true) ||
@@ -180,18 +190,18 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
             .filter(Boolean)
             .join(' ')}
         >
-          {hideMiniCardsSectionLabel ? null : (
+          {hideSectionLabel ? null : (
             <dt className="study-learner-panel-label">{section.labelUk}</dt>
           )}
           <dd
             className={`study-learner-panel-value${
-              hideMiniCardsSectionLabel ? ' study-learner-panel-value--flush' : ''
+              hideSectionLabel ? ' study-learner-panel-value--flush' : ''
             }`}
           >
             {section.type === 'prose' ? (
               <div className="study-learner-panel-prose">
                 {section.labeledLead ? (
-                  <StudyLabeledExplanation
+                  <StudyTermDefinitionCard
                     termUk={section.labeledLead.termUk}
                     explanationUk={section.labeledLead.explanationUk}
                   />

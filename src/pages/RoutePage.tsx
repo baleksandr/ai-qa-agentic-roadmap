@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { getMapLabel } from '../data/learning-map.registry';
 import { LEARNING_MAP_STAGES } from '../data/learning-map.registry';
+import { MapStageHeroCard } from '../components/MapStageHeroCard';
 import { SiteNav } from '../components/SiteNav';
 
 export function RoutePage() {
@@ -14,8 +15,8 @@ export function RoutePage() {
         головній вкладці.
       </p>
       {LEARNING_MAP_STAGES.map((stage) => (
-        <section key={stage.id} className="route-stage-block">
-          <h2>{stage.title}</h2>
+        <section key={stage.id} className="route-stage-block route-stage-block--map">
+          <MapStageHeroCard title={stage.title} subtitle={stage.subtitle} />
           <ol className="route-list">
             {stage.nodes.map((node) => (
               <li key={node.topicId}>

@@ -14,7 +14,7 @@ import { parseStudyDocument } from '../lib/studySections';
 import { useProgress } from '../hooks/useProgress';
 import { LEARNING_LABELS } from '../types/topic';
 import { StudyLessonAcronymHero } from '../components/lesson/StudyLessonAcronymHero';
-import { hasStudyLessonAside } from '../data/study/study-lesson-aside.registry';
+import { hasStudyProgressSidebar } from '../data/study/study-lesson-aside.registry';
 import { getStudyLessonHero } from '../data/study/study-lesson-heroes';
 import { StudyMarkdownWithFlows } from '../components/lesson/StudyMarkdownWithFlows';
 import {
@@ -22,8 +22,12 @@ import {
   getStudyOutcomesLessonHint,
 } from '../data/study/study-lesson-intros';
 import { StudyOutcomesLessonHint } from '../components/lesson/StudyOutcomesLessonHint';
-import { StudyPageCardsHint } from '../components/lesson/StudyPageCardsHint';
-import { topicStudyPageHasInteractiveCards } from '../lib/studyPageInteractive';
+import { StudyFundamentalsLearningOutcomes } from '../components/lesson/StudyFundamentalsLearningOutcomes';
+import { StudyMcpLearningOutcomes } from '../components/lesson/StudyMcpLearningOutcomes';
+import { StudyVectorDatabaseLearningOutcomes } from '../components/lesson/StudyVectorDatabaseLearningOutcomes';
+import { StudyFineTuningLearningOutcomes } from '../components/lesson/StudyFineTuningLearningOutcomes';
+import { studyNeonHudHeroZoneClassName } from '../lib/studyNeonHudTheme';
+import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 export function TopicStudyPage() {
   const { topicId } = useParams<{ topicId: string }>();
   const topic = topicId ? TOPIC_BY_ID[topicId] : undefined;
@@ -59,19 +63,30 @@ export function TopicStudyPage() {
 
   const learning = getProgress(topic.id);
   const lessonHero = getStudyLessonHero(topic.id);
+  const fundamentalsOutcomes = structured && topic.id === 'fundamentals';
+  const vectorDatabaseOutcomes = structured && topic.id === 'concept-15';
+  const mcpOutcomes = structured && topic.id === 'concept-06';
+  const fineTuningOutcomes = structured && topic.id === 'concept-13';
   const structuredOutcomes =
-    structured && topic.id === 'fundamentals'
+    structured &&
+    topic.id !== 'fundamentals' &&
+    topic.id !== 'concept-06' &&
+    topic.id !== 'concept-15' &&
+    topic.id !== 'concept-13'
       ? buildStudyLearningOutcomes(topic.id, '')
       : '';
   const outcomesLessonHint = structured ? getStudyOutcomesLessonHint(topic.id) : null;
-  const showPageCardsHint = topicStudyPageHasInteractiveCards(topic.id);
+  const neonHudTheme = isStudyReadyForLearning(topic.id);
+  const heroHudZone = studyNeonHudHeroZoneClassName(topic.id);
 
   return (
-    <div className={`page topic-study-page topic-study-page-wide topic-study-page--${topic.id}`}>
+    <div className={`page topic-study-page topic-study-page-wide topic-study-page--${topic.id}`.trim()}>
       <Link className="back-link" to="/">← До карти курсу</Link>
       <SiteNav />
 
-      <header className="topic-header study-header study-header-compact">
+      <header
+        className={`topic-header study-header study-header-compact${heroHudZone ? ` ${heroHudZone}` : ''}`.trim()}
+      >
         <p className="muted small">
           <Link to={`/topic/${topic.id}`}>← Review Mode</Link>
         </p>
@@ -79,7 +94,7 @@ export function TopicStudyPage() {
           {lessonHero ? (
             <>
               <span className="sr-only">{lessonHero.pageTitleUk}</span>
-              <StudyLessonAcronymHero hero={lessonHero} />
+              <StudyLessonAcronymHero hero={lessonHero} neonHudTheme={neonHudTheme} />
             </>
           ) : (
             getMapLabel(topic.id)
@@ -95,8 +110,49 @@ export function TopicStudyPage() {
         <p className="muted">Матеріал ще не перенесено з DOCX.</p>
       ) : structured ? (
         <>
-          {structuredOutcomes ? (
-            <aside className="study-learning-outcomes study-outcomes-with-flows" aria-label="Що я зрозумію після цього уроку">
+          {fundamentalsOutcomes ? (
+            <aside
+              className={`study-learning-outcomes study-fundamentals-outcomes-hud${heroHudZone ? ` ${heroHudZone}` : ''}`.trim()}
+              aria-label="Що я зрозумію після цього уроку"
+            >
+              <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
+              <StudyFundamentalsLearningOutcomes />
+            </aside>
+          ) : mcpOutcomes ? (
+            <aside
+              className={`study-learning-outcomes study-outcomes-with-flows${heroHudZone ? ` ${heroHudZone}` : ''}`.trim()}
+              aria-label="Що я зрозумію після цього уроку"
+            >
+              <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
+              <div className="markdown-body study-outcomes-body study-outcomes-with-flows">
+                <StudyMcpLearningOutcomes />
+              </div>
+            </aside>
+          ) : vectorDatabaseOutcomes ? (
+            <aside
+              className={`study-learning-outcomes study-outcomes-with-flows${heroHudZone ? ` ${heroHudZone}` : ''}`.trim()}
+              aria-label="Що я зрозумію після цього уроку"
+            >
+              <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
+              <div className="markdown-body study-outcomes-body study-outcomes-with-flows">
+                <StudyVectorDatabaseLearningOutcomes />
+              </div>
+            </aside>
+          ) : fineTuningOutcomes ? (
+            <aside
+              className={`study-learning-outcomes study-outcomes-with-flows${heroHudZone ? ` ${heroHudZone}` : ''}`.trim()}
+              aria-label="Що я зрозумію після цього уроку"
+            >
+              <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
+              <div className="markdown-body study-outcomes-body study-outcomes-with-flows">
+                <StudyFineTuningLearningOutcomes />
+              </div>
+            </aside>
+          ) : structuredOutcomes ? (
+            <aside
+              className={`study-learning-outcomes study-outcomes-with-flows${heroHudZone ? ` ${heroHudZone}` : ''}`.trim()}
+              aria-label="Що я зрозумію після цього уроку"
+            >
               <h2 className="study-outcomes-title">Що я зрозумію після цього уроку</h2>
               <StudyMarkdownWithFlows
                 markdown={structuredOutcomes}
@@ -110,7 +166,6 @@ export function TopicStudyPage() {
               ) : null}
             </aside>
           ) : null}
-          {showPageCardsHint ? <StudyPageCardsHint /> : null}
           <StructuredStudyView
             study={structured}
             learning={learning}
@@ -132,7 +187,7 @@ export function TopicStudyPage() {
       )}
 
       <footer className="study-footer study-footer-global">
-        {!structured && !hasStudyLessonAside(topic.id) && (
+        {!structured && !hasStudyProgressSidebar(topic.id) && (
           <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
         )}
         <nav className="topic-nav study-next-nav">

@@ -28,6 +28,8 @@ type Props = {
   conceptGroups?: StudyTeachingConceptGroup[];
   /** Префікс для вкладених карток (напр. «3» → 3.1, 3.2). */
   numberPrefix?: string;
+  /** Ліва колонка: лише назва дії (без номерів, teaser і CTA). */
+  compactNav?: boolean;
 };
 
 function NavCard({
@@ -37,6 +39,7 @@ function NavCard({
   activeKey,
   onSelect,
   cardNumberUk,
+  compactNav = false,
 }: {
   item: StudyPipelineNavItem;
   index: number;
@@ -44,6 +47,7 @@ function NavCard({
   activeKey: string | number;
   onSelect: (key: string | number) => void;
   cardNumberUk: string;
+  compactNav?: boolean;
 }) {
   const canClick = item.clickable ?? true;
   return (
@@ -61,6 +65,7 @@ function NavCard({
       layout="pipeline"
       showStepNumber={false}
       cardNumberUk={item.cardNumberUk ?? cardNumberUk}
+      compactNav={compactNav}
     />
   );
 }
@@ -73,6 +78,7 @@ export function StudyPipelineStepNav({
   presentation = 'process',
   conceptGroups,
   numberPrefix,
+  compactNav = false,
 }: Props) {
   const total = items.length;
   const itemByKey = new Map(items.map((it) => [it.key, it]));
@@ -91,8 +97,28 @@ export function StudyPipelineStepNav({
     return (
       <div className="study-concept-nav" aria-label={ariaLabel}>
         {conceptGroups.map((group) => (
-          <section key={group.headingUk} className="study-concept-nav-group" aria-label={group.headingUk}>
-            <h3 className="study-concept-nav-group-title">{group.headingUk}</h3>
+          <section
+            key={group.headingUk}
+            className={[
+              'study-concept-nav-group',
+              group.navGroupBadge ? `study-concept-nav-group--${group.navGroupBadge}` : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            aria-label={group.headingUk}
+          >
+            <h3
+              className={[
+                'study-concept-nav-group-title',
+                group.navGroupBadge
+                  ? `study-concept-nav-group-title--badge study-concept-nav-group-title--${group.navGroupBadge}`
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              {group.headingUk}
+            </h3>
             <ul className="study-rag-pipeline-steps-col study-concept-nav-group-list">
               {group.stepKeys.map((key) => {
                 const item = itemByKey.get(key);
@@ -107,6 +133,7 @@ export function StudyPipelineStepNav({
                       activeKey={activeKey}
                       onSelect={onSelect}
                       cardNumberUk={cardNumberForKey(key, index)}
+                      compactNav={compactNav}
                     />
                   </li>
                 );
@@ -119,7 +146,15 @@ export function StudyPipelineStepNav({
   }
 
   return (
-    <ol className="study-rag-pipeline-steps-col" aria-label={ariaLabel}>
+    <ol
+      className={[
+        'study-rag-pipeline-steps-col',
+        compactNav ? 'study-rag-pipeline-steps-col--compact-nav' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-label={ariaLabel}
+    >
       {items.map((item, i) => (
         <li
           key={item.key}
@@ -138,6 +173,7 @@ export function StudyPipelineStepNav({
             activeKey={activeKey}
             onSelect={onSelect}
             cardNumberUk={cardNumberForKey(item.key, i)}
+            compactNav={compactNav}
           />
         </li>
       ))}

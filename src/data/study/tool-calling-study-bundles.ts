@@ -126,6 +126,8 @@ export const TOOL_CALLING_FAILURE_INTRO_UK =
 export const TOOL_CALLING_FAILURE_BUNDLE: StudyTeachingCardsBundle = {
   ariaLabel: 'Сім збоїв tool calling',
   presentation: 'concepts',
+  sectionCardsInteractionHintUk:
+    'Натисніть картку збою, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.',
   steps: [
     fundamentalsConceptStep(
       'tc-fail-hallucinated-tool',
@@ -182,6 +184,8 @@ export const TOOL_CALLING_QA_CATEGORIES_BUNDLE: StudyTeachingCardsBundle = {
   ariaLabel: 'Шість категорій перевірок tool calling',
   presentation: 'concepts',
   conceptsHeadingUk: 'Категорії перевірок',
+  sectionCardsInteractionHintUk:
+    'Натисніть категорію, щоб прочитати план перевірки поруч. На телефоні панель з’явиться під картками.',
   steps: [
     fundamentalsConceptStep(
       'tc-qa-schema',
@@ -246,6 +250,7 @@ export const TOOL_CALLING_LLM_CODE_FLOW_BUNDLE: StudyTeachingCardsBundle = {
   ariaLabel: 'Шість кроків readPlaywrightReport після login_spec',
   presentation: 'process',
   hideFlowOverview: true,
+  sectionCardsInteractionHintUk: 'Оберіть крок, щоб побачити, хто діє і що передає далі.',
   steps: [
     fundamentalsConceptStep(
       'tc-llc-1',
@@ -287,6 +292,7 @@ export const TOOL_CALLING_LLM_CODE_FLOW_BUNDLE: StudyTeachingCardsBundle = {
 };
 
 export const TOOL_CALLING_LLM_CODE_RISKS_BUNDLE: StudyTeachingCardsBundle = {
+  hideSectionCardsInteractionHint: true,
   ariaLabel: 'Дві межі на практиці',
   presentation: 'concepts',
   conceptGroups: [
@@ -312,6 +318,7 @@ export const TOOL_CALLING_LLM_CODE_RISKS_BUNDLE: StudyTeachingCardsBundle = {
 };
 
 export const TOOL_CALLING_LLM_CODE_ROLES_BUNDLE: StudyTeachingCardsBundle = {
+  hideSectionCardsInteractionHint: true,
   ariaLabel: 'Ролі в прикладі login_spec',
   presentation: 'concepts',
   conceptsHeadingUk: 'Ролі',

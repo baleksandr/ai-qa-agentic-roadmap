@@ -28,19 +28,23 @@ export function HomePage() {
 
   return (
     <div className={`page home-page ${selectedTopic ? 'home-has-panel' : ''}`}>
-      <header className="home-top">
-        <div className="home-top-row">
-          <h1 className="home-title">Agentic AI for QA</h1>
-          <SiteNav />
+      <header className="home-top home-route-header">
+        <div className="home-route-header__shell">
+          <div className="home-route-header__scan" aria-hidden="true" />
+          <div className="home-top-row home-route-header__row">
+            <h1 className="home-title home-route-header__title">Agentic AI for QA</h1>
+            <SiteNav />
+          </div>
+          <div className="home-top-tools home-route-header__tools">
+            <TopicSearch onPickTopic={focusTopicOnMap} />
+            <Link className="home-list-link home-route-header__list-link" to="/route">Список тем</Link>
+          </div>
+          <CompactProgress />
         </div>
-        <div className="home-top-tools">
-          <TopicSearch onPickTopic={focusTopicOnMap} />
-          <Link className="home-list-link" to="/route">Список тем</Link>
-        </div>
-        <CompactProgress />
       </header>
 
-      <div className="home-map-framing">
+      <div className="home-map-framing home-map-framing--cyber">
+        <p className="home-map-framing-lead">Оберіть фільтр і тему на карті — кожна картка відкриває опис і перехід до уроку.</p>
         <div className="home-map-framing-grid">
           <article className="home-map-framing-card home-map-framing-card--theory">
             <p className="home-map-framing-kicker">Теорія</p>

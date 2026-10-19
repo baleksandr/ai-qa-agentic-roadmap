@@ -271,7 +271,11 @@
 
 .study-progress-aside-mobile {
   display: none;
-  margin-bottom: 0.85rem;
+}
+
+.study-progress-aside-mobile--after-content {
+  margin-top: 1.1rem;
+  margin-bottom: 0;
 }
 
 .study-progress-aside-desktop {
@@ -301,12 +305,34 @@
 }
 
 @media (min-width: 1025px) {
-  .study-lesson-aside.study-col-aside {
+  .study-lesson-aside.study-col-aside,
+  .study-col-aside--progress-only {
     align-self: start;
   }
 
   .study-progress-aside-desktop .study-aside-card--progress {
     position: sticky;
     top: 0.75rem;
+  }
+
+  .study-col-aside--progress-only {
+    min-width: 0;
+    max-width: var(--study-grid-aside, 176px);
+  }
+}
+
+.study-col-aside--progress-only .study-aside-card--progress {
+  padding: 0.65rem 0.7rem;
+}
+
+.study-col-aside--progress-only .progress-picker__label {
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+}
+
+@media (max-width: 1024px) {
+  .study-col-aside--progress-only {
+    display: none;
   }
 }

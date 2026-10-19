@@ -7,9 +7,6 @@ import {
   TOOL_CALLING_LLM_CODE_ROLES_BUNDLE,
 } from '../../data/study/tool-calling-study-bundles';
 
-const TC_LLM_CODE_HINT_UK =
-  'Оберіть крок, щоб побачити, хто діє і що передає далі.';
-
 /** §4 «Де код, а де LLM?» — шість кроків, дві межі, три ролі. */
 export function StudyToolCallingLlmCodeBoundary() {
   return (
@@ -21,11 +18,6 @@ export function StudyToolCallingLlmCodeBoundary() {
         <span className="lesson-callout-label">Хто насправді читає звіт</span>
         <StudyLearnerExplanationBlocks bodyUk={TOOL_CALLING_LLM_CODE_INTRO_UK} />
       </div>
-
-      <p className="study-harness-section-cards-hint study-interaction-hint" role="note">
-        <span className="study-interaction-hint-label">Підказка</span>
-        <span className="study-interaction-hint-text">{TC_LLM_CODE_HINT_UK}</span>
-      </p>
 
       <StudyTeachingCardsSection bundle={TOOL_CALLING_LLM_CODE_FLOW_BUNDLE} />
 

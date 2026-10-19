@@ -1,11 +1,6 @@
-import { STUDY_PAGE_CARDS_INTERACTION_HINT_UK } from '../../lib/studyPageInteractive';
-import { StudyInteractionHint } from './StudyInteractionHint';
+import { StudySectionCardsInteractionHint } from './StudySectionCardsInteractionHint';
 
-/** Єдина UI-підказка для всієї Study-сторінки з інтерактивними картками. */
+/** @deprecated Підказку показуйте в `StudyTeachingCardsSection` / `StudySectionCardsInteractionHint` на рівні розділу. */
 export function StudyPageCardsHint() {
-  return (
-    <StudyInteractionHint className="study-page-cards-hint">
-      {STUDY_PAGE_CARDS_INTERACTION_HINT_UK}
-    </StudyInteractionHint>
-  );
+  return <StudySectionCardsInteractionHint className="study-page-cards-hint" />;
 }

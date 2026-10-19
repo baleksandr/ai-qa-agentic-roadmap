@@ -13,14 +13,22 @@ import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
 import { StudyAfterInteractiveSummary } from './StudyAfterInteractiveSummary';
 import { StudyModelResponseExampleBlock } from './StudyModelResponseExampleBlock';
 import { StudyLearnerPanelCourseLessonLink } from './StudyLearnerPanelCourseLessonLink';
+import { StudySectionAsideNote } from './StudySectionAsideNote';
+import { StudySectionCardsInteractionHint } from './StudySectionCardsInteractionHint';
 
 type Props = {
   bundle: StudyTeachingCardsBundle;
   className?: string;
+  /** Компактний вступ над картками (лише в центральному блоці, не в правій панелі). */
+  compactSectionIntroUk?: string;
 };
 
 /** Єдиний патерн навчальних карток + бокова панель (еталон RAG / Tool Calling). */
-export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
+export function StudyTeachingCardsSection({
+  bundle,
+  className = '',
+  compactSectionIntroUk,
+}: Props) {
   const firstKey = bundle.steps[0]?.key ?? '';
   const [activeKey, setActiveKey] = useState<string | number>(firstKey);
 
@@ -68,7 +76,7 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
 
   return (
     <section
-      className={`study-teaching-cards study-rag-pipeline-glossary study-rag-one-query study-teaching-cards--cyber${isConcepts ? ' study-teaching-cards--concepts' : ''} ${className}`.trim()}
+      className={`study-teaching-cards study-rag-pipeline-glossary study-rag-one-query${isConcepts ? ' study-teaching-cards--concepts' : ''} ${className}`.trim()}
       aria-label={bundle.ariaLabel}
     >
       {bundle.introScenarioCard ? (
@@ -114,12 +122,12 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
             </ul>
           ) : null}
           {bundle.sectionAsideNoteUk?.trim() ? (
-            <aside className="study-teaching-section-aside-note lesson-callout" role="note">
-              <LessonRichParagraphs
-                text={bundle.sectionAsideNoteUk}
-                className="study-teaching-section-aside-note-p study-learner-explanation"
-              />
-            </aside>
+            <StudySectionAsideNote
+              variant="inline"
+              className="study-teaching-section-aside-note"
+              titleUk={bundle.sectionAsideNoteTitleUk?.trim() || 'Нотатка до розділу'}
+              bodyUk={bundle.sectionAsideNoteUk}
+            />
           ) : null}
         </div>
       ) : null}
@@ -155,6 +163,21 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
         </div>
       ) : null}
 
+      {compactSectionIntroUk?.trim() ? (
+        <div className="study-teaching-compact-section-intro">
+          <LessonRichParagraphs
+            text={compactSectionIntroUk}
+            className="study-teaching-compact-section-intro-text study-learner-explanation"
+          />
+        </div>
+      ) : null}
+
+      {!bundle.hideSectionCardsInteractionHint ? (
+        <StudySectionCardsInteractionHint>
+          {bundle.sectionCardsInteractionHintUk ?? bundle.cardsInteractionHintUk}
+        </StudySectionCardsInteractionHint>
+      ) : null}
+
       <StudyStepDetailLayout
         wrapperClassName="study-rag-pipeline-with-panel study-teaching-cards-layout"
         navAriaLabel={bundle.ariaLabel}
@@ -182,7 +205,9 @@ export function StudyTeachingCardsSection({ bundle, className = '' }: Props) {
                       : `Крок ${activeStepIndex + 1} з ${bundle.steps.length}`}
                 </p>
               ) : null}
-              <h4 className="study-rag-qa-panel-title">{activeStep.titleUk}</h4>
+              {!bundle.hidePanelStepTitle ? (
+                <h4 className="study-rag-qa-panel-title">{activeStep.titleUk}</h4>
+              ) : null}
               {!activeFundamentalsPanel && activeStep.teaserUk ? (
                 <p className="study-tc-lesson-line">{activeStep.teaserUk}</p>
               ) : null}

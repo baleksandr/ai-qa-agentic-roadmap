@@ -1,7 +1,8 @@
-/* Єдина UI-підказка для інтерактивних Study-сторінок (після outcomes, перед розділами) */
+/* Підказка перед групою карток розділу (після вступу) */
+.study-teaching-section-cards-hint,
 .study-page-cards-hint {
-  max-width: 42rem;
-  margin: 0 0 1.1rem;
+  max-width: none;
+  margin: 0 0 1rem;
 }
 
 /* Підказка «як користуватися уроком» під outcomes — звичайний перенос, без горизонтального вилізання */
@@ -84,7 +85,7 @@
 
 /* Вигляд карток — study-interactive-cards.css */
 
-.study-teaching-cards--cyber .study-flow-stage-glyph {
+.study-teaching-cards .study-flow-stage-glyph {
   border-color: rgba(90, 110, 160, 0.35);
   background: rgba(12, 18, 36, 0.85);
 }
@@ -134,10 +135,13 @@
 /* Prompt Engineering / Reasoning — один бірюзовий акцент заголовків; рожевий лише на обраній картці */
 .study-prompt-pe-teaching-cards .study-rag-qa-panel-title,
 .study-reasoning-teaching-cards .study-rag-qa-panel-title,
+.study-memory-state-teaching-cards .study-rag-qa-panel-title,
 .study-prompt-pe-teaching-cards .study-interactive-card-title,
 .study-reasoning-teaching-cards .study-interactive-card-title,
+.study-memory-state-teaching-cards .study-interactive-card-title,
 .study-prompt-pe-teaching-cards .study-flow-stage-title,
-.study-reasoning-teaching-cards .study-flow-stage-title {
+.study-reasoning-teaching-cards .study-flow-stage-title,
+.study-memory-state-teaching-cards .study-flow-stage-title {
   color: var(--study-heading-accent, #6ee4d4);
 }
 
@@ -178,7 +182,55 @@
   color: var(--study-body-text, rgba(232, 240, 252, 0.94));
 }
 
-.study-prompt-pe-teaching-cards .study-after-interactive-summary-footnote,
+/* PE — вкладений pick у правій панелі: дві картки в ряд, деталі під ними */
+.study-prompt-pe-teaching-cards .study-learner-panel-block--step-pick {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.study-prompt-pe-teaching-cards .study-learner-panel-step-pick-layout--row-above-panel {
+  width: 100%;
+  max-width: none;
+}
+
+.study-prompt-pe-teaching-cards
+  .study-learner-panel-step-pick-layout--row-above-panel
+  .study-rag-pipeline-steps-col {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.study-prompt-pe-teaching-cards
+  .study-learner-panel-step-pick-layout--row-above-panel
+  .study-rag-pipeline-steps-col
+  > li {
+  flex: 1 1 calc(50% - 0.35rem);
+  min-width: min(100%, 11rem);
+  max-width: 100%;
+}
+
+.study-prompt-pe-teaching-cards .study-learner-panel-step-pick-layout--row-above-panel .study-flow-stage-card {
+  min-height: 0;
+  height: 100%;
+}
+
+.study-prompt-pe-teaching-cards .study-learner-panel-step-pick-row-panel {
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 768px) {
+  .study-prompt-pe-teaching-cards
+    .study-learner-panel-step-pick-layout--row-above-panel
+    .study-rag-pipeline-steps-col
+    > li {
+    flex: 1 1 100%;
+  }
+}
+
 .study-reasoning-teaching-cards .study-learner-panel-block--card-intent {
   margin: 0 0 0.85rem;
 }
@@ -271,12 +323,23 @@
 }
 
 /* Порівняння двох процесів (Training vs Inference та інші пари) */
+.study-process-compare-scenario {
+  margin: 0 0 0.75rem;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.study-process-compare-scenario .lesson-callout-label {
+  margin-bottom: 0.35rem;
+}
+
 .study-process-compare-question {
-  margin: 0 0 0.65rem;
+  margin: 0;
   font-size: 0.95rem;
   line-height: 1.5;
   color: #e8eef8;
-  max-width: 46rem;
+  max-width: none;
 }
 
 .study-process-compare-primary-grid {
@@ -306,6 +369,9 @@
 }
 
 .study-process-compare-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   width: 100%;
   text-align: left;
   border-radius: 11px;
@@ -316,6 +382,12 @@
   color: inherit;
   font: inherit;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.study-process-compare-card-cta {
+  margin-top: auto;
+  padding-top: 0.45rem;
 }
 
 .study-process-compare-card--secondary {
@@ -641,6 +713,11 @@
     0 0 16px rgba(255, 120, 180, 0.14);
 }
 
+.study-reasoning-production .study-learner-panel-step-pick-layout .study-rag-qa-detail-panel {
+  position: static;
+  top: auto;
+}
+
 .study-reasoning-production .study-learner-panel--step-pick-detail .study-learner-panel-block {
   margin: 0 0 0.65rem;
   padding: 0.55rem 0.68rem 0.6rem;
@@ -770,6 +847,11 @@
   gap: 0.75rem 1rem;
   margin: 0 0 0.75rem;
   align-items: start;
+  grid-template-columns: 1fr;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @media (min-width: 900px) {
@@ -784,6 +866,60 @@
 
   .study-teaching-intro-mini-grid--aside-only .study-teaching-section-aside-note {
     max-width: 280px;
+  }
+}
+
+.study-reasoning-qa-checks {
+  min-width: 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Sticky панель з App.css накладалась на «Огляд» і вступ при прокрутці */
+.study-reasoning-qa-checks .study-teaching-intro-run-card {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+.study-reasoning-qa-checks .study-teaching-intro-mini-grid {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+.study-reasoning-qa-checks .study-rag-pipeline-with-panel.study-teaching-cards-layout {
+  position: relative;
+  z-index: 0;
+  margin-top: 0.25rem;
+  clear: both;
+}
+
+.study-reasoning-qa-checks .study-rag-qa-detail-panel {
+  position: static;
+  top: auto;
+}
+
+@media (max-width: 1099px) {
+  .study-reasoning-qa-checks .study-teaching-intro-mini-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .study-reasoning-qa-checks .study-teaching-intro-mini-grid .study-teaching-section-aside-note {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .structured-study-layout.study-mode-with-aside .study-reasoning-qa-checks .study-teaching-intro-mini-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1100px) {
+  .structured-study-layout.study-mode-with-aside .study-reasoning-qa-checks .study-teaching-intro-mini-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -828,17 +964,24 @@
 
 .study-teaching-section-aside-note {
   margin: 0;
-  padding: 0.6rem 0.75rem 0.65rem;
-  border-radius: 9px;
-  border: 1px solid rgba(100, 120, 200, 0.22);
-  background: rgba(16, 20, 34, 0.72);
+  min-width: 0;
+  align-self: start;
 }
 
-.study-teaching-section-aside-note-p {
-  margin: 0;
-  font-size: 0.88rem;
-  line-height: 1.48;
-  color: rgba(220, 228, 248, 0.9);
+.study-teaching-intro-mini-grid .study-teaching-section-aside-note {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .study-teaching-intro-mini-grid .study-teaching-intro-mini-cards {
+    grid-column: 1;
+  }
+
+  .study-teaching-intro-mini-grid .study-teaching-section-aside-note {
+    grid-column: 2;
+    grid-row: 1;
+  }
 }
 
 /* Reasoning §7 — обрамлені блоки панелі тесту */
@@ -960,6 +1103,243 @@
   overflow-wrap: anywhere;
 }
 
+/* Memory & State §7 — вкладені картки «Що робить QA» (numbered / titled stack) */
+.study-memory-state-qa-checks .study-learner-panel-mini-list--outcome-stack {
+  gap: 0.65rem;
+}
+
+.study-memory-state-qa-checks .study-learner-panel-mini-list--outcome-stack .study-outcome-card {
+  margin: 0;
+  padding: 0.65rem 0.72rem 0.7rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(14, 18, 30, 0.88);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.study-memory-state-qa-checks .study-learner-panel-mini-list--outcome-stack .study-outcome-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-memory-state-qa-checks .study-learner-panel-mini-list--outcome-stack .study-outcome-card__body {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(230, 238, 250, 0.92);
+}
+
+/* Memory & State §6–7 — вкладений processStepPick у «Що робить QA» */
+.study-memory-state-panel-qa-pick .study-learner-panel-block--step-pick {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.72rem 0.7rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(14, 18, 30, 0.55);
+  box-sizing: border-box;
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-heading {
+  margin: 0 0 0.55rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-layout .study-step-detail-layout {
+  gap: 0.55rem 0.75rem;
+  align-items: start;
+}
+
+@media (min-width: 769px) {
+  .study-memory-state-panel-qa-pick .study-learner-panel-step-pick-layout .study-step-detail-layout {
+    grid-template-columns: minmax(148px, 34%) minmax(0, 1fr);
+  }
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-layout--compact-nav .study-rag-pipeline-steps-col {
+  gap: 0.4rem;
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav.has-card-number {
+  padding-top: 0.44rem;
+  padding-right: 0.48rem;
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav {
+  padding: 0.48rem 0.52rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(88, 104, 140, 0.32);
+  border-left-width: 1px;
+  background: rgba(12, 16, 28, 0.82);
+  box-shadow: none;
+  text-align: left;
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout
+  .study-flow-stage-card--pipeline.is-compact-nav {
+  border-left-width: 1px;
+  border-left-color: rgba(88, 104, 140, 0.32);
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav.is-active {
+  border-color: var(--study-interactive-card-active-border, rgba(255, 120, 180, 0.72));
+  box-shadow:
+    0 0 0 1px rgba(255, 120, 180, 0.2),
+    0 0 12px rgba(255, 120, 180, 0.1);
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav
+  .study-flow-stage-card-top--pipeline {
+  margin: 0;
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav
+  .study-flow-stage-title {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  color: rgba(228, 236, 248, 0.94);
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav
+  .study-flow-stage-card-foot {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav
+  .study-flow-stage-teaser {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  color: rgba(200, 212, 232, 0.82);
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav
+  .study-flow-stage-cta {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.study-memory-state-panel-qa-pick
+  .study-learner-panel-step-pick-layout--compact-nav
+  .study-flow-stage-card--pipeline.is-compact-nav.is-active
+  .study-flow-stage-title {
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-layout .study-step-detail-panel {
+  align-self: start;
+  height: auto;
+  min-height: 0;
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-layout .study-rag-qa-detail-panel,
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-layout .study-step-detail-panel {
+  padding: 0.62rem 0.72rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(110, 228, 212, 0.22);
+  background: linear-gradient(
+    165deg,
+    rgba(16, 22, 38, 0.94) 0%,
+    rgba(10, 14, 26, 0.88) 100%
+  );
+  box-shadow: 0 0 14px rgba(110, 228, 212, 0.06);
+  box-sizing: border-box;
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-panel-title {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-panel-body {
+  font-size: 0.9rem;
+  line-height: 1.52;
+  color: rgba(230, 238, 250, 0.92);
+}
+
+.study-memory-state-panel-qa-pick .study-learner-panel-step-pick-panel-body .study-learner-explanation {
+  color: rgba(230, 238, 250, 0.92);
+}
+
+.study-memory-state-failure-risks .study-panel-terms,
+.study-memory-state-production .study-panel-terms {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(72, 88, 118, 0.35);
+}
+
+/* Memory & State §8 — обрамлені блоки production */
+.study-memory-state-production .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-memory-state-production .study-learner-panel-block--framed:last-of-type {
+  margin-bottom: 0;
+}
+
+.study-memory-state-production .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-memory-state-production .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  color: rgba(230, 235, 250, 0.92);
+  font-size: 0.92rem;
+  line-height: 1.48;
+}
+
 /* Reasoning §8 — обрамлені блоки панелі production */
 .study-reasoning-production .study-learner-panel-block--framed {
   display: block;
@@ -1048,4 +1428,328 @@
 
 .study-reasoning-interview-block .study-rag-interview-pitfall-standalone {
   margin-top: 0.65rem;
+}
+
+/* ——— Спокійна нотатка в центральній сітці (не Neon HUD) ——— */
+
+.study-teaching-inline-aside-note {
+  margin: 0;
+  padding: 0.65rem 0.75rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid var(--study-explainer-border, rgba(72, 88, 118, 0.48));
+  background: var(
+    --study-explainer-bg,
+    linear-gradient(158deg, rgba(16, 20, 34, 0.94) 0%, rgba(9, 12, 22, 0.92) 100%)
+  );
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.study-teaching-inline-aside-note__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: rgba(228, 236, 248, 0.94);
+}
+
+.study-teaching-inline-aside-note__body {
+  min-width: 0;
+}
+
+.study-teaching-inline-aside-note__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.study-teaching-inline-aside-note__line {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.52;
+  overflow-wrap: anywhere;
+}
+
+.study-teaching-inline-aside-note__term {
+  font-weight: 650;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-teaching-inline-aside-note__sep {
+  color: rgba(200, 212, 232, 0.55);
+}
+
+.study-teaching-inline-aside-note__expl {
+  color: rgba(220, 230, 248, 0.9);
+}
+
+.study-teaching-inline-aside-note__prose {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.52;
+  color: rgba(228, 236, 248, 0.92);
+}
+
+.study-teaching-inline-aside-note__inner-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 650;
+  color: rgba(228, 236, 248, 0.94);
+}
+
+.study-teaching-inline-aside-note__track-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.study-teaching-inline-aside-note__footnote {
+  margin: 0.45rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.48;
+  color: rgba(200, 212, 232, 0.82);
+}
+
+.study-teaching-intro-mini-grid .study-teaching-inline-aside-note {
+  align-self: start;
+  height: 100%;
+}
+
+@media (min-width: 900px) {
+  .study-teaching-intro-mini-grid .study-teaching-section-aside-note {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* PE §6 — вкладений processStepPick у панелі збою */
+.study-prompt-pe-failures .study-learner-panel-step-pick {
+  margin-top: 0.35rem;
+}
+
+.study-prompt-pe-failures .study-learner-panel-step-pick-heading {
+  margin: 0 0 0.55rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: rgba(236, 242, 252, 0.96);
+}
+
+.study-prompt-pe-failures .study-learner-panel-step-pick-layout .study-step-detail-layout {
+  gap: 0.65rem;
+}
+
+.study-prompt-pe-failures .study-learner-panel--step-pick-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.study-prompt-pe-failures .study-learner-panel--step-pick-detail .study-learner-panel-block {
+  margin: 0;
+}
+
+.study-prompt-pe-failures .study-learner-panel-step-pick-conclusion {
+  margin-top: 0.65rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-prompt-pe-failures .study-learner-term-pair-conclusion-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(228, 236, 248, 0.9);
+}
+
+.study-prompt-pe-failures .study-learner-term-pair-conclusion-body {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: rgba(224, 234, 248, 0.92);
+}
+
+/* PE §8 Production — обрамлені блоки панелі */
+.study-prompt-pe-production .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-prompt-pe-production .study-learner-panel-block--framed:last-of-type {
+  margin-bottom: 0.75rem;
+}
+
+.study-prompt-pe-production .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-prompt-pe-production .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  color: rgba(230, 235, 250, 0.92);
+  font-size: 0.92rem;
+  line-height: 1.48;
+}
+
+.study-prompt-pe-production .study-learner-labeled-line {
+  margin: 0 0 0.45rem;
+}
+
+.study-prompt-pe-production .study-learner-labeled-line:last-child {
+  margin-bottom: 0;
+}
+
+.study-prompt-pe-production .study-learner-labeled-line .study-term-accent {
+  font-weight: 650;
+}
+
+.study-prompt-pe-production .study-learner-panel-block--term-definition {
+  margin-top: 0.35rem;
+}
+
+.study-prompt-pe-production .study-learner-panel-block--term-definition .study-term-definition-card {
+  font-size: 0.84rem;
+  opacity: 0.92;
+}
+
+.study-prompt-pe-production .study-learner-panel-block--step-pick {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.78rem 0.72rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+}
+
+.study-prompt-pe-production .study-learner-panel-step-pick-heading {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-prompt-pe-production .study-learner-panel-step-pick-layout .study-step-detail-layout {
+  grid-template-columns: minmax(11.5rem, 248px) minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+  align-items: start;
+}
+
+.study-prompt-pe-production .study-learner-panel-step-pick-layout .study-rag-pipeline-steps-col > li {
+  min-width: 0;
+  width: 100%;
+}
+
+.study-prompt-pe-production .study-learner-panel-step-pick-layout .study-rag-qa-detail-panel {
+  position: static;
+  top: auto;
+  margin: 0;
+  padding: 0.62rem 0.72rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-prompt-pe-production .study-learner-panel-step-pick-panel-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-prompt-pe-production .study-learner-panel-step-pick-panel-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+}
+
+@media (max-width: 768px) {
+  .study-prompt-pe-production .study-learner-panel-step-pick-layout .study-step-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .study-prompt-pe-production .study-learner-panel-step-pick-layout .study-step-detail-panel {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Memory & State §4 — послідовність під капотом */
+.study-memory-state-sequence .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.65rem;
+  padding: 0.62rem 0.72rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-memory-state-sequence .study-learner-panel-block--framed:last-of-type {
+  margin-bottom: 0.65rem;
+}
+
+.study-memory-state-sequence .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-memory-state-sequence .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+}
+
+.study-memory-state-sequence .study-learner-panel-block--card-intent .study-learner-panel-card-intent {
+  margin: 0.5rem 0 0;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border: 1px dashed rgba(100, 120, 200, 0.35);
+  background: rgba(16, 20, 34, 0.65);
+  text-align: center;
+}
+
+.study-memory-state-sequence .study-learner-panel-block--card-intent .study-learner-panel-card-intent-body {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(200, 212, 232, 0.9);
+}
+
+.study-memory-state-sequence .study-after-interactive-summary-solo-body {
+  margin: 0;
+  padding: 0.65rem 0.78rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
 }

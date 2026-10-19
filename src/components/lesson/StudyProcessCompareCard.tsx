@@ -45,6 +45,10 @@ export function StudyProcessCompareCard({ card, active, onSelect }: Props) {
           {card.hallmarkUk}
         </p>
       ) : null}
+      <span className="study-flow-stage-cta study-process-compare-card-cta">
+        Деталі
+        <span className="study-flow-stage-cta-arrow" aria-hidden="true">→</span>
+      </span>
     </button>
   );
 }

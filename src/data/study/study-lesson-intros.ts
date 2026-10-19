@@ -22,15 +22,9 @@ plan JSON → validate steps → execute / replan`,
   'concept-12': `**Reasoning** має спиратися на tool/RAG facts після login_spec.
 
 symptom → гіпотези → tools → оновлений висновок`,
-  'concept-13': `**Fine-tuning** змінює weights; свіжі postmortem — RAG, не tune.
-
-train job → model version → eval gate`,
   'concept-14': `**Prompt engineering** — role, constraints, format у messages[].
 
 system + context → LLM → schema validate`,
-  'concept-15': `**Vector DB** — Top-K similarity для chunks у RAG; ACL у коді.
-
-query embed → search → filtered chunks → prompt`,
   'concept-16': `**Agentic workflows** — сценарій з handoff між агентами.
 
 triage → investigate → fix proposal → CI`,
@@ -76,14 +70,10 @@ export function getStudyOutcomesLessonHint(_topicId: string): StudyOutcomesLesso
 export function buildStudyLearningOutcomes(topicId: string, quickViewRaw: string): string {
   const trimmed = quickViewRaw.replace(/\s+/g, ' ').trim();
   if (topicId === 'fundamentals') {
-    return `**Fundamentals** дає спільні слова для всього курсу: що таке LLM на inference, як текст стає токенами, що таке context window і чому відповідь моделі — не база даних.
-
-текст запиту → токени → context → next-token → відповідь (цикл)`;
+    return '';
   }
   if (topicId === 'concept-01') {
-    return `Модель не пам’ятає минулий HTTP-запит сама. **State** — де зараз цей run investigation; **memory** — що зберегли з минулого; **context builder** (код) вирішує, що покласти в \`messages[]\` перед LLM.
-
-падіння login_spec → runId і state → кроки tools → checkpoint → context → LLM`;
+    return '';
   }
   if (topicId === 'concept-02') {
     return `Кілька агентів і CI без спільного **оркестратора** дають хаос порядку. Orchestration — код workflow: ready tasks, routing, retries, **human gates** — не заміна harness всередині одного run.
@@ -118,7 +108,13 @@ CI artifacts ready → investigation task → гілка fix / retry / escalate 
 
 ${trimmed ? `\nКоротке формулювання курсу: ${trimmed}` : ''}`;
   }
-  if (topicId === 'concept-14' || topicId === 'concept-12') {
+  if (
+    topicId === 'concept-06' ||
+    topicId === 'concept-14' ||
+    topicId === 'concept-12' ||
+    topicId === 'concept-15' ||
+    topicId === 'concept-13'
+  ) {
     return '';
   }
   if (PART_II_OUTCOMES[topicId]) return PART_II_OUTCOMES[topicId];

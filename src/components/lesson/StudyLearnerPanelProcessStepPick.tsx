@@ -3,13 +3,14 @@ import type { StudyLearnerPanelProcessStepPickSection } from '../../data/study/s
 import { StudyLearnerExplanationBlocks } from './StudyLearnerExplanationBlocks';
 import { StudyModelResponseExampleBlock } from './StudyModelResponseExampleBlock';
 import { StudyLearnerPanelQaCheck } from './StudyLearnerPanelQaCheck';
-import { StudyLabeledExplanation } from './StudyLabeledExplanation';
+import { StudyTermDefinitionCard } from './StudyTermDefinitionCard';
 import { StudyLabeledExplanationStack } from './StudyLabeledExplanationStack';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
 import { formatStudyCardNumber, studyCardPanelLabel } from '../../lib/studyCardNumber';
 import { studyOutcomeShellToneFromStepKey } from '../../lib/studyOutcomeShellTone';
 import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
+import { shouldShowNestedProcessStepPickHint } from '../../lib/studyPageInteractive';
 import { parseLessonBold } from './lessonRichText';
 import { StudyPanelTerms } from './StudyPanelTerms';
 
@@ -41,6 +42,7 @@ type Props = Pick<
   | 'pickConclusionUk'
   | 'navLayout'
   | 'interactionHintUk'
+  | 'navCompactTitleOnly'
 > & {
   parentCardNumber?: string;
 };
@@ -65,6 +67,7 @@ export function StudyLearnerPanelProcessStepPick({
   pickConclusionUk,
   navLayout = 'sidebar',
   interactionHintUk,
+  navCompactTitleOnly = false,
 }: Props) {
   const firstKey = steps[0]?.key ?? '';
   const [activeKey, setActiveKey] = useState<string>(firstKey);
@@ -97,6 +100,7 @@ export function StudyLearnerPanelProcessStepPick({
       presentation={presentation}
       conceptGroups={conceptGroups}
       numberPrefix={parentCardNumber}
+      compactNav={navCompactTitleOnly}
     />
   );
 
@@ -148,10 +152,16 @@ export function StudyLearnerPanelProcessStepPick({
               <dl className="study-learner-panel study-learner-panel--step-pick-detail">
                 {active.detailSections.map((sec) => (
                   <div key={sec.labelUk} className={outcomeBlockClass}>
-                <dt className="study-learner-panel-label">{sec.labelUk}</dt>
+                <dt
+                  className={
+                    sec.hideLabel ? 'study-learner-panel-label sr-only' : 'study-learner-panel-label'
+                  }
+                >
+                  {sec.hideLabel ? sec.labelUk || 'Пояснення' : sec.labelUk}
+                </dt>
                 <dd className="study-learner-panel-value">
                           {sec.labeledLead ? (
-                            <StudyLabeledExplanation
+                            <StudyTermDefinitionCard
                               termUk={sec.labeledLead.termUk}
                               explanationUk={sec.labeledLead.explanationUk}
                             />
@@ -193,6 +203,7 @@ export function StudyLearnerPanelProcessStepPick({
     pickPanelDetailVariant === 'outcome'
       ? 'study-learner-panel-step-pick-layout--outcome-detail'
       : '',
+    navCompactTitleOnly ? 'study-learner-panel-step-pick-layout--compact-nav' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -200,10 +211,10 @@ export function StudyLearnerPanelProcessStepPick({
   return (
     <div className="study-learner-panel-step-pick">
       <p className="study-learner-panel-step-pick-heading">{labelUk}</p>
-      {interactionHintUk?.trim() ? (
-        <p className="study-learner-panel-step-pick-hint study-interaction-hint" role="note">
+      {shouldShowNestedProcessStepPickHint(interactionHintUk) ? (
+        <p className="study-learner-panel-step-pick-hint study-interaction-hint study-harness-section-cards-hint" role="note">
           <span className="study-interaction-hint-label">Підказка</span>
-          <span className="study-interaction-hint-text">{interactionHintUk}</span>
+          <span className="study-interaction-hint-text">{interactionHintUk!.trim()}</span>
         </p>
       ) : null}
       {modelResponseExample ? (

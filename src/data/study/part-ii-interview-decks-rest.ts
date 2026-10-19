@@ -131,20 +131,6 @@ export const PART_II_INTERVIEW_REST: Record<string, StudyInterviewDeck> = {
     ]),
     [link('/topic/concept-03/study', 'RAG', '— retrieval')],
   ),
-  'concept-15': makeStudyInterviewDeck(
-    'concept-15-vector-db',
-    'Vector DB — спосіб similarity search для RAG, не синонім RAG.',
-    'Vector DB is one similarity-search approach for RAG, not a synonym for RAG.',
-    four('c15', [
-      [
-        'Що повертає vector search у login_spec query?',
-        'Top-K chunk_id + scores + metadata.',
-        'ACL filter у коді; LLM не бачить заборонені chunks.',
-        'Плутати similarity з правдою про DOM.',
-      ],
-    ]),
-    [link('/topic/concept-03/study', 'RAG', '— повний pipeline')],
-  ),
   'concept-16': makeStudyInterviewDeck(
     'concept-16-workflows',
     'Agentic workflow — продуктовий сценарій з кількох агентів.',

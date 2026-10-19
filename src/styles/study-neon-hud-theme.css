@@ -1,0 +1,36 @@
+/**
+ * Neon HUD — лише шапка уроку (.study-neon-hud-hero-zone) і права нотатка (.study-cyber-aside-note).
+ * Центральний зміст уроку не використовує цей файл.
+ */
+
+.study-neon-hud-hero-zone .study-rag-acronym-subtitle.study-rag-acronym-hero-tagline {
+  margin: 0.35rem 0 0.85rem;
+  padding: 0.55rem 0.72rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border-radius: 9px;
+  border: 1px solid rgba(72, 88, 118, 0.42);
+  background: rgba(14, 18, 30, 0.72);
+  color: rgba(224, 234, 248, 0.92);
+  font-size: clamp(0.8rem, 1.2vw, 0.92rem);
+  line-height: 1.45;
+  overflow: visible;
+}
+
+@media (min-width: 640px) {
+  .study-neon-hud-hero-zone .study-rag-acronym-subtitle.study-rag-acronym-hero-tagline:not(
+      .study-rag-acronym-subtitle--multiline
+    ) {
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+}
+
+@media (max-width: 639px) {
+  .study-neon-hud-hero-zone .study-rag-acronym-subtitle.study-rag-acronym-hero-tagline {
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+}

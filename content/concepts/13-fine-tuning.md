@@ -14,35 +14,33 @@
 
 ### Навіщо fine-tuning, якщо є prompt і RAG?
 
-Prompt engineering задає правила в runtime; RAG дає факти з docs. Fine-tuning «вшиває» патерни: як писати internal incident summary, як частіше обирати правильний tool **стилістично**. Після `login_spec` це може зменшити довжину system prompt, але **не** додає свіжий postmortem — для фактів лишається RAG.
+Повний зміст розділу — у навчальних картках Study Mode (чотири підходи та вкладені рішення 4.1–4.3).
 
-### Investigation приклад
+### Приклад після падіння login_spec
 
-Без tune модель verbose; після tune на прикладах QA звітів — коротший structured output. Якщо в training потрапив застарілий селектор — модель може наполягати на хибному — **ризик data drift**.
+Повний зміст розділу — у навчальних картках Study Mode (шість кроків від формулювання задачі до спостереження після випуску, вкладені рішення 4.1–4.2).
 
-data → train job → new weights → deploy → eval gate
+### З чого складається механізм?
 
-### Компоненти
+Повний зміст розділу — у навчальних картках Study Mode (п’ять частин механізму та примітка, що це не кроки кожного run).
 
-Dataset, training pipeline, eval harness, model registry, rollback.
+### Де код, а де LLM?
 
-### Код vs LLM
+Повний зміст розділу — у навчальних картках Study Mode (три ролі: навчання, відповідь моделі, правила й виконання).
 
-Training — offline код/сервіс. Inference — LLM з новими weights. Policy — код.
+### Де може зламатися?
 
-### Збої
-
-Overfit, PII у dataset, regression safety. **QA:** holdout evals, red-team prompts.
+Повний зміст розділу — у навчальних картках Study Mode (три типові збої: завчення прикладів, чутливі дані в dataset, погіршення безпеки).
 
 ### Production
 
-Version models, A/B, cost; книга — fine-tuning глава (inventory).
+Повний зміст розділу — у навчальних картках Study Mode (версія в run, порівняння версій, витрати та час).
 
 ### Запам’ятати та співбесіда
 
-Fine-tune змінює **модель**; RAG/prompt — **контекст і правила** runtime.
+Підсумок «Запам’ятати», п’ять питань із розгортанням відповіді та цільна відповідь для співбесіди — у Study Mode нижче.
 
 :::study-sources
-- *AI Engineering*, 2025 — fine-tuning (inventory).
+- *AI Engineering* (Chip Huyen, 2025) — розділ про fine-tuning (друк. с. 66+); порівняння «Prompting vs RAG vs Finetuning» (друк. с. 124).
 - V10 Concept 13.
 :::study-sources-end

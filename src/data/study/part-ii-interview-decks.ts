@@ -35,60 +35,6 @@ export function q(
   };
 }
 
-const MEMORY_QUESTIONS: StudyInterviewQuestion[] = [
-  q(
-    'c01-q1',
-    'Чим відрізняється state від memory в agentic системі?',
-    'State — знімок поточного run (крок, статус, останні observations). Memory — збережене з минулого, що harness може знову додати в контекст.',
-    'Після `login_spec` harness тримає `runId` і `step` у state. Факт «минулого разу ламався селектор» може жити в long-term memory, якщо політика дозволяє. LLM не читає сховище напряму — лише те, що context builder поклав у `messages[]`.',
-    'Плутати «модель пам’ятає чат» з реальним збереженням у БД без harness.',
-  ),
-  q(
-    'c01-q2',
-    'Хто вирішує, який шмат history потрапить у наступний виклик LLM?',
-    'Context builder і політики retention — код harness, не модель.',
-    'Перед другим turn після `readPlaywrightReport` builder може: залишити system, user goal, останній tool result, короткий summary старих turns. Якщо історія довга — summarization з логом у trace.',
-    'Вважати, що «автоматично все попереднє в контексті» без лімітів токенів.',
-  ),
-  q(
-    'c01-q3',
-    'Навіщо checkpoint у investigation run?',
-    'Щоб після рестарту pod продовжити той самий run без повторення небезпечних дій.',
-    'Checkpoint зберігає state після кроку N. QA: kill процес → restore → той самий `runId`/`step`, без другого write-tool. Idempotent handlers допомагають при duplicate retry.',
-    'Тестувати лише happy path без crash recovery.',
-  ),
-  q(
-    'c01-q4',
-    'Як memory може зашкодити новому investigation?',
-    'Старий факт з іншого продукту або tenant потрапляє в prompt і зміщує гіпотезу.',
-    'Умова: memory з payment flow. Дія: новий run login-only. Очікування: фільтр по `productArea`/tenant у builder. Доказ: spy на payload до model API.',
-    'Ігнорувати tenant isolation у тестах memory.',
-  ),
-  q(
-    'c01-q5',
-    'Що перевірити в trace щодо memory/state перед співбесідою?',
-    'Переходи `step`, `checkpointId`, що саме пішло в context — без секретів у логах.',
-    'QA дивиться: state після кожного tool, розмір prompt, чи не зник `lastObservation` після summarization. Відповідь LLM — гіпотеза; факти run — у state/trace.',
-    'Перевіряти лише фінальний текст відповіді моделі.',
-  ),
-];
-
-export const MEMORY_STATE_INTERVIEW_DECK: StudyInterviewDeck = {
-  deckId: 'concept-01-memory-interview',
-  headingUk: 'Перевір себе перед співбесідою',
-  leadUk:
-    'Сформулюйте відповідь своїми словами, потім розгорніть «Коротко» і «До гвинтиків». Позначки — лише в цьому браузері.',
-  pitchUk:
-    'Investigation після login_spec — це довгий run. State тримає «де ми зараз», memory — «що з минулого дозволено підказати», а context builder збирає prompt. Модель не є базою даних.',
-  pitchEn:
-    'After login_spec, investigation is a long run. State holds where we are; memory holds what we may reuse; the context builder assembles the prompt. The model is not a database.',
-  questions: MEMORY_QUESTIONS,
-  nextLinks: [
-    { to: '/topic/concept-04/study', label: 'Agent Harness', hintUk: '— хто зберігає state у loop.' },
-    { to: '/topic/concept-03/study', label: 'RAG', hintUk: '— зовнішні факти з індексу, не memory run.' },
-  ],
-};
-
 const ORCHESTRATION_QUESTIONS: StudyInterviewQuestion[] = [
   q(
     'c02-q1',
@@ -208,7 +154,6 @@ export const AGENT_HARNESS_INTERVIEW_DECK: StudyInterviewDeck = {
 
 /** Decks для PART II (крім еталонів 03, 10, 17 — окремі файли). Доповнюється по пакетах rollout. */
 export const PART_II_INTERVIEW_BY_TOPIC: Record<string, StudyInterviewDeck> = {
-  'concept-01': MEMORY_STATE_INTERVIEW_DECK,
   'concept-02': ORCHESTRATION_INTERVIEW_DECK,
   'concept-04': AGENT_HARNESS_INTERVIEW_DECK,
 };
