@@ -9,6 +9,28 @@
   min-width: 0;
 }
 
+.topic-review-page .review-route-panel {
+  width: 100%;
+  min-width: 0;
+}
+
+.topic-review-page .review-route-panel .route-side-panel {
+  gap: 0.65rem;
+}
+
+.route-side-panel-qa-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.route-side-panel-qa-item {
+  margin: 0;
+}
+
 .review-markdown-prose .markdown-body p {
   margin: 0 0 0.55rem;
   font-size: 0.9rem;

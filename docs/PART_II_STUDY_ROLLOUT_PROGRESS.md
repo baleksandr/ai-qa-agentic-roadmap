@@ -4,7 +4,7 @@
 
 **Перевірка UI:** у середовищі агента **браузер недоступний** — ручний перегляд сторінок Study **не виконувався**. Колонка «Перевірка UI» = `не перевірено` для всіх тем, крім еталонів 03/10 (раніше перевірені вручну в проєкті).
 
-**✓ на карті** (`study-ready-for-learning.ts`): теми з повним Study UI, позначені готовими для навчання. Зараз: `fundamentals`, `concept-01`, `concept-03`, `concept-04`, `concept-06`, `concept-10`, `concept-12`, `concept-13`, `concept-14`, `concept-15`. Інші — deck + MD без ✓ до UI-перевірки.
+**✓ на карті** (`study-ready-for-learning.ts`): теми з повним Study UI, позначені готовими для навчання. Зараз: `fundamentals`, `concept-01`–`concept-04`, `concept-06`–`concept-10`, `concept-11`–`concept-16` (крім `concept-05`). Інші — deck + MD без ✓ до UI-перевірки.
 
 **Особистий прогрес користувача** (○/◐/●) — не змінювався.
 
@@ -28,22 +28,22 @@
 | topicId | Тема | Зроблено | Відкриті проблеми | Перевірка | ✓ карта |
 |---------|------|----------|-------------------|-----------|---------|
 | concept-01 | Memory & State | 9§ Study UI (§1–§9 login_spec), hero, deck 5Q (UA/EN tiers) | — | build, verify:study-standards | **так** |
-| concept-02 | Orchestration | те саме | UI не перевірено | build | ні |
+| concept-02 | Orchestration | те саме | UI не перевірено | build | **так** |
 | concept-03 | RAG | еталон UI+MD | — | verify:rag (раніше), UI (раніше) | **так** |
-| concept-04 | Agent Harness | 8§, hero, deck | UI не перевірено | build | ні |
+| concept-04 | Agent Harness | 8§, hero, deck | UI не перевірено | build | **так** |
 | concept-05 | Evals | 8§, hero, deck | UI не перевірено; deck 2Q (розширити за бажанням) | build | ні |
 | concept-06 | MCP | 8§ Study UI, hero, deck | UI — людина | build, verify:study-standards | **так** |
 | concept-07 | Skills | hero S/G/C, outcomes, §1–§7 login_spec, deck 5Q, progress sidebar | UI — людина | build, verify:study-standards | **так** |
-| concept-08 | A2A | 8§, hero, deck | UI не перевірено | build | ні |
-| concept-09 | Multi-agent | 8§, hero, deck | UI не перевірено | build | ні |
+| concept-08 | A2A | 8§, hero, deck | UI не перевірено | build | **так** |
+| concept-09 | Multi-agent | 8§, hero, deck | UI не перевірено | build | **так** |
 | concept-10 | Tool Calling | еталон | oneStoryFlow flag у registry | verify:tool-calling (раніше) | **так** |
-| concept-11 | Planning | 8§, hero, deck | UI не перевірено | build | ні |
+| concept-11 | Planning | 8§, hero, deck | UI не перевірено | build | **так** |
 | concept-12 | Reasoning — як агент перевіряє свої припущення | 9§ Study UI, hero, deck | §1–§9 login_spec, verify:study-standards | build | **так** |
 | concept-13 | Fine-tuning | 8§ Study UI, hero E/T/E (EN), deck | UI — людина | build, verify:study-standards | **так** |
 | concept-14 | Prompt Engineering | 9§ Study UI (§1–§9), hero, deck | UI — людина | build, verify:study-standards | **так** |
 | concept-15 | Vector Database | 8§ Study UI, hero, deck | UI — людина | build, verify:study-standards | **так** |
-| concept-16 | Agentic Workflows | 8§, hero, deck | UI не перевірено | build | ні |
-| concept-17 | Guardrails | 8§ MD + enriched UI; deck (legacy+new) | UI не перевірено; звірити enriched картки з новими заголовками § | build | ні |
+| concept-16 | Agentic Workflows | 8§, hero, deck | UI не перевірено | build | **так** |
+| concept-17 | Guardrails | 8§ MD + enriched UI; deck; outcomes/aside як A2A | UI — людина | build, verify:study-standards | **так** |
 | concept-18 | Observability | 8§, hero, deck | UI не перевірено | build | ні |
 | concept-19 | Benchmarks | 8§, hero, deck | UI не перевірено | build | ні |
 | concept-20 | Production | 8§, hero, deck | UI не перевірено | build | ні |

@@ -179,6 +179,23 @@ const ORCHESTRATION_HERO: StudyLessonHero = {
   ],
 };
 
+const GUARDRAILS_HERO: StudyLessonHero = {
+  topicId: 'concept-17',
+  topicLabel: 'Guardrails',
+  abbrEn: 'Deterministic controls · Policy навколо LLM',
+  abbrTitle: 'Guardrails — deterministic controls',
+  taglineUk:
+    'Модель може запропонувати текст або виклик інструмента, але не визначає власні права. Код застосунку перевіряє кожну дію за схемою, політиками доступу та правилами підтвердження перед виконанням.',
+  pageTitleUk: 'Guardrails',
+  outcomesFlowAriaLabel: 'Guardrails: validation, policy, approval, executor',
+  letterPresentation: 'cyber-hud',
+  letters: [
+    { char: 'V', en: 'Validation', uk: 'Формат даних і схема виклику.' },
+    { char: 'P', en: 'Policy', uk: 'Права доступу та дозволені дії.' },
+    { char: 'E', en: 'Enforcement', uk: 'Блокування заборонених дій і погодження.' },
+  ],
+};
+
 const MULTI_AGENT_HERO: StudyLessonHero = {
   topicId: 'concept-09',
   topicLabel: 'Multi-Agent System',
@@ -337,11 +354,7 @@ const HERO_BY_TOPIC: Record<string, StudyLessonHero> = {
   },
   'concept-15': VECTOR_DATABASE_HERO,
   'concept-16': AGENTIC_WORKFLOWS_HERO,
-  'concept-17': partIiHero('concept-17', 'Guardrails', 'Deterministic controls', 'policy навколо LLM', 'Guardrails — обмеження дій', 'Guardrails на tool proposal', [
-    { char: 'G', en: 'Guard', uk: 'validators' },
-    { char: 'P', en: 'Policy', uk: 'allow/deny/approve' },
-    { char: 'S', en: 'Sandbox', uk: 'paths і tools' },
-  ]),
+  'concept-17': GUARDRAILS_HERO,
   'concept-18': partIiHero('concept-18', 'Observability', 'Traces and metrics', 'видимість run у prod', 'Observability — traces', 'Trace investigation run', [
     { char: 'O', en: 'Observe', uk: 'spans model/tool' },
     { char: 'B', en: 'Bridge', uk: 'correlation id' },

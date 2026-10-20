@@ -1,8 +1,7 @@
-# AI / LLM Fundamentals
+﻿# AI / LLM Fundamentals
 
 > **migrationStatus (з DOCX):** `partial`  
 > **Джерело:** PDF (DOCX відсутній)  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
 
 ## Review Mode
 

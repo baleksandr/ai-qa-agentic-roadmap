@@ -29,7 +29,9 @@ export function studyFlowStageKindBadge(
 ): string | null {
   const explicit = navBadgeUk?.trim() || cardBadgeUk?.trim();
   if (explicit) {
-    if (hasCardNumber && GENERIC_KIND_WHEN_NUMBERED.has(explicit)) return null;
+    if (hasCardNumber && (GENERIC_KIND_WHEN_NUMBERED.has(explicit) || /^\d+$/.test(explicit))) {
+      return null;
+    }
     return explicit;
   }
   if (hasCardNumber) return null;

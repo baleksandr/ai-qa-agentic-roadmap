@@ -5,7 +5,10 @@ import { TOPIC_BY_ID } from '../data/topics.registry';
 import { getStudyNextTopic, getStudyPrevTopic } from '../lib/studyTopicNavigation';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
 import { ReviewMarkdownBody } from '../components/ReviewMarkdownBody';
+import { RouteTopicSidePanelBody } from '../components/RouteTopicSidePanelBody';
 import { getEnrichedReviewMarkdown } from '../data/review/review-mode-by-topic';
+import { getRouteTopicSidePanel } from '../data/review/route-topic-side-panels';
+import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import { SiteNav } from '../components/SiteNav';
 import { ProgressPicker } from '../components/ProgressPicker';
 import { useProgress } from '../hooks/useProgress';
@@ -36,6 +39,8 @@ export function TopicPage() {
   }
 
   const learning = getProgress(topic.id);
+  const studyReady = isStudyReadyForLearning(topic.id);
+  const routePanel = topic ? getRouteTopicSidePanel(topic.id) : null;
   const reviewMarkdown = topic
     ? getEnrichedReviewMarkdown(topic.id, lesson?.reviewMarkdown ?? '')
     : '';
@@ -49,13 +54,17 @@ export function TopicPage() {
         <h1>{getMapLabel(topic.id)}</h1>
         <p className="muted">Review Mode — короткий огляд перед повним вивченням</p>
         <div className="topic-badges">
-          <span className={`badge migration-${topic.migrationStatus}`}>
-            Перенесення: {MIGRATION_LABELS[topic.migrationStatus]}
-          </span>
+          {studyReady ? (
+            <span className="badge migration-migrated" title="Study Mode готовий для навчання">
+              Готово для навчання
+            </span>
+          ) : (
+            <span className={`badge migration-${topic.migrationStatus}`}>
+              Перенесення: {MIGRATION_LABELS[topic.migrationStatus]}
+            </span>
+          )}
           <span className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</span>
         </div>
-        {(topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated') &&
-          topic.migrationNotes && <p className="muted small">{topic.migrationNotes}</p>}
       </header>
 
       <div className="review-cta">
@@ -67,6 +76,10 @@ export function TopicPage() {
       <article className="markdown-body review-body">
         {topic.migrationStatus === 'not_migrated' ? (
           <p className="muted">Огляд з’явиться після перенесення з DOCX.</p>
+        ) : routePanel ? (
+          <div className="review-route-panel">
+            <RouteTopicSidePanelBody panel={routePanel} />
+          </div>
         ) : (
           <ReviewMarkdownBody markdown={reviewMarkdown} />
         )}

@@ -922,6 +922,28 @@
   color: rgba(232, 240, 252, 0.94);
 }
 
+.study-teaching-section-topic-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0 0 0.85rem;
+  min-width: 0;
+}
+
+.study-teaching-section-topic-about .study-teaching-section-topic-label {
+  margin: 0 0 0.4rem;
+}
+
+.study-teaching-section-cards-how .study-interaction-hint-label {
+  color: rgba(126, 232, 216, 0.92);
+}
+
+.study-teaching-section-cards-how .study-interaction-hint-text {
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+  white-space: normal;
+}
+
 .study-vector-db-components-cards .study-learner-panel-block--framed .study-labeled-explanation-stack {
   display: flex;
   flex-direction: column;
@@ -2129,3 +2151,4 @@
     grid-template-columns: minmax(200px, 42%) minmax(0, 1fr);
   }
 }
+

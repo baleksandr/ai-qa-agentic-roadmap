@@ -1760,3 +1760,227 @@
   line-height: 1.48;
   color: rgba(230, 235, 250, 0.92);
 }
+
+/* Guardrails §4 — послідовність етапів: три картки в ряд, панель знизу */
+.study-guardrails-sequence-stages-wrap {
+  margin-bottom: 1.15rem;
+}
+
+.study-guardrails-sequence-stages-heading {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-guardrails-sequence-stages .study-teaching-cards {
+  margin-bottom: 0;
+}
+
+.study-guardrails-sequence-stages .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.65rem;
+  padding: 0.62rem 0.72rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+}
+
+.study-guardrails-sequence-stages .study-learner-panel-block--framed:last-of-type {
+  margin-bottom: 0;
+}
+
+.study-guardrails-sequence-stages .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-guardrails-sequence-stages .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+}
+
+.study-guardrails-sequence-stages .study-after-interactive-summary-solo-body {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.78rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+}
+
+.study-guardrails-sequence-stages .study-flow-stage-card--pipeline .study-flow-stage-card-label,
+.study-guardrails-sequence-stages .study-flow-stage-card--pipeline .study-flow-stage-title {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.study-guardrails-sequence-stages .study-flow-stage-card--pipeline .study-flow-stage-teaser {
+  overflow-wrap: anywhere;
+}
+
+.study-guardrails-sequence-stages .study-rag-pipeline-steps-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.study-guardrails-sequence-stages .study-rag-pipeline-steps-col > li {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.study-guardrails-sequence-stages .study-rag-pipeline-steps-col > li:not(:last-child)::after {
+  content: '↓';
+  align-self: center;
+  margin: 0.2rem 0 0.15rem;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--study-heading-accent, #6ee4d4);
+  opacity: 0.85;
+}
+
+.study-guardrails-sequence-stages .study-step-detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.study-guardrails-sequence-stages .study-step-detail-nav {
+  max-width: none;
+  width: 100%;
+}
+
+.study-guardrails-sequence-stages .study-step-detail-panel {
+  min-width: 0;
+  max-width: none;
+}
+
+.study-guardrails-data-transfer .study-learner-panel-step-pick-layout {
+  min-width: 0;
+  width: 100%;
+}
+
+.study-guardrails-data-transfer .study-learner-panel-step-pick-layout .study-step-detail-layout,
+.study-guardrails-data-transfer .study-learner-panel-step-pick-layout .study-step-detail-nav,
+.study-guardrails-data-transfer .study-learner-panel-step-pick-layout .study-step-detail-panel,
+.study-guardrails-data-transfer .study-learner-panel-step-pick-layout .study-rag-pipeline-steps-col > li {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .study-guardrails-data-transfer .study-learner-panel-step-pick-layout .study-step-detail-panel {
+    margin-top: 0.5rem;
+  }
+}
+
+/* Guardrails §5–§6 — teaching cards (послідовність, код vs LLM) */
+.study-guardrails-under-hood-sequence .study-learner-panel-block--framed,
+.study-guardrails-llm-code .study-learner-panel-block--framed {
+  display: block;
+  margin: 0 0 0.65rem;
+  padding: 0.62rem 0.72rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.study-guardrails-under-hood-sequence .study-learner-panel-block--framed:last-of-type,
+.study-guardrails-llm-code .study-learner-panel-block--framed:last-of-type {
+  margin-bottom: 0.65rem;
+}
+
+.study-guardrails-under-hood-sequence .study-learner-panel-block--framed .study-learner-panel-label,
+.study-guardrails-llm-code .study-learner-panel-block--framed .study-learner-panel-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--study-heading-accent, #6ee4d4);
+}
+
+.study-guardrails-under-hood-sequence .study-learner-panel-block--framed .study-learner-panel-value,
+.study-guardrails-llm-code .study-learner-panel-block--framed .study-learner-panel-value {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+  overflow-wrap: anywhere;
+}
+
+.study-guardrails-under-hood-sequence .study-step-detail-layout,
+.study-guardrails-under-hood-sequence .study-step-detail-nav,
+.study-guardrails-under-hood-sequence .study-step-detail-panel,
+.study-guardrails-under-hood-sequence .study-rag-pipeline-steps-col > li,
+.study-guardrails-llm-code .study-step-detail-layout,
+.study-guardrails-llm-code .study-step-detail-nav,
+.study-guardrails-llm-code .study-step-detail-panel,
+.study-guardrails-llm-code .study-rag-pipeline-steps-col > li {
+  min-width: 0;
+}
+
+.study-guardrails-under-hood-sequence .study-after-interactive-summary-footnote,
+.study-guardrails-under-hood-sequence .study-after-interactive-summary-solo-body,
+.study-guardrails-llm-code .study-after-interactive-summary-footnote,
+.study-guardrails-llm-code .study-after-interactive-summary-solo-body {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.78rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(20, 26, 44, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.48;
+  color: rgba(230, 235, 250, 0.92);
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 769px) {
+  .study-guardrails-sequence-stages .study-rag-pipeline-steps-col {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .study-guardrails-sequence-stages .study-rag-pipeline-steps-col > li {
+    flex: 1 1 0;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .study-guardrails-sequence-stages .study-rag-pipeline-steps-col > li .study-flow-stage-card {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .study-guardrails-sequence-stages .study-rag-pipeline-steps-col > li:not(:last-child)::after {
+    content: '→';
+    align-self: center;
+    flex-shrink: 0;
+    margin: 0 0.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .study-guardrails-sequence-stages .study-step-detail-panel {
+    margin-top: 0.35rem;
+  }
+}

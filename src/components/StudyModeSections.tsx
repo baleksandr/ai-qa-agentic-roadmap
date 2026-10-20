@@ -14,6 +14,8 @@ import { StudyKeyIdeaCallout } from './lesson/StudyKeyIdeaCallout';
 import {
   StudyGuardrailsConnections,
   StudyGuardrailsDataTransfer,
+  StudyGuardrailsLlmCode,
+  StudyGuardrailsUnderHoodSequence,
   StudyGuardrailsFailureModes,
   StudyGuardrailsInterview,
   StudyGuardrailsObservability,
@@ -22,8 +24,8 @@ import {
   StudyGuardrailsRemember,
   StudyGuardrailsSecurity,
 } from './lesson/StudyGuardrailsExtraSections';
+import { StudyGuardrailsComponents, StudyGuardrailsWhy } from './lesson/StudyGuardrailsSections';
 import { StudyGuardrailsPolicyExample } from './lesson/StudyGuardrailsPolicyExample';
-import { StudyLlmVsCodeBoundary } from './lesson/StudyLlmVsCodeBoundary';
 import { StudyProcessStepCards } from './lesson/StudyProcessStepCards';
 import { StudyTransferFlow } from './lesson/StudyTransferFlow';
 import { StudyRagFailureCards } from './lesson/StudyRagFailureCards';
@@ -113,6 +115,7 @@ import { StudySkillsLearningOutcomes } from './lesson/StudySkillsLearningOutcome
 import { StudyPlanningLearningOutcomes } from './lesson/StudyPlanningLearningOutcomes';
 import { StudyOrchestrationLearningOutcomes } from './lesson/StudyOrchestrationLearningOutcomes';
 import { StudyAgenticWorkflowsLearningOutcomes } from './lesson/StudyAgenticWorkflowsLearningOutcomes';
+import { StudyGuardrailsLearningOutcomes } from './lesson/StudyGuardrailsLearningOutcomes';
 import {
   StudyAgenticWorkflowsExample,
   StudyAgenticWorkflowsFailures,
@@ -333,7 +336,9 @@ export function StudyModeSections({
           topicId === 'concept-11' ||
           topicId === 'concept-02' ||
           topicId === 'concept-16' ||
-          topicId === 'concept-09') && (
+          topicId === 'concept-09' ||
+          topicId === 'concept-17' ||
+          topicId === 'concept-08') && (
           <aside
             className={`study-learning-outcomes${topicId === 'concept-12' ? ' study-learning-outcomes--reasoning-compact' : ''}`}
             aria-label="Що я зрозумію після цього уроку"
@@ -364,6 +369,8 @@ export function StudyModeSections({
                 <StudyAgenticWorkflowsLearningOutcomes />
               ) : topicId === 'concept-09' ? (
                 <StudyMultiAgentLearningOutcomes />
+              ) : topicId === 'concept-17' ? (
+                <StudyGuardrailsLearningOutcomes />
               ) : (
                 <StudyMarkdownWithFlows
                   markdown={introMarkdown}
@@ -1115,11 +1122,15 @@ function StudyMarkdownSegment({
   }
 
   if (topicId === 'concept-17' && isLlmVsCodeSection(sectionTitle, text)) {
-    return <StudyLlmVsCodeBoundary sourceText={text} />;
+    return <StudyGuardrailsLlmCode />;
   }
 
   if (topicId === 'concept-17' && isPolicyExampleSection(sectionTitle, text)) {
     return <StudyGuardrailsPolicyExample />;
+  }
+
+  if (topicId === 'concept-17' && isGuardrailsComponentsSection(sectionTitle)) {
+    return <StudyGuardrailsComponents />;
   }
 
   if (topicId === 'concept-17') {
@@ -1271,9 +1282,18 @@ function isPolicyExampleSection(sectionTitle?: string, text?: string): boolean {
   );
 }
 
+function isGuardrailsComponentsSection(sectionTitle?: string): boolean {
+  const t = (sectionTitle ?? '').trim().toLowerCase();
+  return t === 'компоненти' || t.startsWith('компоненти ');
+}
+
 function renderGuardrailsBySection(sectionTitle?: string, text?: string) {
   const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо') && t.includes('guardrail')) return <StudyGuardrailsWhy />;
   if (t.includes('передається між')) return <StudyGuardrailsDataTransfer />;
+  if (t.trim() === 'послідовність' || t.startsWith('послідовність ')) {
+    return <StudyGuardrailsUnderHoodSequence />;
+  }
   if (t.includes('впасти') || t.includes('failure') || t.includes('злам')) {
     return <StudyGuardrailsFailureModes />;
   }

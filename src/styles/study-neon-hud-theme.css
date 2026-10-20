@@ -60,7 +60,8 @@
   }
 }
 
-.topic-study-page--concept-09 .study-header-compact .study-cyber-hud-hero-grid {
+.topic-study-page--concept-09 .study-header-compact .study-cyber-hud-hero-grid,
+.topic-study-page--concept-17 .study-header-compact .study-cyber-hud-hero-grid {
   margin-bottom: 1.1rem;
 }
 
@@ -70,7 +71,8 @@
   border-top: 1px solid rgba(72, 88, 118, 0.42);
 }
 
-.topic-study-page--concept-09 .study-header-compact {
+.topic-study-page--concept-09 .study-header-compact,
+.topic-study-page--concept-17 .study-header-compact {
   margin-bottom: 1.15rem;
   padding-bottom: 0.25rem;
 }
@@ -109,6 +111,52 @@
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.48;
+}
+
+.study-neon-hud-outcome-step-body p {
+  margin: 0 0 0.55rem;
+}
+
+.study-neon-hud-outcome-step-body p:last-child {
+  margin-bottom: 0;
+}
+
+.study-guardrails-outcomes-hud-grid.study-cyber-hud-hero-grid {
+  margin-top: 1.15rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.study-guardrails-outcomes-hud-grid .study-cyber-hud-card--hero {
+  height: auto;
+  min-height: 0;
+}
+
+.study-guardrails-outcomes-hud-grid .study-cyber-hud-card__title,
+.study-guardrails-outcomes-hud-grid .study-cyber-hud-card__sub {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.study-guardrails-outcomes-hud-grid .study-cyber-hud-card__copy {
+  gap: 0.28rem;
+}
+
+.study-guardrails-outcomes-hud-grid .study-inline-code {
+  font-family: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace;
+  font-size: 0.84em;
+  padding: 0.06em 0.32em;
+  border-radius: 4px;
+  background: rgba(0, 232, 255, 0.08);
+  border: 1px solid rgba(0, 232, 255, 0.22);
+  color: rgba(186, 228, 255, 0.96);
+}
+
+.study-guardrails-summary-cards {
+  margin-top: 1.15rem;
 }
 
 .study-multi-agent-outcomes-footnote {

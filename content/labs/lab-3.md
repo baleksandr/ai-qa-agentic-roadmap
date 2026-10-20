@@ -1,8 +1,7 @@
-# Lab 3 — QA Regression Investigation Agent
+﻿# Lab 3 — QA Regression Investigation Agent
 
 > **migrationStatus (з DOCX):** `partial`  
 > **Джерело:** LAB 3 (pdf)  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
 
 ## Review Mode
 

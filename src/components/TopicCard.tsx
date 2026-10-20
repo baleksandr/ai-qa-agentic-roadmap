@@ -1,5 +1,6 @@
 import type { TopicMeta } from '../types/topic';
 import { LEARNING_LABELS, MIGRATION_LABELS } from '../types/topic';
+import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import { useProgress } from '../hooks/useProgress';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 export function TopicCard({ topic, showDocNumber = true, selected, onSelect }: Props) {
   const { getProgress } = useProgress();
   const learning = getProgress(topic.id);
+  const studyReady = isStudyReadyForLearning(topic.id);
 
   const label =
     topic.kind === 'concept' && topic.sourceNumber != null && showDocNumber
@@ -29,9 +31,15 @@ export function TopicCard({ topic, showDocNumber = true, selected, onSelect }: P
       <span className="topic-card-title">{topic.shortTitle}</span>
       <span className="topic-card-meta">
         <span className={`badge progress-${learning}`}>{LEARNING_LABELS[learning]}</span>
-        <span className={`badge migration-${topic.migrationStatus}`}>
-          {MIGRATION_LABELS[topic.migrationStatus]}
-        </span>
+        {studyReady ? (
+          <span className="badge migration-migrated" title="Study Mode готовий для навчання">
+            Готово для навчання
+          </span>
+        ) : (
+          <span className={`badge migration-${topic.migrationStatus}`}>
+            {MIGRATION_LABELS[topic.migrationStatus]}
+          </span>
+        )}
       </span>
     </button>
   );

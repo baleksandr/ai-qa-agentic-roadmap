@@ -87,6 +87,12 @@ export type StudyTeachingCardsBundle = {
   /** `after-cards` — Neon HUD нотатка під split-panel (не footnote під картками). */
   sectionAsideNotePlacement?: 'intro-grid' | 'after-cards';
   leadUk?: string;
+  /** Компактний вступ над картками (без callout-рамки). */
+  compactSectionIntroUk?: string;
+  /** Підпис до `compactSectionIntroUk` (наприклад «Головний принцип»). */
+  compactSectionIntroLabelUk?: string;
+  /** Змістовний вступ «Про що цей розділ» перед картками (окремо від інструкції UI). */
+  sectionTopicIntroUk?: string;
   /** Короткий рядок кроків для компактної схеми зверху (лише presentation `process`). */
   flowArrowLine?: string;
   /** `vertical` — один стовпчик кроків зверху вниз (наприклад §4 tool calling). */

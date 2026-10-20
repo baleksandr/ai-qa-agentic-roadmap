@@ -1,8 +1,7 @@
-# Reference Library
+﻿# Reference Library
 
 > **migrationStatus (з DOCX):** `partial`  
 > **Джерело:** Reference Library  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
 
 ## Review Mode
 

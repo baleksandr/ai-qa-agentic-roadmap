@@ -1,4 +1,5 @@
 import type { RoadmapGroup, TopicMeta } from '../types/topic';
+import { migrationNotesForLearners } from '../lib/migrationNotes';
 import { MIGRATION_OVERRIDE } from './migration.generated';
 
 /** Очікуване ім’я файлу DOCX у `source/` */
@@ -153,6 +154,7 @@ for (const topic of TOPICS) {
     topic.migrationStatus = o.migrationStatus;
     topic.migrationNotes = o.migrationNotes;
   }
+  topic.migrationNotes = migrationNotesForLearners(topic.migrationNotes);
 }
 
 export const TOPIC_BY_ID: Record<string, TopicMeta> = Object.fromEntries(

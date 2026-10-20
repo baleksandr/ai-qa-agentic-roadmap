@@ -15,12 +15,14 @@ import { StudyModelResponseExampleBlock } from './StudyModelResponseExampleBlock
 import { StudyLearnerPanelCourseLessonLink } from './StudyLearnerPanelCourseLessonLink';
 import { StudySectionAsideNote } from './StudySectionAsideNote';
 import { StudySectionCardsInteractionHint } from './StudySectionCardsInteractionHint';
+import { StudyTeachingSectionTopicIntro } from './StudyTeachingSectionTopicIntro';
 
 type Props = {
   bundle: StudyTeachingCardsBundle;
   className?: string;
   /** Компактний вступ над картками (лише в центральному блоці, не в правій панелі). */
   compactSectionIntroUk?: string;
+  sectionTopicIntroUk?: string;
 };
 
 /** Єдиний патерн навчальних карток + бокова панель (еталон RAG / Tool Calling). */
@@ -28,6 +30,7 @@ export function StudyTeachingCardsSection({
   bundle,
   className = '',
   compactSectionIntroUk,
+  sectionTopicIntroUk,
 }: Props) {
   const firstKey = bundle.steps[0]?.key ?? '';
   const [activeKey, setActiveKey] = useState<string | number>(firstKey);
@@ -169,20 +172,35 @@ export function StudyTeachingCardsSection({
         </div>
       ) : null}
 
-      {compactSectionIntroUk?.trim() ? (
-        <div className="study-teaching-compact-section-intro">
-          <LessonRichParagraphs
-            text={compactSectionIntroUk}
-            className="study-teaching-compact-section-intro-text study-learner-explanation"
-          />
-        </div>
-      ) : null}
-
-      {!bundle.hideSectionCardsInteractionHint ? (
-        <StudySectionCardsInteractionHint>
-          {bundle.sectionCardsInteractionHintUk ?? bundle.cardsInteractionHintUk}
-        </StudySectionCardsInteractionHint>
-      ) : null}
+      {(() => {
+        const topicIntro =
+          sectionTopicIntroUk?.trim() || bundle.sectionTopicIntroUk?.trim() || '';
+        const compactIntro =
+          compactSectionIntroUk?.trim() || bundle.compactSectionIntroUk?.trim() || '';
+        return (
+          <>
+            {topicIntro ? <StudyTeachingSectionTopicIntro topicIntroUk={topicIntro} /> : null}
+            {compactIntro ? (
+              <div className="study-teaching-compact-section-intro">
+                {bundle.compactSectionIntroLabelUk?.trim() ? (
+                  <p className="study-teaching-section-topic-label study-learner-panel-label">
+                    {bundle.compactSectionIntroLabelUk.trim()}
+                  </p>
+                ) : null}
+                <LessonRichParagraphs
+                  text={compactIntro}
+                  className="study-teaching-compact-section-intro-text study-learner-explanation"
+                />
+              </div>
+            ) : null}
+            {!topicIntro && !bundle.hideSectionCardsInteractionHint ? (
+              <StudySectionCardsInteractionHint>
+                {bundle.sectionCardsInteractionHintUk ?? bundle.cardsInteractionHintUk}
+              </StudySectionCardsInteractionHint>
+            ) : null}
+          </>
+        );
+      })()}
 
       <StudyStepDetailLayout
         wrapperClassName="study-rag-pipeline-with-panel study-teaching-cards-layout"

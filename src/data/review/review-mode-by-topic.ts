@@ -1,42 +1,20 @@
+import { isStudyReadyForLearning } from '../study/study-ready-for-learning';
+import { getRouteTopicSidePanel } from './route-topic-side-panels';
+import { buildReviewMarkdownFromRoutePanel } from '../../lib/reviewFromRoutePanel';
+
 /**
  * Review Mode для бічної панелі та /topic/:id.
- * Якщо є запис — використовується замість сирого ## Review Mode з markdown (узгоджено з Study).
+ * Теми з ✓ на карті — з панелі «Увесь маршрут»; інші — запис тут або ## Review Mode у markdown.
  */
 export function getEnrichedReviewMarkdown(topicId: string, fallbackFromFile: string): string {
+  if (isStudyReadyForLearning(topicId)) {
+    const panel = getRouteTopicSidePanel(topicId);
+    if (panel) return buildReviewMarkdownFromRoutePanel(panel);
+  }
   return REVIEW_BY_TOPIC_ID[topicId] ?? fallbackFromFile;
 }
 
 const REVIEW_BY_TOPIC_ID: Record<string, string> = {
-  fundamentals: `**Проблема:** без спільного словника «токен», «context window», «inference» розмови про агента й investigation збиваються з півслова.
-
-**Ідея:** Fundamentals — 20 опорних поняттів до PART II: що модель робить на inference, чим відрізняється від коду, чому hallucination не лікується «кращим промптом» сама по собі.
-
-**У QA Regression Agent:** кожен run — це API-виклик з \`messages[]\`, ліміт токенів і ймовірнісна відповідь; harness і evals компенсують це **кодом**.
-
-:::review-compare
-LLM | Генерує наступні токени з контексту; не гарантує правду || Код | Збирає prompt, викликає API, валідує output, тримає state
-:::
-
-**Для QA:** тестуйте structured output і поведінку harness, не «магічність» моделі.
-
-**Запам’ятати:** inference ≠ training, контекст обмежений, агент = модель + код навколо.`,
-
-  'concept-01': `**Проблема:** після \`login_spec\` investigation триває багато кроків; без state/memory run «забуває», що вже зробив, після рестарту pod.
-
-**Ідея:** **state** — знімок поточного run; **memory** — збережене з минулого; **context builder** (код) вирішує, що потрапить у наступний prompt.
-
-**У агенті:** між tool calls harness дописує observations у state; перед LLM — лише дозволений шмат history/memory.
-
-:::review-steps
-Checkpoint | Код | Знімок state після кроку N
-Context builder | Код | Збирає messages[] перед model call
-LLM | Модель | Бачить лише переданий контекст
-:::
-
-**Для QA:** restore після kill process; ізоляція tenant; snapshot prompt без секретів.
-
-**Запам’ятати:** модель не читає БД пам’яті напряму.`,
-
   'concept-02': `**Проблема:** CI, investigation agent і coding agent без «диригента» стартують у хаотичному порядку після nightly failure.
 
 **Ідея:** orchestration — **код workflow**: ready tasks, routing, retries, human gates між сервісами.
@@ -53,36 +31,6 @@ Gate | Людина+код | Approve небезпечні гілки
 
 **Запам’ятати:** orchestration ≠ tool loop всередині одного run.`,
 
-  'concept-03': `**Проблема:** модель не бачить Confluence, postmortem і закриті інциденти, поки ви явно не передасте текст; «вся wiki» в prompt — дорого й шумно.
-
-**Ідея RAG:** **код** знаходить релевантні фрагменти, додає в prompt, **LLM** відповідає з опорою на уривки.
-
-:::review-phases
-Offline | Документи → parse → chunks → індекс (embed / інший retrieval)
-Runtime | Query після login_spec → retriever → (rerank) → context builder → LLM
-:::
-
-**У агенті:** пошук і ACL — harness; модель не «ходить у базу» сама.
-
-**Для QA:** chunk_id у trace, groundedness, свіжість індексу vs DOM/trace CI.
-
-**Запам’ятати:** retrieval ≠ правда про поточне падіння.`,
-
-  'concept-04': `**Проблема:** один виклик LLM не читає Playwright report і не тримає цикл tool calls після \`login_spec\`.
-
-**Ідея:** **harness** — runtime: context, model API, parse tool_call, policy, handler, state, stop rules, trace.
-
-:::review-steps
-createRun | Код | runId і початковий state
-model.complete | LLM | text або tool_call proposal
-handler | Код | I/O після allow
-stop | Код | max steps / timeout / final text
-:::
-
-**Для QA:** mock LLM integration; policy deny без side effect.
-
-**Запам’ятати:** harness перетворює чат на систему.`,
-
   'concept-05': `**Проблема:** зміна prompt/RAG ламає investigation непомітно, якщо перевіряти лише один ручний прогін.
 
 **Ідея:** **evals** — golden set + метрики на фіксованому harness (tool choice, groundedness).
@@ -98,34 +46,6 @@ Score | Код | Pass rate vs baseline
 **Для QA:** не плутати з production observability.
 
 **Запам’ятати:** eval = регресія якості.`,
-
-  'concept-06': `**Проблема:** багато інтеграцій (CI, Jira) — дублювати SDK у кожному агенті дорого.
-
-**Ідея:** **MCP** — протокол client (harness) ↔ server (tools/resources).
-
-**У агенті:** read CI artifact через MCP server; policy лишається в harness.
-
-:::review-compare
-MCP server | Надає tools і виконує I/O до зовнішніх API || Harness client | Discover tools, policy, trace
-:::
-
-**Для QA:** contract tests на server; auth і sandbox paths.
-
-**Запам’ятати:** MCP не замінює guardrails.`,
-
-  'concept-07': `**Проблема:** один prompt з усіма tools — шум і помилки вибору після failure.
-
-**Ідея:** **skills** — модулі (instructions + subset tools), які router підключає за задачею.
-
-**У агенті:** skill «Playwright investigation» після login_spec без write-tools до approve.
-
-:::review-steps
-Router | Код | Обирає skill за intent/workflow
-Bundle | Код | Звужений allow-list + prompt slice
-LLM | Модель | Працює в межах skill
-:::
-
-**Для QA:** matrix сценарій → expected skill id у trace.`,
 
   'concept-08': `**Проблема:** агенти на різних сервісах не можуть безпечно «передавати задачу» вільним чатом.
 
@@ -152,86 +72,6 @@ Investigation agent | Facts з tools після login_spec || Coding agent | Pat
 :::
 
 **Для QA:** немає двох writer на один файл без lock.`,
-
-  'concept-10': `**Проблема:** текст відповіді ≠ дія; після \`login_spec\` потрібен звіт з диска, не вигадка.
-
-**Ідея:** LLM повертає **tool_call** (пропозиція); harness валідує й виконує handler.
-
-:::review-steps
-Proposal | LLM | readPlaywrightReport + args
-Policy | Код | schema, sandbox, allow-list
-Handler | Код | Читає файл → observation у messages
-:::
-
-**Для QA:** matrix schema/sandbox/permission/duplicate/trace (див. Study §6).
-
-**Запам’ятати:** I/O на диску — не в моделі.`,
-
-  'concept-11': `**Проблема:** без плану investigation робить хаотичні tool calls.
-
-**Ідея:** **planning** — явні кроки (JSON/список), harness валідує проти allow-list.
-
-**У агенті:** read CI → read report → hypothesis → optional Jira draft.
-
-:::review-steps
-Plan | LLM | Кроки з tool names
-Validate | Код | Кроки ∈ registry
-Execute | Harness | По одному з replan
-:::
-
-**Для QA:** max replans; deny забороненого кроку.`,
-
-  'concept-12': `**Проблема:** модель може «красиво» пояснити падіння без facts з trace.
-
-**Ідея:** **reasoning** — проміжні кроки мислення, але **grounding** з tool/RAG results.
-
-**У агенті:** гіпотеза про селектор лише після readPlaywrightReport.
-
-:::review-compare
-Guess | LLM без tools | Не приймається як root cause || Evidence | Tool snippet у trace | Підтверджує або спростовує
-:::
-
-**Для QA:** strong claims лише після tool span.`,
-
-  'concept-13': `**Проблема:** внутрішній стиль звітів важко тримати лише довгим prompt.
-
-**Ідея:** **fine-tuning** змінює weights; **не** підставляє свіжий postmortem (RAG).
-
-**У агенті:** коротший tone у summary після login_spec — можливий tune; факти — retrieval.
-
-:::review-phases
-Training | Offline job на ваших прикладах звітів
-Inference | Той самий harness + RAG що й раніше
-:::
-
-**Для QA:** eval до/після; safety regression.`,
-
-  'concept-14': `**Проблема:** розмитий «розбери тест» дає нестабільну поведінку.
-
-**Ідея:** **prompt engineering** — role, constraints, format, few-shot у \`messages[]\`.
-
-**У агенті:** system: Senior SDET, JSON hypothesis, не вигадувати API; user: login_spec failure.
-
-:::review-steps
-Context builder | Код | Порядок system/user/RAG
-LLM | Модель | Наступна дія або текст
-Validator | Код | JSON schema pass
-:::
-
-**Для QA:** prompt regression set; injection у retrieved text.`,
-
-  'concept-15': `**Проблема:** keyword search пропускає семантично близькі postmortem.
-
-**Ідея:** **vector DB** — embeddings + Top-K similarity (варіант RAG retrieval).
-
-**У агенті:** query embed після login_spec → chunks у prompt з ACL filter.
-
-:::review-phases
-Index | Offline: chunks → vectors у колекції
-Query | Runtime: similarity + metadata filters
-:::
-
-**Для QA:** golden query → expected chunk_ids; stale index tests.`,
 
   'concept-16': `**Проблема:** end-to-end «від падіння до fix» не вкладається в один monolith run.
 

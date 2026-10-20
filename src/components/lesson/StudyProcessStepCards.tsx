@@ -6,6 +6,7 @@ import {
 } from '../../data/study/guardrails-process-steps';
 import { lookupRagFlowStep } from '../../data/study/rag-query-flow-steps';
 import { LessonRichParagraphs } from './lessonRichText';
+import { StudyGuardrailsSectionTopicIntro } from './StudyGuardrailsSectionTopicIntro';
 import { StudyTeachingCardsSection } from './StudyTeachingCardsSection';
 
 type Props = {
@@ -42,14 +43,21 @@ export function StudyProcessStepCards({ steps, topicId, sectionHint }: Props) {
     topicId === 'concept-17' &&
     (sectionHint?.toLowerCase().includes('крок за кроком') ||
       sectionHint?.toLowerCase().includes('під капотом') ||
+      sectionHint?.toLowerCase().includes('послідовність') ||
       steps.some((s) => lookupGuardrailsProcessStep(s.text)));
+
+  const isGuardrailsSequenceSection =
+    topicId === 'concept-17' && sectionHint?.toLowerCase().includes('послідовність');
 
   const isRagQueryFlow =
     topicId === 'concept-03' && sectionHint?.toLowerCase().includes('одному запиті');
 
   return (
     <div className="study-step-section">
-      {isGuardrailsFlow && (
+      {isGuardrailsSequenceSection ? (
+        <StudyGuardrailsSectionTopicIntro sectionTitle={sectionHint} showCardsHow={false} />
+      ) : null}
+      {isGuardrailsFlow && !isGuardrailsSequenceSection && (
         <div className="study-step-intro lesson-callout lesson-key-idea">
           <span className="lesson-callout-label">Коротко: що «під капотом»</span>
           <LessonRichParagraphs text={GUARDRAILS_UNDER_THE_HOOD_INTRO} className="lesson-p" />

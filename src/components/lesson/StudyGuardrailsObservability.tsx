@@ -16,6 +16,7 @@ import { LessonRichParagraphs, parseLessonBold } from './lessonRichText';
 import { StudyPipelineStepNav } from './StudyPipelineStepNav';
 import { STUDY_EMPTY_ITEM_PANEL_UK } from '../../lib/studyLearnerCopy';
 import { StudyStepDetailLayout } from './StudyStepDetailLayout';
+import { StudyGuardrailsSectionTopicIntro } from './StudyGuardrailsSectionTopicIntro';
 
 function ObsJson({ label, json }: { label: string; json: string }) {
   return (
@@ -93,6 +94,7 @@ function FieldSplitPanel() {
 export function StudyGuardrailsObservability() {
   return (
     <article className="study-obs-lesson">
+      <StudyGuardrailsSectionTopicIntro sectionTitle="Observability" showCardsHow={false} />
       <section className="study-obs-block" aria-labelledby="obs-why">
         <h3 id="obs-why" className="study-obs-heading">Навіщо нам це бачити</h3>
         <LessonRichParagraphs

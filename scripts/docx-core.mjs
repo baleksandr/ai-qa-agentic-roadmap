@@ -239,7 +239,6 @@ export function auditTopicContent({ markdown, docxTableCount, docxImageCountInSe
 
   if (sourceKind !== 'docx') {
     status = 'partial';
-    notes.push('Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.');
   } else {
     if (docxTableCount > 0 && !hasTables) {
       status = 'partial';

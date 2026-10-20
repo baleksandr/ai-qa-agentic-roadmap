@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { getMapLabel } from '../../data/learning-map.registry';
 import {
-  GUARDRAILS_DATA_TRANSFER_HINTS,
   GUARDRAILS_FAILURE_MODES_LIST,
   GUARDRAILS_INTERVIEW_ANSWER_EN,
   GUARDRAILS_INTERVIEW_ANSWER_UK,
@@ -12,25 +11,63 @@ import {
   GUARDRAILS_REMEMBER_UK,
   GUARDRAILS_SECURITY_HINTS,
 } from '../../data/study/guardrails-extra-sections';
+import {
+  GUARDRAILS_DATA_TRANSFER_BUNDLE,
+  GUARDRAILS_LLM_CODE_BUNDLE,
+  GUARDRAILS_UNDER_HOOD_SEQUENCE_BUNDLE,
+} from '../../data/study/guardrails-study-bundles';
 import { StudyEnrichedCardList } from './StudyEnrichedCardList';
 import { StudyGuardrailsObservability } from './StudyGuardrailsObservability';
 import { StudySplitHintPanel } from './StudySplitHintPanel';
+import { StudyGuardrailsSectionTopicIntro } from './StudyGuardrailsSectionTopicIntro';
+import { StudyTeachingCardsSection } from './StudyTeachingCardsSection';
 import { LessonRichParagraphs } from './lessonRichText';
 
 export { StudyGuardrailsObservability };
 
+const GUARDRAILS_DATA_TRANSFER_CLASS =
+  'study-guardrails-teaching-cards study-guardrails-data-transfer study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards';
+
+/** §6 «Де код, а де LLM?» — ролі моделі, коду та людини на прикладі login_spec. */
+export function StudyGuardrailsLlmCode() {
+  return (
+    <StudyTeachingCardsSection
+      bundle={GUARDRAILS_LLM_CODE_BUNDLE}
+      className="study-guardrails-teaching-cards study-guardrails-llm-code study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards"
+    />
+  );
+}
+
+/** §5 «Послідовність» — шість етапів від input checks до executor. */
+export function StudyGuardrailsUnderHoodSequence() {
+  return (
+    <StudyTeachingCardsSection
+      bundle={GUARDRAILS_UNDER_HOOD_SEQUENCE_BUNDLE}
+      className="study-guardrails-teaching-cards study-guardrails-under-hood-sequence study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards"
+    />
+  );
+}
+
+/** §4 «Що передається між компонентами?» — одна послідовність із трьох карток. */
 export function StudyGuardrailsDataTransfer() {
   return (
-    <StudySplitHintPanel
-      leadUk="Між LLM, policy і executor летять не «думки», а **конкретні структури даних**."
-      introUk="Ланцюг: пропозиція дії від моделі → verdict policy engine → лише після цього sanitized результат у context для наступного кроку LLM."
-      items={GUARDRAILS_DATA_TRANSFER_HINTS}
-      listAriaLabel="Кроки передачі даних"
+    <StudyTeachingCardsSection
+      bundle={GUARDRAILS_DATA_TRANSFER_BUNDLE}
+      className={`${GUARDRAILS_DATA_TRANSFER_CLASS} study-guardrails-sequence-stages`}
     />
   );
 }
 
 export function StudyGuardrailsFailureModes() {
+  return (
+    <>
+      <StudyGuardrailsSectionTopicIntro sectionTitle="failure modes" showCardsHow={false} />
+      <StudyGuardrailsFailureModesBody />
+    </>
+  );
+}
+
+function StudyGuardrailsFailureModesBody() {
   const cards = GUARDRAILS_FAILURE_MODES_LIST.map((mode) => ({
     id: mode.termEn,
     titleUk: mode.titleUk,
@@ -55,28 +92,36 @@ export function StudyGuardrailsFailureModes() {
 
 export function StudyGuardrailsQaTests() {
   return (
-    <StudySplitHintPanel
+    <>
+      <StudyGuardrailsSectionTopicIntro sectionTitle="Як це тестувати" />
+      <StudySplitHintPanel
       leadUk="Як SDET перевіряє guardrails: не лише happy path, а **навмисні зловживання** і крайові випадки."
       introUk="Для кожного сценарію — що перевіряти, як запускати й що шукати в trace. Англійська назва внизу — термін курсу."
       items={GUARDRAILS_QA_TESTS_HINTS}
       listAriaLabel="Сценарії тестування guardrails"
     />
+    </>
   );
 }
 
 export function StudyGuardrailsSecurity() {
   return (
-    <StudySplitHintPanel
+    <>
+      <StudyGuardrailsSectionTopicIntro sectionTitle="Security" />
+      <StudySplitHintPanel
       leadUk="Guardrails — **основний security-шар** агента: не фраза в промпті, а код і інфраструктура навколо кожного tool call."
       introUk="Чотири принципи з уроку — пояснення для дизайну й перевірок QA."
       items={GUARDRAILS_SECURITY_HINTS}
       listAriaLabel="Принципи security"
     />
+    </>
   );
 }
 
 export function StudyGuardrailsProduction() {
   return (
+    <>
+      <StudyGuardrailsSectionTopicIntro sectionTitle="Production considerations" showCardsHow={false} />
     <div className="study-production-block">
       <LessonRichParagraphs
         text="Guardrails живуть у реальному deploy: політики версіонуються, сервіси падають, навантаження росте — поведінка має залишатися **передбачуваною**."
@@ -88,6 +133,7 @@ export function StudyGuardrailsProduction() {
         ))}
       </ul>
     </div>
+    </>
   );
 }
 
@@ -115,6 +161,8 @@ export function StudyGuardrailsConnections() {
 
 export function StudyGuardrailsInterview() {
   return (
+    <>
+      <StudyGuardrailsSectionTopicIntro sectionTitle="співбесіда" showCardsHow={false} />
     <aside className="lesson-callout lesson-interview study-interview-rich">
       <span className="lesson-callout-label">Коротка відповідь на співбесіді</span>
 
@@ -138,11 +186,14 @@ export function StudyGuardrailsInterview() {
       </p>
       <p className="study-interview-answer-en" lang="en">{GUARDRAILS_INTERVIEW_ANSWER_EN}</p>
     </aside>
+    </>
   );
 }
 
 export function StudyGuardrailsRemember({ sourceText }: { sourceText?: string }) {
   return (
+    <>
+      <StudyGuardrailsSectionTopicIntro sectionTitle="Запам'ятати" showCardsHow={false} />
     <aside className="lesson-callout lesson-key-idea study-remember-rich">
       <span className="lesson-callout-label">Що варто запам’ятати</span>
       <LessonRichParagraphs text={GUARDRAILS_REMEMBER_UK} className="lesson-p" />
@@ -150,5 +201,6 @@ export function StudyGuardrailsRemember({ sourceText }: { sourceText?: string })
         <p className="study-step-source muted small">{sourceText.replace(/\s+/g, ' ').trim()}</p>
       )}
     </aside>
+    </>
   );
 }

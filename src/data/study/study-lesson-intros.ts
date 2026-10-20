@@ -99,19 +99,6 @@ export function buildStudyLearningOutcomes(topicId: string, quickViewRaw: string
   if (topicId === 'concept-10') {
     return 'Після уроку ви відрізняєте пропозицію моделі від виконання в коді та пояснюєте один прохід readPlaywrightReport після login_spec без плутання тексту з дією.';
   }
-  if (topicId === 'concept-17') {
-    return `**Guardrails** — шар **детермінованого коду** навколо LLM: політики, перевірки, sandbox і підтвердження людиною. Модель може запропонувати tool call або текст, але **не вирішує**, чи можна читати prod, писати в БД чи створювати Jira.
-
-Після уроку ви зможете:
-
-- пояснити, **чому** без guardrails agent небезпечний (prompt injection, hallucinated permissions);
-- відрізнити **пропозицію LLM** від **дозволу та виконання в коді**;
-- назвати основні шари: input/output validation, permission matrix, sandbox, rate limits, human approval;
-- пройти **ланцюг під капотом** (вхід → модель → schema → policy → approval → executor);
-- перенести це на **QA Regression Agent**: що дозволено лише read-only, що потребує human approval, чого немає в tool registry.
-
-${trimmed ? `\nКоротке формулювання курсу: ${trimmed}` : ''}`;
-  }
   if (
     topicId === 'concept-06' ||
     topicId === 'concept-14' ||
@@ -119,12 +106,13 @@ ${trimmed ? `\nКоротке формулювання курсу: ${trimmed}` :
     topicId === 'concept-15' ||
     topicId === 'concept-13' ||
     topicId === 'concept-07' ||
-    topicId === 'concept-11'
+    topicId === 'concept-11' ||
+    topicId === 'concept-17'
   ) {
     return '';
   }
   if (PART_II_OUTCOMES[topicId]) return PART_II_OUTCOMES[topicId];
-  return quickViewRaw;
+  return trimmed;
 }
 
 export function getLessonOutcomesFlowAriaLabel(topicId: string): string {

@@ -1,8 +1,7 @@
-# Lab 4 — QA Regression Investigation Agent
+﻿# Lab 4 — QA Regression Investigation Agent
 
 > **migrationStatus (з DOCX):** `partial`  
 > **Джерело:** LAB 4 (pdf)  
-> Текст з PDF; DOCX не знайдено — таблиці/зображення не звірені.
 
 ## Review Mode
 

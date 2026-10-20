@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { getMapLabel } from '../data/learning-map.registry';
 import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
 import type { TopicMeta } from '../types/topic';
-import { MIGRATION_LABELS } from '../types/topic';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
 import { ReviewMarkdownBody } from './ReviewMarkdownBody';
 import { getEnrichedReviewMarkdown } from '../data/review/review-mode-by-topic';
@@ -30,24 +29,13 @@ export function TopicSidePanel({ topic, onClose }: Props) {
   }, [topic.contentPath, topic.id]);
 
   const titleUk = getMapLabel(topic.id);
-  const badges = (
+  const badges = isStudyReadyForLearning(topic.id) ? (
     <div className="topic-badges topic-badges--route-panel">
-      {isStudyReadyForLearning(topic.id) && (
-        <span className="badge migration-migrated" title="Study Mode готовий для навчання">
-          Готово для навчання
-        </span>
-      )}
-      {!isStudyReadyForLearning(topic.id) &&
-        (topic.migrationStatus === 'partial' || topic.migrationStatus === 'not_migrated') && (
-          <span
-            className={`badge migration-${topic.migrationStatus}`}
-            title="Частина матеріалу ще звіряється з оригіналом курсу"
-          >
-            {MIGRATION_LABELS[topic.migrationStatus]}
-          </span>
-        )}
+      <span className="badge migration-migrated" title="Study Mode готовий для навчання">
+        Готово для навчання
+      </span>
     </div>
-  );
+  ) : null;
 
   const studyLink = (
     <Link className="study-open-btn study-open-btn-compact" to={`/topic/${topic.id}/study`}>

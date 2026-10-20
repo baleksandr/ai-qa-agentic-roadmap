@@ -28,6 +28,7 @@ import {
   MULTI_AGENT_ASIDE_META,
 } from './multi-agent-section-aside';
 import { getA2aSectionAside, A2A_ASIDE_META } from './a2a-section-aside';
+import { getGuardrailsSectionAside, GUARDRAILS_ASIDE_META } from './guardrails-section-aside';
 import { isStudyReadyForLearning } from './study-ready-for-learning';
 
 const RAG_META: StudyLessonAsideMeta = {
@@ -51,15 +52,8 @@ const ASIDE_TOPIC_IDS = new Set([
   'concept-16',
   'concept-09',
   'concept-08',
+  'concept-17',
 ]);
-
-/**
- * Теми з прогресом у правій колонці без повного `StudyLessonAside` (наприклад Guardrails).
- * Інші «готові для навчання» уроки підключаються через `isStudyReadyForLearning`.
- */
-export const STUDY_PROGRESS_SIDEBAR_ONLY_TOPIC_IDS: readonly string[] = ['concept-17'];
-
-const PROGRESS_SIDEBAR_ONLY_TOPIC_IDS = new Set(STUDY_PROGRESS_SIDEBAR_ONLY_TOPIC_IDS);
 
 const ASIDE_COMPACT_TOPIC_IDS = new Set([
   'concept-01',
@@ -72,6 +66,7 @@ const ASIDE_COMPACT_TOPIC_IDS = new Set([
   'concept-16',
   'concept-09',
   'concept-08',
+  'concept-17',
 ]);
 
 export function hasStudyLessonAside(topicId: string): boolean {
@@ -80,18 +75,14 @@ export function hasStudyLessonAside(topicId: string): boolean {
 
 /** Компактна права панель «Мій прогрес вивчення» (десктоп) + слот під контентом (мобільний). */
 export function hasStudyProgressSidebar(topicId: string): boolean {
-  return (
-    hasStudyLessonAside(topicId) ||
-    isStudyReadyForLearning(topicId) ||
-    PROGRESS_SIDEBAR_ONLY_TOPIC_IDS.has(topicId)
-  );
+  return hasStudyLessonAside(topicId) || isStudyReadyForLearning(topicId);
 }
 
 export function isStudyProgressSidebarCompact(topicId: string): boolean {
   if (hasStudyLessonAside(topicId)) {
     return ASIDE_COMPACT_TOPIC_IDS.has(topicId);
   }
-  if (isStudyReadyForLearning(topicId) || PROGRESS_SIDEBAR_ONLY_TOPIC_IDS.has(topicId)) {
+  if (isStudyReadyForLearning(topicId)) {
     return true;
   }
   return false;
@@ -109,6 +100,7 @@ export function getStudyLessonAsideMeta(topicId: string): StudyLessonAsideMeta |
   if (topicId === 'concept-16') return { ...AGENTIC_WORKFLOWS_ASIDE_META };
   if (topicId === 'concept-09') return { ...MULTI_AGENT_ASIDE_META };
   if (topicId === 'concept-08') return { ...A2A_ASIDE_META };
+  if (topicId === 'concept-17') return { ...GUARDRAILS_ASIDE_META };
   return null;
 }
 
@@ -124,6 +116,7 @@ export function getStudySectionAside(topicId: string, navTitle: string): StudySe
   if (topicId === 'concept-16') return getAgenticWorkflowsSectionAside(navTitle);
   if (topicId === 'concept-09') return getMultiAgentSectionAside(navTitle);
   if (topicId === 'concept-08') return getA2aSectionAside(navTitle);
+  if (topicId === 'concept-17') return getGuardrailsSectionAside(navTitle);
   return {
     focus: 'Контекст для цього розділу ще не налаштований.',
     example: 'Оберіть розділ у змісті уроку.',

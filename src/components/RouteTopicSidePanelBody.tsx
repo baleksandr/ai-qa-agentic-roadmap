@@ -27,31 +27,54 @@ function ProseParagraph({ text }: { text: string }) {
 }
 
 function BlockContent({ block }: { block: RouteTopicSidePanelBlock }) {
-  if (block.steps && block.steps.length > 0) {
-    return (
-      <ol className="route-side-panel-steps">
-        {block.steps.map((step, index) => (
-          <li key={`${index}-${step.titleUk}`} className="route-side-panel-step-card">
-            <p className="route-side-panel-step-title">
-              <span className="route-side-panel-step-index" aria-hidden="true">
-                {index + 1}.
-              </span>
-              {step.titleUk}
-            </p>
-            <p className="route-side-panel-step-body">{renderAccentProse(step.bodyUk)}</p>
-          </li>
-        ))}
-      </ol>
-    );
-  }
-  if (block.bodyUk) {
+  const hasSteps = Boolean(block.steps && block.steps.length > 0);
+  const hasBody = Boolean(block.bodyUk?.trim());
+  if (!hasSteps && !hasBody) return null;
+
+  return (
+    <>
+      {hasBody && (
+        <div className="route-side-panel-prose-card">
+          <ProseParagraph text={block.bodyUk!} />
+        </div>
+      )}
+      {hasSteps && (
+        <ol className="route-side-panel-steps">
+          {block.steps!.map((step, index) => (
+            <li key={`${index}-${step.titleUk}`} className="route-side-panel-step-card">
+              <p className="route-side-panel-step-title">
+                <span className="route-side-panel-step-index" aria-hidden="true">
+                  {index + 1}.
+                </span>
+                {step.titleUk}
+              </p>
+              <p className="route-side-panel-step-body">{renderAccentProse(step.bodyUk)}</p>
+            </li>
+          ))}
+        </ol>
+      )}
+    </>
+  );
+}
+
+function QaBlock({ text }: { text: string }) {
+  const items = text.split(/;\s+/).map((s) => s.trim()).filter(Boolean);
+  if (items.length <= 1) {
     return (
       <div className="route-side-panel-prose-card">
-        <ProseParagraph text={block.bodyUk} />
+        <ProseParagraph text={text} />
       </div>
     );
   }
-  return null;
+  return (
+    <ul className="route-side-panel-qa-list">
+      {items.map((item) => (
+        <li key={item} className="route-side-panel-prose-card route-side-panel-qa-item">
+          <p className="route-side-panel-prose">{renderAccentProse(item)}</p>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function blockHasContent(block?: RouteTopicSidePanelBlock): boolean {
@@ -93,7 +116,10 @@ export function RouteTopicSidePanelBody({ panel }: Props) {
       {blockHasContent(panel.example) ? (
         <Section headingUk="Приклад у login_spec" block={panel.example} />
       ) : null}
-      <Section headingUk="Що перевіряє QA" proseUk={panel.qaUk} />
+      <section className="route-side-panel-section">
+        <h3 className="route-side-panel-section-heading">Що перевіряє QA</h3>
+        <QaBlock text={panel.qaUk} />
+      </section>
       {panel.rememberUk?.trim() ? (
         <section className="route-side-panel-section route-side-panel-section--remember">
           <h3 className="route-side-panel-section-heading">Запам’ятати</h3>

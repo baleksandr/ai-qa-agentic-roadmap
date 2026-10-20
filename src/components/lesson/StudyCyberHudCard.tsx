@@ -3,13 +3,14 @@ import type { ReactNode } from 'react';
 type Props = {
   badge: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   className?: string;
   children?: ReactNode;
 };
 
 /** Інформаційна HUD-картка (шапка уроку): не клікабельна. */
-export function StudyCyberHudCard({ badge, title, subtitle, className = '' }: Props) {
+export function StudyCyberHudCard({ badge, title, subtitle, className = '', children }: Props) {
+  const sub = children ?? subtitle;
   return (
     <article
       className={`study-cyber-hud-card study-cyber-hud-card--hero study-cyber-hud-surface study-cyber-hud-surface--static${className ? ` ${className}` : ''}`}
@@ -18,7 +19,11 @@ export function StudyCyberHudCard({ badge, title, subtitle, className = '' }: Pr
       <span className="study-cyber-hud-card__badge" aria-hidden="true">{badge}</span>
       <div className="study-cyber-hud-card__copy">
         <span className="study-cyber-hud-card__title">{title}</span>
-        <span className="study-cyber-hud-card__sub">{subtitle}</span>
+        {sub ? (
+          <span className={`study-cyber-hud-card__sub${children ? ' study-learner-explanation' : ''}`}>
+            {sub}
+          </span>
+        ) : null}
       </div>
     </article>
   );

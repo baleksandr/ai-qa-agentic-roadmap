@@ -1,6 +1,9 @@
-/** Стандартна підказка перед групою карток розділу (після короткого вступу). */
-export const STUDY_SECTION_CARDS_INTERACTION_HINT_UK =
-  'Оберіть картку ліворуч, щоб побачити пояснення. На телефоні воно з’явиться під картками.';
+/** Коротка інструкція в блоці «Як працювати з картками». */
+export const STUDY_SECTION_CARDS_HOW_UK =
+  'Оберіть картку ліворуч, щоб побачити повне пояснення праворуч. На телефоні пояснення з’явиться під картками.';
+
+/** Стандартна підказка перед групою карток (лише механіка UI, без теми розділу). */
+export const STUDY_SECTION_CARDS_INTERACTION_HINT_UK = STUDY_SECTION_CARDS_HOW_UK;
 
 export type StudySectionCardsInteractionHintText = string;
 
@@ -9,7 +12,9 @@ export const STUDY_PAGE_CARDS_INTERACTION_HINT_UK = STUDY_SECTION_CARDS_INTERACT
 
 const GENERIC_NESTED_PICK_HINTS = new Set([
   STUDY_SECTION_CARDS_INTERACTION_HINT_UK,
+  STUDY_SECTION_CARDS_HOW_UK,
   'Оберіть картку ліворуч, щоб побачити пояснення.',
+  'Оберіть картку ліворуч, щоб побачити повне пояснення праворуч. На телефоні пояснення з’явиться під картками.',
   'Натисніть картку, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.',
   'Оберіть картку, щоб прочитати пояснення поруч. На телефоні воно з’явиться під картками.',
 ]);
