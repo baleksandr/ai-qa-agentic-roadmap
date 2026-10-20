@@ -120,7 +120,4 @@ run створено → кроки investigation → checkpoint state → conte
 Повний зміст розділу — у навчальних картках Study Mode (блок «Запам’ятати», п’ять питань для самоперевірки, цільна відповідь і посилання далі).
 
 :::study-sources
-- *AI Engineering*, 2025 — memory types, друк. с. 195–196; RAG and AI Memory, друк. с. 143 (контекст для агентів).
-- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 1 — state manager, checkpoint, context builder (архів курсу).
-- Навчальний сценарій: QA Regression Investigation Agent, `login_spec`, умовні `runId` / investigation — для закріплення механізму.
 :::study-sources-end

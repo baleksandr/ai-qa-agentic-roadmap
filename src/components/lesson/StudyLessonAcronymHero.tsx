@@ -1,6 +1,7 @@
 import type { StudyLessonHero } from '../../data/study/study-lesson-heroes';
 import { StudyAfterInteractiveSummary } from './StudyAfterInteractiveSummary';
 import { StudyCyberHudCard, StudyCyberHudHeroGrid } from './StudyCyberHudCard';
+import { StudyLessonHeroFramedExplanation } from './StudyLessonHeroFramedExplanation';
 
 type Props = {
   hero: StudyLessonHero;
@@ -26,15 +27,21 @@ function HeroTaglineUk({ hero, neonHudTheme }: { hero: StudyLessonHero; neonHudT
   const lines = heroTaglineLines(hero);
   if (lines.length === 0) return null;
   const multiline = lines.length > 1;
-  const framedTagline = neonHudTheme && !multiline;
-  const heroLead = hero.letterPresentation === 'cyber-hud';
+  const useFramedExplanation =
+    !multiline &&
+    (neonHudTheme || hero.letterPresentation === 'cyber-hud') &&
+    hero.taglinePresentation !== 'plain';
+
+  if (useFramedExplanation) {
+    return <StudyLessonHeroFramedExplanation textUk={lines[0]} />;
+  }
+
+  const heroLead = hero.letterPresentation === 'cyber-hud' && !neonHudTheme;
   return (
     <p
       className={`study-rag-acronym-subtitle study-learner-explanation${
         multiline ? ' study-rag-acronym-subtitle--multiline' : ''
-      }${heroLead ? ' study-rag-acronym-subtitle--hero-lead' : ''}${
-        framedTagline ? ' study-rag-acronym-hero-tagline' : ''
-      }`}
+      }${heroLead ? ' study-rag-acronym-subtitle--hero-lead' : ''}`}
     >
       {multiline
         ? lines.map((line) => (

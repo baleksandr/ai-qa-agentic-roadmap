@@ -33,5 +33,4 @@ Overfit публічний bench; ігнор domain safety. **QA:** вимага
 Benchmark — **порівняння моделей**; prod quality — **ваші evals**.
 
 :::study-sources
-- V10 Concept 19; книга — benchmarks (inventory, обмежено).
 :::study-sources-end

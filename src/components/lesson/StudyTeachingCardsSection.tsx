@@ -74,6 +74,12 @@ export function StudyTeachingCardsSection({
   const activeStepIndex = bundle.steps.findIndex((s) => s.key === activeKey);
   const activeFundamentalsPanel = bundle.steps.find((s) => s.key === activeKey)?.fundamentalsPanel;
 
+  const sectionAsidePlacement = bundle.sectionAsideNotePlacement ?? 'intro-grid';
+  const sectionAsideAfterCards =
+    Boolean(bundle.sectionAsideNoteUk?.trim()) && sectionAsidePlacement === 'after-cards';
+  const sectionAsideInIntroGrid =
+    Boolean(bundle.sectionAsideNoteUk?.trim()) && sectionAsidePlacement === 'intro-grid';
+
   return (
     <section
       className={`study-teaching-cards study-rag-pipeline-glossary study-rag-one-query${isConcepts ? ' study-teaching-cards--concepts' : ''} ${className}`.trim()}
@@ -102,7 +108,7 @@ export function StudyTeachingCardsSection({
         </div>
       ) : null}
 
-      {bundle.introMiniCards?.length || bundle.sectionAsideNoteUk?.trim() ? (
+      {bundle.introMiniCards?.length || sectionAsideInIntroGrid ? (
         <div
           className={`study-teaching-intro-mini-grid${
             !bundle.introMiniCards?.length ? ' study-teaching-intro-mini-grid--aside-only' : ''
@@ -121,7 +127,7 @@ export function StudyTeachingCardsSection({
               ))}
             </ul>
           ) : null}
-          {bundle.sectionAsideNoteUk?.trim() ? (
+          {sectionAsideInIntroGrid ? (
             <StudySectionAsideNote
               variant="inline"
               className="study-teaching-section-aside-note"
@@ -232,6 +238,15 @@ export function StudyTeachingCardsSection({
           )
         }
       />
+
+      {sectionAsideAfterCards ? (
+        <StudySectionAsideNote
+          variant="hud"
+          className="study-teaching-section-aside-note study-teaching-section-aside-note--after-cards"
+          titleUk={bundle.sectionAsideNoteTitleUk?.trim() || 'Нотатка до розділу'}
+          bodyUk={bundle.sectionAsideNoteUk}
+        />
+      ) : null}
 
       {bundle.afterInteractiveSummary ? (
         <StudyAfterInteractiveSummary summary={bundle.afterInteractiveSummary} />

@@ -39,5 +39,4 @@ Nightly eval job; alert on drop vs baseline.
 Evals — **регресія якості** агента, не один demo run.
 
 :::study-sources
-- V10 Concept 5; *AI Engineering* — evaluation (inventory).
 :::study-sources-end

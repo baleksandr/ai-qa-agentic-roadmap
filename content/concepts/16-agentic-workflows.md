@@ -12,32 +12,29 @@
 
 ## Study Mode
 
-### Навіщо workflows?
+### Навіщо потрібні agentic workflows?
 
-Nightly `login_spec` → workflow: triage agent → investigation agent → (gate) coding agent → CI → review agent. Кожен крок — окремий harness run або sub-workflow.
+Шість кроків навчального маршруту ABC-123 — у картках Study Mode (nightly CI → triage → investigation → gate → coding/CI → review).
 
 ### Приклад
 
-Investigation output `hypothesis=selector` + evidence refs передається coding agent як structured artifact, не як довгий chat.
+Шість кроків handoff Agent A → artifact → Agent B → human gate → CI — у картках Study Mode.
 
-workflow start → agent A → artifact → agent B → human gate → CI
+### Agentic workflow і orchestration: у чому різниця?
 
-### vs Orchestration
+Дві картки: що описує workflow і що координує orchestration — у картках Study Mode.
 
-Orchestration — engine графа; agentic workflow — **продуктовий сценарій** з кількох агентських ролей.
+### Де може зламатися?
 
-### Збої
-
-Lost handoff artifact; incompatible schema між агентами. **QA:** contract на artifact JSON.
+Дві картки збою handoff (загублений результат і несумісний формат) — у картках Study Mode.
 
 ### Production
 
-SLA per stage, compensating transactions.
+Дві картки: час етапів і дії після часткового успіху — у картках Study Mode.
 
 ### Запам’ятати та співбесіда
 
-Workflow — **сценарій**; orchestration — **двигун**.
+«Запам’ятати», п’ять питань співбесіди та перехід до Orchestration — у Study Mode.
 
 :::study-sources
-- V10 Concept 16.
 :::study-sources-end

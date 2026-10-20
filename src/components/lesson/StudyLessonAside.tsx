@@ -175,13 +175,19 @@ export function StudyLessonAside({
           </div>
         )}
 
-        <div className="study-aside-card study-aside-card-compact">
-          <p className="study-aside-label">{meta.schemaTitle}</p>
-          <p className="muted small study-aside-schema-blurb">{meta.schemaBlurb}</p>
-          <Link className="study-rag-atlas-link" to={meta.atlasTo}>
-            {meta.atlasLinkLabel}
-          </Link>
-        </div>
+        {Boolean(meta.schemaTitle?.trim() || meta.schemaBlurb?.trim() || meta.atlasTo?.trim()) ? (
+          <div className="study-aside-card study-aside-card-compact">
+            {meta.schemaTitle?.trim() ? <p className="study-aside-label">{meta.schemaTitle}</p> : null}
+            {meta.schemaBlurb?.trim() ? (
+              <p className="muted small study-aside-schema-blurb">{meta.schemaBlurb}</p>
+            ) : null}
+            {meta.atlasTo?.trim() ? (
+              <Link className="study-rag-atlas-link" to={meta.atlasTo}>
+                {meta.atlasLinkLabel}
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </aside>
   );

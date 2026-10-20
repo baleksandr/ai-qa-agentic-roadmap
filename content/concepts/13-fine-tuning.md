@@ -41,6 +41,4 @@
 Підсумок «Запам’ятати», п’ять питань із розгортанням відповіді та цільна відповідь для співбесіди — у Study Mode нижче.
 
 :::study-sources
-- *AI Engineering* (Chip Huyen, 2025) — розділ про fine-tuning (друк. с. 66+); порівняння «Prompting vs RAG vs Finetuning» (друк. с. 124).
-- V10 Concept 13.
 :::study-sources-end

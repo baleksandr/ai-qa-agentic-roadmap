@@ -1213,6 +1213,120 @@
   hyphens: auto;
 }
 
+/* Skills — «Що я зрозумію»: вступ + 3 картки в ряд на десктопі */
+.study-skills-outcomes-block {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.study-skills-outcomes-lead {
+  margin: 0;
+  max-width: none;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.study-skills-outcomes-triple-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (min-width: 720px) {
+  .study-skills-outcomes-triple-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem 0.85rem;
+  }
+
+  .study-skills-outcomes-quad-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .study-skills-outcomes-quad-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem 0.75rem;
+  }
+}
+
+.study-skills-outcome-card-note {
+  margin: 0.45rem 0 0;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.study-agentic-workflows-outcomes-intro {
+  margin-bottom: 0.15rem;
+}
+
+.study-skills-outcome-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0.85rem 0.95rem 0.9rem;
+  padding-top: 1.35rem;
+  border-radius: 10px;
+  border: 1px solid rgba(72, 88, 118, 0.48);
+  background: linear-gradient(158deg, rgba(16, 20, 34, 0.94) 0%, rgba(9, 12, 22, 0.92) 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  min-width: 0;
+  text-align: left;
+}
+
+.study-skills-outcome-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.3rem;
+  border-radius: 6px;
+  border: 1px solid rgba(118, 138, 220, 0.35);
+  background: rgba(14, 22, 38, 0.85);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(200, 218, 248, 0.85);
+  pointer-events: none;
+}
+
+.study-skills-outcome-card-title {
+  margin: 0 0 0.45rem;
+  padding-right: 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #c8daf8;
+  text-wrap: pretty;
+}
+
+.study-skills-outcome-card-body {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.52;
+  color: rgba(232, 240, 252, 0.94);
+  text-wrap: pretty;
+  hyphens: auto;
+}
+
 .study-mcp-run-cards .study-after-interactive-summary {
   margin-top: 0.85rem;
   padding: 0.85rem 0.95rem;
@@ -1930,6 +2044,84 @@
   white-space: pre;
   word-break: normal;
   font-size: 0.78rem;
+}
+
+.study-agent-handoff-fixture {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.study-agent-handoff-fixture-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.study-agent-handoff-fixture-intro {
+  margin: 0;
+  line-height: 1.48;
+  text-wrap: pretty;
+}
+
+.study-agent-handoff-fixture-json-card {
+  border-color: rgba(118, 138, 220, 0.32);
+  background: #0a0e18;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.study-agent-handoff-fixture-json-pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.study-agent-handoff-fixture-fields-details {
+  margin: 0;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.study-agent-handoff-fixture-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+  padding-top: 0.15rem;
+}
+
+.study-agent-handoff-fixture-field {
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(72, 88, 118, 0.38);
+  background: rgba(12, 16, 28, 0.55);
+  max-width: 100%;
+  min-width: 0;
+}
+
+.study-agent-handoff-fixture-agent-b {
+  margin: 0.15rem 0 0;
+}
+
+.study-agent-handoff-fixture-agent-b-label {
+  margin: 0 0 0.35rem;
+}
+
+.study-agent-handoff-fixture-agent-b-body {
+  margin: 0;
+  line-height: 1.48;
+  text-wrap: pretty;
+}
+
+.study-agent-handoff-fixture-footnote {
+  margin: 0;
+  line-height: 1.45;
+  text-wrap: pretty;
 }
 
 @media (min-width: 769px) {

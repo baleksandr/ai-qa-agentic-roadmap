@@ -109,6 +109,62 @@ import {
 } from './lesson/StudyMcpSections';
 import { StudyMcpLearningOutcomes } from './lesson/StudyMcpLearningOutcomes';
 import { StudyFineTuningLearningOutcomes } from './lesson/StudyFineTuningLearningOutcomes';
+import { StudySkillsLearningOutcomes } from './lesson/StudySkillsLearningOutcomes';
+import { StudyPlanningLearningOutcomes } from './lesson/StudyPlanningLearningOutcomes';
+import { StudyOrchestrationLearningOutcomes } from './lesson/StudyOrchestrationLearningOutcomes';
+import { StudyAgenticWorkflowsLearningOutcomes } from './lesson/StudyAgenticWorkflowsLearningOutcomes';
+import {
+  StudyAgenticWorkflowsExample,
+  StudyAgenticWorkflowsFailures,
+  StudyAgenticWorkflowsProduction,
+  StudyAgenticWorkflowsRememberInterview,
+  StudyAgenticWorkflowsVsOrchestration,
+  StudyAgenticWorkflowsWhy,
+} from './lesson/StudyAgenticWorkflowsSections';
+import { StudyMultiAgentLearningOutcomes } from './lesson/StudyMultiAgentLearningOutcomes';
+import {
+  StudyMultiAgentExample,
+  StudyMultiAgentFailures,
+  StudyMultiAgentLlmCode,
+  StudyMultiAgentRememberInterview,
+  StudyMultiAgentWhy,
+} from './lesson/StudyMultiAgentSections';
+import {
+  StudyA2aFailures,
+  StudyA2aLlmCode,
+  StudyA2aQaDevFlow,
+  StudyA2aRememberInterview,
+  StudyA2aWhy,
+} from './lesson/StudyA2aSections';
+import {
+  StudyOrchestrationComponents,
+  StudyOrchestrationFailures,
+  StudyOrchestrationInvestigation,
+  StudyOrchestrationLlmCode,
+  StudyOrchestrationProduction,
+  StudyOrchestrationQaTesting,
+  StudyOrchestrationRememberInterview,
+  StudyOrchestrationSequence,
+  StudyOrchestrationWhy,
+} from './lesson/StudyOrchestrationSections';
+import {
+  StudyPlanningComponents,
+  StudyPlanningFailures,
+  StudyPlanningLlmCode,
+  StudyPlanningOneRun,
+  StudyPlanningProduction,
+  StudyPlanningRememberInterview,
+  StudyPlanningWhy,
+} from './lesson/StudyPlanningSections';
+import {
+  StudySkillsComponents,
+  StudySkillsFailures,
+  StudySkillsFlow,
+  StudySkillsLlmCode,
+  StudySkillsProduction,
+  StudySkillsRememberInterview,
+  StudySkillsWhy,
+} from './lesson/StudySkillsSections';
 import {
   StudyFineTuningComponents,
   StudyFineTuningFailures,
@@ -148,6 +204,7 @@ import {
 } from '../data/study/study-interview-registry';
 import type { LearningStatus } from '../types/topic';
 import { StudySourcesCollapsible } from './lesson/StudySourcesCollapsible';
+import { hasStudyLessonSources } from '../data/study/study-lesson-sources';
 import { StudyProcessSchema } from './lesson/StudyProcessSchema';
 import { isLikelyFlowDiagram, parseStudyFlowAscii } from '../lib/studyFlowSchema';
 import {
@@ -271,7 +328,12 @@ export function StudyModeSections({
           topicId === 'concept-14' ||
           topicId === 'concept-06' ||
           topicId === 'concept-15' ||
-          topicId === 'concept-13') && (
+          topicId === 'concept-13' ||
+          topicId === 'concept-07' ||
+          topicId === 'concept-11' ||
+          topicId === 'concept-02' ||
+          topicId === 'concept-16' ||
+          topicId === 'concept-09') && (
           <aside
             className={`study-learning-outcomes${topicId === 'concept-12' ? ' study-learning-outcomes--reasoning-compact' : ''}`}
             aria-label="Що я зрозумію після цього уроку"
@@ -292,6 +354,16 @@ export function StudyModeSections({
                 <StudyVectorDatabaseLearningOutcomes />
               ) : topicId === 'concept-13' ? (
                 <StudyFineTuningLearningOutcomes />
+              ) : topicId === 'concept-07' ? (
+                <StudySkillsLearningOutcomes />
+              ) : topicId === 'concept-11' ? (
+                <StudyPlanningLearningOutcomes />
+              ) : topicId === 'concept-02' ? (
+                <StudyOrchestrationLearningOutcomes />
+              ) : topicId === 'concept-16' ? (
+                <StudyAgenticWorkflowsLearningOutcomes />
+              ) : topicId === 'concept-09' ? (
+                <StudyMultiAgentLearningOutcomes />
               ) : (
                 <StudyMarkdownWithFlows
                   markdown={introMarkdown}
@@ -353,7 +425,9 @@ export function StudyModeSections({
           })}
         </div>
 
-        {sourcesMarkdown?.trim() && <StudySourcesCollapsible markdown={sourcesMarkdown} />}
+        {(sourcesMarkdown?.trim() || (topicId && hasStudyLessonSources(topicId))) && (
+          <StudySourcesCollapsible topicId={topicId} markdown={sourcesMarkdown} />
+        )}
 
         {progressSidebar && onLearningChange ? (
           <StudyProgressAsideCard
@@ -493,6 +567,201 @@ function renderConcept06StudySection(sectionTitle?: string) {
       <div className="study-mcp-interview-section study-memory-state-interview-section">
         <StudyMcpRememberInterview />
         {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </div>
+    );
+  }
+  return null;
+}
+
+function renderConcept08StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyA2aWhy />;
+  }
+  if (t.includes('переходить') || (t.includes('задача') && t.includes('dev'))) {
+    return <StudyA2aQaDevFlow />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudyA2aLlmCode />;
+  }
+  if (t.includes('зламати') || t.includes('збої')) {
+    return <StudyA2aFailures />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-08');
+    return (
+      <>
+        <StudyA2aRememberInterview />
+        {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </>
+    );
+  }
+  return null;
+}
+
+function renderConcept09StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyMultiAgentWhy />;
+  }
+  if (t.includes('приклад') || t.includes('abc-123')) {
+    return <StudyMultiAgentExample />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudyMultiAgentLlmCode />;
+  }
+  if (t.includes('зламати') || t.includes('збої')) {
+    return <StudyMultiAgentFailures />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-09');
+    return (
+      <>
+        <StudyMultiAgentRememberInterview />
+        {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </>
+    );
+  }
+  return null;
+}
+
+function renderConcept16StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyAgenticWorkflowsWhy />;
+  }
+  if (t.includes('приклад')) {
+    return <StudyAgenticWorkflowsExample />;
+  }
+  if (t.includes('orchestration') || t.includes('різниця')) {
+    return <StudyAgenticWorkflowsVsOrchestration />;
+  }
+  if (t.includes('зламати') || t.includes('збої')) {
+    return <StudyAgenticWorkflowsFailures />;
+  }
+  if (t.includes('production')) {
+    return <StudyAgenticWorkflowsProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-16');
+    return (
+      <>
+        <StudyAgenticWorkflowsRememberInterview />
+        {deck ? <StudyInterviewSelfCheck deck={deck} /> : null}
+      </>
+    );
+  }
+  return null;
+}
+
+function renderConcept02StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyOrchestrationWhy />;
+  }
+  if (t.includes('investigation') || t.includes('login_spec')) {
+    return <StudyOrchestrationInvestigation />;
+  }
+  if (t.includes('складається') || t.includes('механізм')) {
+    return <StudyOrchestrationComponents />;
+  }
+  if (t.includes('послідовність') || t.includes('капотом')) {
+    return <StudyOrchestrationSequence />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudyOrchestrationLlmCode />;
+  }
+  if (t.includes('зламати') || t.includes('зламатися') || t.includes('збої')) {
+    return <StudyOrchestrationFailures />;
+  }
+  if (t.includes('qa') && t.includes('тест')) {
+    return <StudyOrchestrationQaTesting />;
+  }
+  if (t.includes('production')) {
+    return <StudyOrchestrationProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-02');
+    return (
+      <div className="study-orchestration-interview-section study-memory-state-interview-section">
+        <StudyOrchestrationRememberInterview />
+        {deck ? (
+          <div className="study-memory-state-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  return null;
+}
+
+function renderConcept11StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyPlanningWhy />;
+  }
+  if (t.includes('run') && t.includes('приклад')) {
+    return <StudyPlanningOneRun />;
+  }
+  if (t.includes('компонент')) {
+    return <StudyPlanningComponents />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudyPlanningLlmCode />;
+  }
+  if (t.includes('зламатися') || t.includes('зламати') || t.includes('збої')) {
+    return <StudyPlanningFailures />;
+  }
+  if (t.includes('production')) {
+    return <StudyPlanningProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-11');
+    return (
+      <div className="study-planning-interview-section study-memory-state-interview-section">
+        <StudyPlanningRememberInterview />
+        {deck ? (
+          <div className="study-memory-state-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+  return null;
+}
+
+function renderConcept07StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudySkillsWhy />;
+  }
+  if (t.includes('компонент') || t.includes('складається')) {
+    return <StudySkillsComponents />;
+  }
+  if (t.includes('послідовність') || t.includes('потрапляє')) {
+    return <StudySkillsFlow />;
+  }
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) {
+    return <StudySkillsLlmCode />;
+  }
+  if (t.includes('зламатися') || t.includes('збої')) {
+    return <StudySkillsFailures />;
+  }
+  if (t.includes('production')) {
+    return <StudySkillsProduction />;
+  }
+  if (t.includes('запам')) {
+    const deck = getStudyInterviewDeck('concept-07');
+    return (
+      <div className="study-skills-interview-section study-memory-state-interview-section">
+        <StudySkillsRememberInterview />
+        {deck ? (
+          <div className="study-memory-state-interview-block">
+            <StudyInterviewSelfCheck deck={deck} />
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -640,6 +909,26 @@ function StudyMarkdownSegment({
     if (memorySection) return memorySection;
   }
 
+  if (topicId === 'concept-02') {
+    const orchestrationSection = renderConcept02StudySection(sectionTitle);
+    if (orchestrationSection) return orchestrationSection;
+  }
+
+  if (topicId === 'concept-16') {
+    const workflowsSection = renderConcept16StudySection(sectionTitle);
+    if (workflowsSection) return workflowsSection;
+  }
+
+  if (topicId === 'concept-08') {
+    const a2aSection = renderConcept08StudySection(sectionTitle);
+    if (a2aSection) return a2aSection;
+  }
+
+  if (topicId === 'concept-09') {
+    const multiAgentSection = renderConcept09StudySection(sectionTitle);
+    if (multiAgentSection) return multiAgentSection;
+  }
+
   if (topicId === 'concept-06') {
     const mcpSection = renderConcept06StudySection(sectionTitle);
     if (mcpSection) return mcpSection;
@@ -653,6 +942,16 @@ function StudyMarkdownSegment({
   if (topicId === 'concept-13') {
     const fineTuningSection = renderConcept13StudySection(sectionTitle);
     if (fineTuningSection) return fineTuningSection;
+  }
+
+  if (topicId === 'concept-07') {
+    const skillsSection = renderConcept07StudySection(sectionTitle);
+    if (skillsSection) return skillsSection;
+  }
+
+  if (topicId === 'concept-11') {
+    const planningSection = renderConcept11StudySection(sectionTitle);
+    if (planningSection) return planningSection;
   }
 
   if (topicId === 'concept-04') {

@@ -14,112 +14,39 @@
 
 ### Навіщо потрібна orchestration?
 
-У продукті одночасно живуть Coding Agent, QA Investigation Agent, Review Agent, CI pipeline і людина з approve. Кожен вміє робити свою частину, але **ніхто з них за замовчуванням не знає глобальний порядок** для тікета ABC-123.
-
-Без orchestration після падіння `login_spec` може статися так: CI ще збирає артефакти, а investigation agent уже намагається створити Jira; reviewer коментує старий diff; два процеси пишуть у один config. Потрібен рівень, який тримає **граф робіт**: що готово, що blocked, хто наступний, що робити після failure.
-
-| Термін | Простими словами |
-|--------|------------------|
-| **Orchestration** | Керування workflow: порядок, залежності, паралельність, retries, approvals |
-| **Workflow graph** | Вузли (кроки) і ребра (умови переходу) |
-| **Human gate** | Крок не йде далі без явної дії людини |
-
-*Примітка:* у книзі Pachaar & Chawla немає окремої глави «Orchestration»; модель нижче — **каркас курсу V10**, узгоджений з patterns/deployment у книзі за потреби.
+Повний зміст розділу — у навчальних картках Study Mode (п’ять карток для тікета ABC-123: артефакти CI, порядок робіт, версія diff, спільні ресурси, помилки та схвалення).
 
 ### Де це в investigation після login_spec?
 
-*Навчальний приклад.*
-
-Подія: failed `login_spec` на nightly. Orchestrator (код) отримує goal «розслідувати regression» і розкладає на задачі:
-
-1. Дочекатися артефактів CI (blocked, поки немає report path).  
-2. Запустити QA Investigation Agent (tool-heavy run).  
-3. Якщо висновок «потрібен product fix» — маршрут до Coding Agent; якщо «flake» — обмежений retry CI.  
-4. Якщо пропозиція змінити production config — **human gate** перед виконанням.
-
-Orchestration **не** робить embedding і **не** парсить PDF — це RAG. Вона **не** виконує tool call — це harness усередині агента. Вона відповідає: **коли** стартує investigation run і **що** дозволено після його результату.
-
-CI ready → investigation task → (branch) fix / retry / escalate → human gate?
+Повний зміст розділу — у навчальних картках Study Mode (чотири кроки workflow для ABC-123 після login_spec; на картці «Вибір наступної гілки» — вкладені варіанти 3.1–3.3). Це навчальний приклад маршруту, а не опис архітектури конкретного продукту.
 
 ### З чого складається механізм?
 
-| Компонент | Роль |
-|-----------|------|
-| Workflow graph / state machine | Модель кроків і переходів |
-| Scheduler / dispatcher | Вибирає ready tasks |
-| Task queue | Черга подій і завдань |
-| Routing rules | Хто виконує крок: agent, tool, human |
-| Retry / timeout policy | Поведінка при помилках |
-| Approval gates | Блокування до approve |
-| Shared state / event bus | Статуси між сервісами |
+Повний зміст розділу — у семи навчальних картках Study Mode (ролі orchestration для ABC-123: модель workflow, scheduler, передача задач, routing, retry, approval, спільний стан). У невеликому продукті кілька ролей може виконувати один компонент.
 
 ### Послідовність під капотом
 
-**Крок 1.** User goal → workflow instance (код).  
-**Вхід:** «Investigate login_spec failure»; **вихід:** `workflowId`, початковий вузол.
-
-**Крок 2.** Orchestrator дивиться state graph, знаходить ready tasks (код).  
-**Вихід:** список task з preconditions.
-
-**Крок 3.** Призначає виконавця: agent id / external job / human (код).  
-**Вихід:** task envelope + context pointer (не весь wiki).
-
-**Крок 4.** Отримує result / event (код).  
-**Вхід:** `success|failure|needs_approval`.
-
-**Крок 5.** Оновлює workflow state, переходить по ребру (код).  
-**При failure:** retry policy або escalation — **детерміновані правила**, не «модель вирішила».
+Повний зміст розділу — у п’яти навчальних картках Study Mode (екземпляр workflow, ready tasks, передача виконавцю, результат, перехід стану для ABC-123 після login_spec).
 
 ### Де код, а де LLM?
 
-| Що | Хто |
-|----|-----|
-| Черги, таймери, retry count, routing matrix | Код orchestrator |
-| Human approval UI | Людина + код |
-| План усередині одного agent run | LLM + harness (інша концепція) |
-| Визначення «чи пройшов CI» | CI / код, не LLM |
+Повний зміст розділу — у чотирьох картках Study Mode (CI, orchestrator, модель у agent run, людина та approval на прикладі ABC-123).
 
 ### Де може зламатися?
 
-#### Deadlock
-
-Два кроки чекають один на одного. **QA:** статичний аналіз графа або simulation — немає циклу без progress.
-
-#### Retry storm
-
-Flaky CI → нескінченні rerun. **Очікування:** max attempts + backoff у trace.
-
-#### Duplicate event
-
-Один і той же `ci_finished` оброблено двічі → два investigation run. **Harness:** idempotent consumer, `eventId`.
-
-#### Wrong routing
-
-Product failure пішла на «ignore». **QA:** golden workflows + assert наступного вузла в trace orchestrator.
+Повний зміст розділу — у чотирьох картках збоїв Study Mode (deadlock, retry storm, duplicate event, wrong routing).
 
 ### Як QA це тестує?
 
-| Перевірка | Дія | Очікування | Доказ |
-|-----------|-----|------------|-------|
-| Порядок | Симулювати CI slow | Investigation стартує після `artifacts_ready` | ordered events у bus |
-| Gate | Висновок «prod config» | Run blocked до approve | audit `approvedBy` |
-| Retry | Flake flag | Рівно N CI rerun | counter у state |
-| Isolation | Паралельні тікети | Окремі workflow instance | `workflowId` |
+Повний зміст розділу — у чотирьох картках перевірок Study Mode (порядок після CI, approval, межа retry, ізоляція workflow). Це навчальні шаблони тестування, а не опис готових тестів у репозиторії.
 
 ### Production
 
-Моніторинг: час у вузлі, кількість retries, stuck workflows, SLA human gates. Версіонування графа workflow при deploy — щоб старі run не ламалися на новій схемі.
+Повний зміст розділу — у п’яти картках Study Mode (час у задачі, повтори, застряглі workflow, очікування approval, версія після deploy для ABC-123).
 
 ### Запам’ятати та співбесіда
 
-| Теза | Коротко |
-|------|---------|
-| Orchestration | **Порядок і правила** між агентами та сервісами |
-| Не LLM | Scheduler і policy — код |
-| Investigation | Старт/гілки після `login_spec` — приклад вузлів workflow |
+Компактна нотатка «Запам’ятати», п’ять питань самоперевірки з короткою й розгорнутою відповіддю (UA/EN), цільна відповідь ~30–45 с і посилання на Agentic Workflows та Agent Harness — у Study Mode UI.
 
 :::study-sources
-- *AI Engineering*, 2025 — design patterns, deployment (орієнтири; окремого concept orchestration у книзі немає).
-- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 2 — workflow, retries, approvals (архів курсу).
-- Навчальний сценарій: nightly `login_spec`, гілки fix/retry/escalate — умовні дані.
 :::study-sources-end

@@ -7,6 +7,7 @@
 .study-term-accent {
   font-weight: 650;
   color: var(--study-term-accent, #7ee8d8);
+  text-shadow: 0 0 18px rgba(126, 232, 216, 0.14);
 }
 
 .study-learner-explanation,

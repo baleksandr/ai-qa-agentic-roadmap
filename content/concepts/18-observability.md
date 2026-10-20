@@ -37,5 +37,4 @@ Sampling, retention, PII scrubbing.
 Без trace QA сліпий до **механізму**, бачить лише текст.
 
 :::study-sources
-- V10 Concept 18.
 :::study-sources-end

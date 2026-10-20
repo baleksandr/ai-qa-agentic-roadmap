@@ -8,6 +8,8 @@ export const STUDY_READY_FOR_LEARNING_TOPIC_IDS: readonly string[] = [
   'concept-03',
   'concept-04',
   'concept-06',
+  'concept-07',
+  'concept-11',
   'concept-10',
   'concept-12',
   'concept-13',

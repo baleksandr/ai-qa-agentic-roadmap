@@ -10,6 +10,7 @@ import { StudyLearnerPanelTermPairCards } from './StudyLearnerPanelTermPairCards
 import { StudyLearnerPanelCourseLessonLink } from './StudyLearnerPanelCourseLessonLink';
 import { StudyModelResponseExampleBlock } from './StudyModelResponseExampleBlock';
 import { StudyLearnerPanelCollapsibleTraceSample } from './StudyLearnerPanelCollapsibleTraceSample';
+import { StudyAgentHandoffFixtureBlock } from './StudyAgentHandoffFixtureBlock';
 import { StudyTermDefinitionCard } from './StudyTermDefinitionCard';
 import { StudyLearnerPanelOutcomeCard } from './StudyLearnerPanelOutcomeCard';
 
@@ -66,6 +67,16 @@ export function StudyLearnerPanelRichSections({ sections, parentCardNumber }: Pr
                   fieldExplanations={section.fieldExplanations}
                   calloutUk={section.calloutUk}
                 />
+              </dd>
+            </div>
+          );
+        }
+
+        if (section.type === 'handoffFixture') {
+          return (
+            <div key={section.block.titleUk} className="study-learner-panel-block">
+              <dd className="study-learner-panel-value study-learner-panel-value--flush">
+                <StudyAgentHandoffFixtureBlock block={section.block} />
               </dd>
             </div>
           );

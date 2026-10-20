@@ -45,6 +45,4 @@
 Повний зміст розділу — у блоці «Запам’ятати», п’яти питаннях самоперевірки та цільній відповіді для співбесіди в Study Mode.
 
 :::study-sources
-- V10 Concept 6; *AI Engineering* — інтеграції (inventory).
-- Навчальний: MCP CI read після login_spec.
 :::study-sources-end

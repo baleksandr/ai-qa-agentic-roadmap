@@ -3,34 +3,121 @@
  * Центральний зміст уроку не використовує цей файл.
  */
 
-.study-neon-hud-hero-zone .study-rag-acronym-subtitle.study-rag-acronym-hero-tagline {
+.study-neon-hud-hero-zone .study-lesson-hero-framed-explanation,
+.study-rag-acronym-hero .study-lesson-hero-framed-explanation {
   margin: 0.35rem 0 0.85rem;
-  padding: 0.55rem 0.72rem;
+  padding: 0.62rem 0.78rem;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
   border-radius: 9px;
-  border: 1px solid rgba(72, 88, 118, 0.42);
-  background: rgba(14, 18, 30, 0.72);
+  border: 1px solid rgba(72, 120, 168, 0.45);
+  background: rgba(12, 16, 28, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(20, 28, 44, 0.65) inset,
+    0 0 18px rgba(56, 120, 200, 0.12);
   color: rgba(224, 234, 248, 0.92);
   font-size: clamp(0.8rem, 1.2vw, 0.92rem);
-  line-height: 1.45;
-  overflow: visible;
+  line-height: 1.48;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
-@media (min-width: 640px) {
-  .study-neon-hud-hero-zone .study-rag-acronym-subtitle.study-rag-acronym-hero-tagline:not(
-      .study-rag-acronym-subtitle--multiline
-    ) {
+.study-rag-acronym-hero:has(.study-cyber-hud-hero-grid) .study-lesson-hero-framed-explanation {
+  margin-bottom: 1rem;
+}
+
+.study-rag-acronym-en-line + .study-lesson-hero-framed-explanation {
+  margin-top: 0.5rem;
+}
+
+.topic-study-page--concept-09 .study-rag-acronym-hero .study-lesson-hero-framed-explanation {
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: calc(100% - 1.25rem);
+  margin-left: 0.45rem;
+  margin-right: 0.45rem;
+  padding: 0.65rem 1.05rem 0.7rem;
+}
+
+@media (min-width: 900px) {
+  .topic-study-page--concept-09 .study-rag-acronym-hero .study-lesson-hero-framed-explanation {
     white-space: nowrap;
-    overflow-wrap: normal;
+    font-size: clamp(0.74rem, 0.72rem + 0.35vw, 0.9rem);
+    line-height: 1.42;
   }
 }
 
-@media (max-width: 639px) {
-  .study-neon-hud-hero-zone .study-rag-acronym-subtitle.study-rag-acronym-hero-tagline {
+@media (max-width: 899px) {
+  .topic-study-page--concept-09 .study-rag-acronym-hero .study-lesson-hero-framed-explanation {
     white-space: normal;
-    overflow-wrap: break-word;
+    width: auto;
+    max-width: calc(100% - 0.75rem);
+    margin-left: 0.35rem;
+    margin-right: 0.35rem;
   }
+}
+
+.topic-study-page--concept-09 .study-header-compact .study-cyber-hud-hero-grid {
+  margin-bottom: 1.1rem;
+}
+
+.topic-study-page--concept-09 .study-header-compact .study-lead {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(72, 88, 118, 0.42);
+}
+
+.topic-study-page--concept-09 .study-header-compact {
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.25rem;
+}
+
+.study-multi-agent-outcomes-hud-list {
+  margin: 1.15rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.study-neon-hud-outcome-step-card {
+  padding: 0.72rem 0.85rem;
+  border-radius: 9px;
+  border: 1px solid rgba(72, 120, 168, 0.45);
+  background: rgba(12, 16, 28, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(20, 28, 44, 0.65) inset,
+    0 0 14px rgba(56, 120, 200, 0.1);
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.study-neon-hud-outcome-step-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba(224, 234, 248, 0.95);
+}
+
+.study-neon-hud-outcome-step-body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.48;
+}
+
+.study-multi-agent-outcomes-footnote {
+  margin: 1.35rem 0 0;
+  padding: 0.62rem 0.78rem;
+  border-radius: 9px;
+  border: 1px solid rgba(72, 120, 168, 0.38);
+  background: rgba(12, 16, 28, 0.55);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  text-wrap: pretty;
 }

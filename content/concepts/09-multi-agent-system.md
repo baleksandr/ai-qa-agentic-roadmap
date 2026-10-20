@@ -1,6 +1,6 @@
 # Concept 09 — Multi-Agent System
 
-> **migrationStatus:** `partial` — Study Mode: 8 розділів (PART II пакет 4).
+> **migrationStatus:** `partial` — Study Mode: картки та Neon HUD у UI.
 
 ## Review Mode
 
@@ -14,24 +14,23 @@
 
 ### Навіщо кілька агентів?
 
-Після `login_spec` Investigation Agent збирає facts; Coding Agent пропонує patch; Review Agent коментує diff — різні skills, різні guardrails.
+Три картки ролей Investigation, Coding і Review Agent — у картках Study Mode.
 
 ### Приклад
 
-Investigation завершується artifact → orchestrator запускає Coding Agent з read-only repo token vs write token після approve.
+Чотири кроки: handoff → orchestrator → patch → approval перед записом — у картках Study Mode.
 
-### Код vs LLM
+### Де код, а де LLM?
 
-Кожен agent — harness+LLM; координація — orchestration.
+Чотири картки ролей моделі й коду для Investigation, Coding і координації — у картках Study Mode.
 
-### Збої
+### Де може зламатися?
 
-Два агенти змінюють один файл; circular messages. **QA:** file lock policy; max hops.
+Три картки збоїв: конфлікт файлу, цикли делегування, гіпотеза як факт — у картках Study Mode.
 
 ### Запам’ятати та співбесіда
 
-Multi-agent = **ролі + координація**, не «більше LLM в одному prompt».
+«Запам’ятати» та питання співбесіди — у Study Mode.
 
 :::study-sources
-- V10 Concept 9; книга — multi-agent patterns (inventory).
 :::study-sources-end

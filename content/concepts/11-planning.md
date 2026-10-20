@@ -14,32 +14,31 @@
 
 ### Навіщо planning?
 
-`login_spec` failed → план: (1) read CI summary, (2) read Playwright report, (3) compare з last green, (4) сформувати гіпотезу, (5) optional Jira draft. Harness може зберегти plan у state; кожен крок — tool або LLM subgoal.
+Повний зміст розділу — у навчальних картках Study Mode (п’ять кроків плану розслідування login_spec).
 
 ### Run приклад
 
-LLM output plan JSON → harness validate → execute step 1 → replan якщо report empty.
+Повний зміст розділу — у навчальних картках Study Mode (чотири кроки одного run: пропозиція плану, перевірка, виконання, перегляд після результату).
 
 ### Компоненти
 
-Planner prompt, plan schema, executor, replan triggers.
+Повний зміст розділу — у навчальних картках Study Mode (чотири компоненти: інструкція, форма плану, виконання, умови перегляду).
 
 ### Код vs LLM
 
-LLM пропонує plan; harness валідує кроки проти allow-list. Replan — після observation.
+Повний зміст розділу — у навчальних картках Study Mode (три ролі: пропозиція плану, перевірка та виконання, перегляд після результату).
 
-### Збої
+### Де може зламатися?
 
-План з забороненим tool; нескінченний replan. **QA:** max replans; deny step у trace.
+Повний зміст розділу — у навчальних картках Study Mode (два збої: заборонена дія в плані та перепланування без прогресу).
 
 ### Production
 
-Log plan versions; eval plan quality на golden incidents.
+Повний зміст розділу — у навчальних картках Study Mode (план у trace та eval на golden incidents).
 
 ### Запам’ятати та співбесіда
 
-Plan — **карта** run; facts — з tools.
+Повний зміст розділу — у блоці «Запам’ятати» та «Перевір себе перед співбесідою» в Study Mode.
 
 :::study-sources
-- V10 Concept 11.
 :::study-sources-end

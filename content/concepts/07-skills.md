@@ -14,35 +14,31 @@
 
 ### Навіщо skills?
 
-Після `login_spec` потрібен skill «Playwright investigation»: tools read report, compare trace, **без** deploy prod. Інший skill «Create ticket» — лише після approve. Harness router (код) обирає skill за intent або workflow node.
-
-goal → skill router → skill bundle (prompt slice + tools) → harness loop
+Повний зміст розділу — у навчальних картках Study Mode (чотири картки: задача, вибір skill, інструкції та harness).
 
 ### Компоненти
 
-Skill manifest, tool subset, prompt template, activation rules.
+Повний зміст розділу — у навчальних картках Study Mode (опис skill, інструменти, інструкція, правила застосування).
 
 ### Послідовність
 
-Orchestrator/harness визначає skill → context builder додає skill instructions → LLM бачить менший allow-list.
+Повний зміст розділу — у навчальних картках Study Mode (три кроки: вибір skill, передача інструкцій, доступні інструменти).
 
-### Код vs LLM
+### Де код, а де LLM?
 
-Активація skill — код. Модель працює в межах skill.
+Повний зміст розділу — у навчальних картках Study Mode (вибір інструкції, робота моделі, перевірка та виконання).
 
-### Збої
+### Де може зламатися?
 
-Wrong skill → missing tool. **QA:** matrix scenario → expected skill id у trace.
+Повний зміст розділу — у навчальних картках Study Mode (три збої та вкладена матриця перевірок QA на картці 3).
 
 ### Production
 
-Version skills, test compatibility з MCP/local tools.
+Повний зміст розділу — у навчальних картках Study Mode (версії skills, локальний інструмент, MCP).
 
 ### Запам’ятати та співбесіда
 
-Skills — **модульність** агента, не заміна guardrails.
+Повний зміст розділу — блок «Запам’ятати», п’ять питань із короткою та докладною відповіддю (UA/EN) і перехід до Agent Harness.
 
 :::study-sources
-- V10 Concept 7.
-- Навчальний: investigation skill після login_spec.
 :::study-sources-end

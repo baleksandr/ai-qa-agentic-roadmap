@@ -38,7 +38,7 @@ const BY_SECTION: Record<string, StudySectionAside> = {
 export function getVectorDatabaseSectionAside(navTitle: string): StudySectionAside {
   const hit = Object.entries(BY_SECTION).find(([key]) => navTitle.startsWith(key));
   if (hit) return hit[1];
-  return { sectionNoteUk: 'Повний зміст розділу — у центральному блоці уроку.' };
+  return { suppressSectionContext: true };
 }
 
 export const VECTOR_DATABASE_ASIDE_META = {

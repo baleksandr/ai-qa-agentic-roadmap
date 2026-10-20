@@ -1,0 +1,194 @@
+/* Нижня навігація курсом — вирівнювання з центральною колонкою Study Mode */
+
+.topic-study-page-wide:has(.study-mode-with-aside) .study-footer-global .study-topic-route-nav {
+  grid-column: 2;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin-top: 0;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(72, 88, 118, 0.42);
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .topic-study-page-wide:has(.study-mode-with-aside) .study-footer-global .study-topic-route-nav {
+    grid-column: auto;
+    width: 100%;
+    padding-top: 1.5rem;
+  }
+}
+
+.study-topic-route-nav {
+  --study-route-accent: #00d4e8;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+  margin-top: 1.25rem;
+}
+
+.study-topic-route-nav__card {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.42rem;
+  min-height: 4.75rem;
+  box-sizing: border-box;
+  padding: 0.95rem 1.15rem 1.05rem;
+  border-radius: 11px;
+  border: 1px solid rgba(0, 212, 232, 0.28);
+  background:
+    linear-gradient(140deg, rgba(0, 212, 232, 0.08) 0%, transparent 46%),
+    linear-gradient(168deg, rgba(16, 22, 42, 0.94) 0%, rgba(6, 8, 16, 0.92) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 0 18px rgba(0, 212, 232, 0.08),
+    0 3px 14px rgba(0, 0, 0, 0.28);
+  color: rgba(242, 246, 255, 0.98);
+  text-decoration: none;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    transform 0.16s ease;
+}
+
+.study-topic-route-nav__card::before,
+.study-topic-route-nav__card::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  opacity: 0.72;
+  transition: opacity 0.16s ease;
+}
+
+.study-topic-route-nav__card::before {
+  top: 6px;
+  left: 6px;
+  border-top: 1.5px solid var(--study-route-accent);
+  border-left: 1.5px solid var(--study-route-accent);
+}
+
+.study-topic-route-nav__card::after {
+  right: 6px;
+  bottom: 6px;
+  border-right: 1.5px solid var(--study-route-accent);
+  border-bottom: 1.5px solid var(--study-route-accent);
+}
+
+.study-topic-route-nav__card--placeholder {
+  visibility: hidden;
+  pointer-events: none;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.study-topic-route-nav__card--placeholder::before,
+.study-topic-route-nav__card--placeholder::after {
+  display: none;
+}
+
+.study-topic-route-nav__card:hover {
+  border-color: rgba(0, 232, 255, 0.48);
+  box-shadow:
+    0 0 0 1px rgba(0, 232, 255, 0.12) inset,
+    0 0 26px rgba(0, 212, 232, 0.18),
+    0 6px 20px rgba(0, 0, 0, 0.32);
+}
+
+.study-topic-route-nav__card:hover::before,
+.study-topic-route-nav__card:hover::after {
+  opacity: 1;
+}
+
+.study-topic-route-nav__card:focus-visible {
+  outline: 2px solid rgba(0, 232, 255, 0.75);
+  outline-offset: 3px;
+}
+
+.study-topic-route-nav__dir {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(168, 188, 216, 0.92);
+}
+
+.study-topic-route-nav__arrow {
+  color: var(--study-route-accent);
+  font-weight: 700;
+  text-shadow: 0 0 14px rgba(0, 232, 255, 0.35);
+}
+
+.study-topic-route-nav__title {
+  position: relative;
+  z-index: 1;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.32;
+  color: #f2f6ff;
+  text-shadow: 0 0 20px rgba(0, 212, 232, 0.12);
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+
+.study-topic-route-nav__card--prev {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.study-topic-route-nav__card--next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.study-topic-route-nav__card--next .study-topic-route-nav__dir {
+  justify-content: flex-end;
+}
+
+@media (min-width: 721px) {
+  .study-topic-route-nav__title {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 720px) {
+  .study-topic-route-nav {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .study-topic-route-nav__card--next {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .study-topic-route-nav__card--next .study-topic-route-nav__dir {
+    justify-content: flex-start;
+  }
+
+  .study-topic-route-nav__card--placeholder {
+    display: none;
+  }
+
+  .study-topic-route-nav__title {
+    white-space: normal;
+  }
+}
+
+.study-footer-global .study-topic-route-nav {
+  margin-top: 0.35rem;
+}

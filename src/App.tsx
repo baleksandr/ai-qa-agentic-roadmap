@@ -15,6 +15,7 @@ import './styles/fundamentals-study-layout.css';
 import './styles/study-learner-panel.css';
 import './styles/study-outcome-cards.css';
 import './styles/study-progress.css';
+import './styles/study-route-nav.css';
 import './styles/study-remember-takeaways.css';
 import './styles/study-after-interactive-summary.css';
 import './styles/study-role-colors.css';

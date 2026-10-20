@@ -8,6 +8,12 @@ import { MEMORY_STATE_INTERVIEW_DECK } from './memory-state-interview-self-check
 import { VECTOR_DATABASE_INTERVIEW_DECK } from './vector-database-interview-self-check';
 import { MCP_INTERVIEW_DECK } from './mcp-interview-self-check';
 import { FINE_TUNING_INTERVIEW_DECK } from './fine-tuning-interview-self-check';
+import { SKILLS_INTERVIEW_DECK } from './skills-interview-self-check';
+import { PLANNING_INTERVIEW_DECK } from './planning-interview-self-check';
+import { ORCHESTRATION_INTERVIEW_DECK } from './orchestration-interview-self-check';
+import { AGENTIC_WORKFLOWS_INTERVIEW_DECK } from './agentic-workflows-interview-self-check';
+import { MULTI_AGENT_INTERVIEW_DECK } from './multi-agent-interview-self-check';
+import { A2A_INTERVIEW_DECK } from './a2a-interview-self-check';
 import { PART_II_INTERVIEW_BY_TOPIC } from './part-ii-interview-decks';
 import { PART_II_INTERVIEW_REST } from './part-ii-interview-decks-rest';
 
@@ -23,6 +29,12 @@ const BY_TOPIC: Record<string, StudyInterviewDeck> = {
   'concept-15': VECTOR_DATABASE_INTERVIEW_DECK,
   'concept-06': MCP_INTERVIEW_DECK,
   'concept-13': FINE_TUNING_INTERVIEW_DECK,
+  'concept-07': SKILLS_INTERVIEW_DECK,
+  'concept-11': PLANNING_INTERVIEW_DECK,
+  'concept-02': ORCHESTRATION_INTERVIEW_DECK,
+  'concept-16': AGENTIC_WORKFLOWS_INTERVIEW_DECK,
+  'concept-09': MULTI_AGENT_INTERVIEW_DECK,
+  'concept-08': A2A_INTERVIEW_DECK,
 };
 
 /** Чи показувати deck співбесіди в цьому розділі Study Mode */

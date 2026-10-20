@@ -45,6 +45,40 @@ for (const file of walk(path.join(repo, 'content/concepts'), '.md')) {
   }
 }
 
+// 1a. Реєстр джерел — без вигаданих «архівів» і Redwood
+const lessonSourcesPath = path.join(repo, 'src/data/study/study-lesson-sources.ts');
+if (fs.existsSync(lessonSourcesPath)) {
+  const src = read(lessonSourcesPath);
+  if (/архів курсу|courseArchive|Redwood/i.test(src)) {
+    errors.push('study-lesson-sources.ts: приберіть архів курсу / Redwood / courseArchive — лише підтверджені джерела');
+  }
+}
+
+// 1b. «Джерела» в markdown — не показувати V10; для тем з реєстру — порожній блок
+const STUDY_SOURCES_REGISTRY_TOPICS = new Set([
+  'concept-01', 'concept-02', 'concept-03', 'concept-04', 'concept-06', 'concept-07',
+  'concept-10', 'concept-11', 'concept-12', 'concept-13', 'concept-14', 'concept-15',
+  'concept-09', 'concept-16', 'concept-17',
+]);
+const STUDY_SOURCES_BLOCK = /:::study-sources\s*([\s\S]*?):::study-sources-end/m;
+
+for (const file of walk(path.join(repo, 'content/concepts'), '.md')) {
+  const md = read(file);
+  const m = md.match(STUDY_SOURCES_BLOCK);
+  if (!m) continue;
+  const inner = m[1].trim();
+  if (/V10\s+Concept/i.test(inner)) {
+    errors.push(`${path.relative(repo, file)}: у :::study-sources не показуйте «V10 Concept» — реєстр study-lesson-sources.ts`);
+  }
+  const num = path.basename(file).match(/^(\d+)-/);
+  const topicId = num ? `concept-${num[1].padStart(2, '0')}` : '';
+  if (topicId && STUDY_SOURCES_REGISTRY_TOPICS.has(topicId) && inner.length > 0) {
+    errors.push(
+      `${path.relative(repo, file)}: текст у :::study-sources для ${topicId} — у study-lesson-sources.ts, блок лишіть порожнім`,
+    );
+  }
+}
+
 // 2. Fundamentals JSON — без diagram/flow/code поруч із teaching-картками (дубль процесу)
 const fundJson = path.join(repo, 'content/fundamentals/ai-llm-fundamentals.study.json');
 if (fs.existsSync(fundJson)) {
@@ -214,6 +248,42 @@ if (fs.existsSync(halluPath)) {
     for (const issue of findStudyInlineMarkupArtifacts(raw)) {
       errors.push(`fundamentals-hallucination-cards.ts: ${issue} — …${raw.slice(0, 56)}…`);
     }
+  }
+}
+
+// Study Mode: навігація «Наступна тема» = порядок навчальної карти
+const navPath = path.join(repo, 'src/lib/studyTopicNavigation.ts');
+if (fs.existsSync(navPath)) {
+  const navSrc = read(navPath);
+  if (!navSrc.includes('getLearningMapRoute')) {
+    errors.push('studyTopicNavigation.ts: використовуй getLearningMapRoute() з learning-map.registry');
+  }
+}
+const mapRegPath = path.join(repo, 'src/data/learning-map.registry.ts');
+if (fs.existsSync(mapRegPath) && fs.existsSync(navPath)) {
+  const mapSrc = read(mapRegPath);
+  const routeFn = mapSrc.includes('getLearningMapRouteTopicIds');
+  if (!routeFn) {
+    errors.push('learning-map.registry.ts: очікується getLearningMapRouteTopicIds');
+  }
+  const routeIds = [...mapSrc.matchAll(/\btopicId:\s*'([^']+)'/g)].map((m) => m[1]);
+  const excluded = new Set(['reference-library', 'qa-interview']);
+  const studyRoute = routeIds.filter((id) => !excluded.has(id));
+  const assertNext = (from, to) => {
+    const i = studyRoute.indexOf(from);
+    if (i < 0 || studyRoute[i + 1] !== to) {
+      errors.push(
+        `навчальний маршрут: після ${from} очікується ${to}, отримано ${studyRoute[i + 1] ?? '(кінець)'}`,
+      );
+    }
+  };
+  assertNext('concept-02', 'concept-16');
+  assertNext('concept-16', 'concept-09');
+  assertNext('concept-09', 'concept-08');
+  assertNext('concept-19', 'lab-0');
+  assertNext('lab-9', 'concept-20');
+  if (studyRoute[studyRoute.length - 1] !== 'concept-20') {
+    errors.push(`навчальний маршрут: останній крок має бути concept-20, зараз ${studyRoute[studyRoute.length - 1]}`);
   }
 }
 

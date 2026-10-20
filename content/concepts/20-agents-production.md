@@ -33,5 +33,4 @@ Cascading failure MCP+LLM; **QA:** degraded mode з явним user message.
 Production = **операційна оболонка** навколо концепцій 01–19.
 
 :::study-sources
-- V10 Concept 20; *AI Engineering* — deployment (inventory).
 :::study-sources-end

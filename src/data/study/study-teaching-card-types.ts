@@ -84,6 +84,8 @@ export type StudyTeachingCardsBundle = {
   sectionAsideNoteUk?: string;
   /** Заголовок нотатки (за замовчуванням — «Нотатка до розділу»). */
   sectionAsideNoteTitleUk?: string;
+  /** `after-cards` — Neon HUD нотатка під split-panel (не footnote під картками). */
+  sectionAsideNotePlacement?: 'intro-grid' | 'after-cards';
   leadUk?: string;
   /** Короткий рядок кроків для компактної схеми зверху (лише presentation `process`). */
   flowArrowLine?: string;

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { StudyTopicRouteNav } from '../components/StudyTopicRouteNav';
 import { QaInterviewBankView } from '../components/qa-interview/QaInterviewBankView';
 import { SiteNav } from '../components/SiteNav';
 import { ProgressPicker } from '../components/ProgressPicker';
@@ -34,11 +35,7 @@ export function QaInterviewStudyPage() {
 
       <footer className="study-footer study-footer-global">
         <ProgressPicker value={learning} onChange={(s) => setProgress(topicId, s)} />
-        <nav className="topic-nav study-next-nav">
-          <Link className="study-next-link" to="/">
-            Повернутися на навчальну карту →
-          </Link>
-        </nav>
+        <StudyTopicRouteNav topicId={topicId} />
       </footer>
     </div>
   );

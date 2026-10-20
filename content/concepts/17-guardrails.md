@@ -63,6 +63,4 @@ Audit `rule_id`, actor, resource; version policies з deploy.
 Guardrails — **trusted code**, не частина weights моделі.
 
 :::study-sources
-- V10 Concept 17; policy приклади курсу.
-- Навчальний: read report vs createJira vs заборонений tool.
 :::study-sources-end

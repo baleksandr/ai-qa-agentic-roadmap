@@ -64,7 +64,7 @@ export function getHarnessSectionAside(navTitle: string): StudySectionAside {
   const hit = Object.entries(BY_SECTION).find(([key]) => navTitle.startsWith(key));
   if (hit) return hit[1];
   return {
-    sectionNoteUk: 'Повний зміст розділу — у центральному блоці уроку.',
+    suppressSectionContext: true,
   };
 }
 

@@ -21,7 +21,11 @@
 .study-learning-outcomes .study-outcomes-body:has(.study-memory-state-outcomes-block),
 .study-learning-outcomes .study-outcomes-body:has(.study-vector-db-outcomes-block),
 .study-learning-outcomes .study-outcomes-body:has(.study-mcp-outcomes-block),
-.study-learning-outcomes .study-outcomes-body:has(.study-fine-tuning-outcomes-block) {
+.study-learning-outcomes .study-outcomes-body:has(.study-fine-tuning-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-skills-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-planning-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-orchestration-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-agentic-workflows-outcomes-block) {
   max-width: none;
   width: 100%;
 }
@@ -32,7 +36,11 @@
 .study-outcomes-with-flows .study-memory-state-outcomes-block,
 .study-outcomes-with-flows .study-vector-db-outcomes-block,
 .study-outcomes-with-flows .study-mcp-outcomes-block,
-.study-outcomes-with-flows .study-fine-tuning-outcomes-block {
+.study-outcomes-with-flows .study-fine-tuning-outcomes-block,
+.study-outcomes-with-flows .study-skills-outcomes-block,
+.study-outcomes-with-flows .study-planning-outcomes-block,
+.study-outcomes-with-flows .study-orchestration-outcomes-block,
+.study-outcomes-with-flows .study-agentic-workflows-outcomes-block {
   max-width: none;
   width: 100%;
 }

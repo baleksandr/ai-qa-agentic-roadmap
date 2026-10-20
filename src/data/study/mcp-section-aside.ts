@@ -38,7 +38,7 @@ const BY_SECTION: Record<string, StudySectionAside> = {
 export function getMcpSectionAside(navTitle: string): StudySectionAside {
   const hit = Object.entries(BY_SECTION).find(([key]) => navTitle.startsWith(key));
   if (hit) return hit[1];
-  return { sectionNoteUk: 'Повний зміст розділу — у центральному блоці уроку.' };
+  return { suppressSectionContext: true };
 }
 
 export const MCP_ASIDE_META: StudyLessonAsideMeta = {

@@ -30,6 +30,8 @@ export type StudyLessonHero = {
   pageTitleUk: string;
   /** aria-label для ribbon у блоці outcomes */
   outcomesFlowAriaLabel: string;
+  /** Без рамки в шапці (рідкі випадки). За замовчуванням — framed explanation для neon/cyber-hud. */
+  taglinePresentation?: 'plain';
 };
 
 const FUNDAMENTALS_HERO: StudyLessonHero = {
@@ -94,6 +96,40 @@ const FINE_TUNING_HERO: StudyLessonHero = {
   ],
 };
 
+const PLANNING_HERO: StudyLessonHero = {
+  topicId: 'concept-11',
+  topicLabel: 'Planning',
+  abbrEn: 'План перевірок під час розслідування',
+  abbrTitle: 'Planning checks during investigation',
+  taglineUk:
+    'План допомагає визначити, що перевірити далі. Після результату інструмента його можна уточнити: нові факти здатні змінити наступний крок.',
+  pageTitleUk: 'Planning',
+  outcomesFlowAriaLabel: 'Plan, execute і replan після login_spec',
+  letterPresentation: 'cyber-hud',
+  letters: [
+    { char: 'P', en: 'Plan', uk: 'Визначити наступні перевірки' },
+    { char: 'E', en: 'Execute', uk: 'Виконати дозволений крок' },
+    { char: 'R', en: 'Replan', uk: 'Оновити план після результату' },
+  ],
+};
+
+const SKILLS_HERO: StudyLessonHero = {
+  topicId: 'concept-07',
+  topicLabel: 'Skills',
+  abbrEn: 'Повторювані інструкції для задач агента',
+  abbrTitle: 'Agent skills for repeatable tasks',
+  taglineUk:
+    'Skill підказує агенту, як виконати типову задачу. Код окремо вирішує, які інструменти й дані доступні під час конкретного run.',
+  pageTitleUk: 'Skills — повторювані інструкції для задач агента',
+  outcomesFlowAriaLabel: 'Select, guide і control для skill login_spec',
+  letterPresentation: 'cyber-hud',
+  letters: [
+    { char: 'S', en: 'Select', uk: 'Обрати доречну навичку' },
+    { char: 'G', en: 'Guide', uk: 'Отримати кроки й матеріали' },
+    { char: 'C', en: 'Control', uk: 'Перевірити дозволені дії' },
+  ],
+};
+
 const MCP_HERO: StudyLessonHero = {
   topicId: 'concept-06',
   topicLabel: 'MCP',
@@ -129,15 +165,51 @@ const MEMORY_STATE_HERO: StudyLessonHero = {
 const ORCHESTRATION_HERO: StudyLessonHero = {
   topicId: 'concept-02',
   topicLabel: 'Orchestration',
-  abbrEn: 'Workflow coordination',
-  abbrTitle: 'Orchestration of agents and services',
-  taglineUk: 'порядок кроків, retries і human gates',
-  pageTitleUk: 'Orchestration — керування workflow investigation',
-  outcomesFlowAriaLabel: 'Orchestration після падіння login_spec',
+  abbrEn: 'Координація кроків розслідування',
+  abbrTitle: 'Orchestration of investigation steps',
+  taglineUk:
+    'Оркестрація визначає, коли запускати наступну задачу, як обробити результат і коли зупинитися або передати рішення людині.',
+  pageTitleUk: 'Orchestration',
+  outcomesFlowAriaLabel: 'Workflow, routing і gates після login_spec',
+  letterPresentation: 'cyber-hud',
   letters: [
-    { char: 'W', en: 'Workflow', uk: 'граф кроків і залежностей' },
-    { char: 'F', en: 'Flow control', uk: 'ready tasks, routing, retries' },
-    { char: 'G', en: 'Gates', uk: 'human approve перед небезпечним кроком' },
+    { char: 'W', en: 'Workflow', uk: 'Порядок і залежності задач' },
+    { char: 'R', en: 'Routing', uk: 'Вибір наступного кроку' },
+    { char: 'G', en: 'Gates', uk: 'Перевірки перед ризиковою дією' },
+  ],
+};
+
+const MULTI_AGENT_HERO: StudyLessonHero = {
+  topicId: 'concept-09',
+  topicLabel: 'Multi-Agent System',
+  abbrEn: 'Кілька агентів із різними задачами',
+  abbrTitle: 'Multi-Agent System',
+  taglineUk:
+    'Код застосунку передає результати між агентами й перевіряє їхній доступ до інструментів.',
+  pageTitleUk: 'Multi-Agent System',
+  outcomesFlowAriaLabel: 'Ролі, handoff і контроль для login_spec ABC-123',
+  letterPresentation: 'cyber-hud',
+  letters: [
+    { char: 'R', en: 'Roles', uk: 'Хто за яку задачу відповідає' },
+    { char: 'H', en: 'Handoff', uk: 'Дані для наступного агента' },
+    { char: 'C', en: 'Control', uk: 'Хто перевіряє дії та доступ' },
+  ],
+};
+
+const AGENTIC_WORKFLOWS_HERO: StudyLessonHero = {
+  topicId: 'concept-16',
+  topicLabel: 'Agentic Workflows',
+  abbrEn: 'Пов’язані задачі агентів',
+  abbrTitle: 'Agentic workflows',
+  taglineUk:
+    'Workflow передає задачу й результат між етапами. Наступний етап залежить від фактичного результату попереднього, тому один маршрут не підходить для кожного збою.',
+  pageTitleUk: 'Agentic Workflows',
+  outcomesFlowAriaLabel: 'Задачі, handoff і гілки після login_spec',
+  letterPresentation: 'cyber-hud',
+  letters: [
+    { char: 'T', en: 'Task', uk: 'Одна зрозуміла робота' },
+    { char: 'H', en: 'Handoff', uk: 'Передача результату далі' },
+    { char: 'G', en: 'Gate', uk: 'Перевірка перед дією' },
   ],
 };
 
@@ -225,27 +297,15 @@ const HERO_BY_TOPIC: Record<string, StudyLessonHero> = {
     { char: 'S', en: 'Score', uk: 'pass/fail gate у CI' },
   ]),
   'concept-06': MCP_HERO,
-  'concept-07': partIiHero('concept-07', 'Skills', 'Modular agent skills', 'підмножина tools і prompt', 'Skills — модульні навички', 'Skill investigation', [
-    { char: 'S', en: 'Select', uk: 'router обирає skill' },
-    { char: 'K', en: 'Kit', uk: 'tools + instructions' },
-    { char: 'L', en: 'Limit', uk: 'менший allow-list' },
-  ]),
+  'concept-07': SKILLS_HERO,
   'concept-08': partIiHero('concept-08', 'A2A', 'Agent-to-agent protocol', 'обмін задачами між сервісами', 'A2A — агент до агента', 'A2A delegate після investigation', [
     { char: 'A', en: 'Agent', uk: 'відправник задачі' },
     { char: '2', en: 'To', uk: 'транспорт між сервісами' },
     { char: 'A', en: 'Agent', uk: 'виконавець з контрактом' },
   ]),
-  'concept-09': partIiHero('concept-09', 'Multi-Agent', 'Multiple specialized agents', 'ролі + координація', 'Multi-Agent — кілька агентів', 'Multi-agent після login_spec', [
-    { char: 'M', en: 'Many', uk: 'різні prompts/tools' },
-    { char: 'A', en: 'Actors', uk: 'investigation vs coding' },
-    { char: 'P', en: 'Policy', uk: 'окремі guardrails' },
-  ]),
+  'concept-09': MULTI_AGENT_HERO,
   'concept-10': TOOL_CALLING_HERO,
-  'concept-11': partIiHero('concept-11', 'Planning', 'Explicit run plans', 'кроки до tool chaos', 'Planning — план investigation', 'Plan після login_spec', [
-    { char: 'P', en: 'Plan', uk: 'кроки з schema' },
-    { char: 'L', en: 'Loop', uk: 'execute / replan' },
-    { char: 'N', en: 'Next', uk: 'harness валідує крок' },
-  ]),
+  'concept-11': PLANNING_HERO,
   'concept-12': REASONING_HERO,
   'concept-13': FINE_TUNING_HERO,
   'concept-14': {
@@ -276,11 +336,7 @@ const HERO_BY_TOPIC: Record<string, StudyLessonHero> = {
     ],
   },
   'concept-15': VECTOR_DATABASE_HERO,
-  'concept-16': partIiHero('concept-16', 'Agentic Workflows', 'Multi-step agent scenarios', 'сценарій з handoff', 'Agentic Workflows — сценарії', 'Workflow investigation→fix', [
-    { char: 'W', en: 'Workflow', uk: 'етапи продукту' },
-    { char: 'A', en: 'Artifacts', uk: 'structured handoff' },
-    { char: 'G', en: 'Gate', uk: 'human між етапами' },
-  ]),
+  'concept-16': AGENTIC_WORKFLOWS_HERO,
   'concept-17': partIiHero('concept-17', 'Guardrails', 'Deterministic controls', 'policy навколо LLM', 'Guardrails — обмеження дій', 'Guardrails на tool proposal', [
     { char: 'G', en: 'Guard', uk: 'validators' },
     { char: 'P', en: 'Policy', uk: 'allow/deny/approve' },

@@ -31,7 +31,4 @@
 ### Запам’ятати та співбесіда
 
 :::study-sources
-- *AI Engineering*, 2025 — building blocks / layers of agentic AI, друк. с. 181, 240 (часткова відповідність терміну harness).
-- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 4 — component list, loop, tracing (архів курсу).
-- Навчальний сценарій: `readPlaywrightReport` після `login_spec` — узгоджено з уроком Tool Calling.
-:::
+:::study-sources-end

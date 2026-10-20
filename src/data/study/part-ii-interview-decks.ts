@@ -35,58 +35,7 @@ export function q(
   };
 }
 
-const ORCHESTRATION_QUESTIONS: StudyInterviewQuestion[] = [
-  q(
-    'c02-q1',
-    'Що робить orchestration у продукті з кількома агентами?',
-    'Керує порядком кроків workflow: ready tasks, routing, retries, human gates — код, не LLM.',
-    'Після nightly `login_spec` orchestrator може: дочекатися CI artifacts → запустити investigation agent → за результатом направити на fix, flake retry або escalation. Це не заміна harness всередині одного agent run.',
-    'Думати, що LLM «сама знає порядок» між CI і Jira.',
-  ),
-  q(
-    'c02-q2',
-    'Чим orchestration відрізняється від harness?',
-    'Harness — loop одного run (model + tools). Orchestration — граф між сервісами/агентами.',
-    'Investigation harness виконує tool calls. Orchestrator вирішує, чи взагалі стартувати investigation і що робити після його висновку.',
-    'Змішувати один tool loop з workflow між командами.',
-  ),
-  q(
-    'c02-q3',
-    'Що таке human gate в workflow?',
-    'Крок blocked до явного approve людини — наприклад зміна prod config.',
-    'Код ставить статус `needs_approval`; UI пише audit `approvedBy`. LLM може *запропонувати* дію, але не обходить gate.',
-    'Покладатися на «не роби це» в system prompt без enforcement.',
-  ),
-  q(
-    'c02-q4',
-    'Який ризик duplicate event у bus?',
-    'Два investigation run на один `ci_finished`.',
-    'QA: той самий `eventId` двічі → один run (idempotent consumer). Trace: два `workflowId` — баг.',
-    'Не тестувати idempotency подій.',
-  ),
-  q(
-    'c02-q5',
-    'Як QA перевіряє retry policy orchestrator?',
-    'Flake CI → обмежена кількість rerun з backoff у trace.',
-    'Умова: позначений flake. Дія: fail CI. Очікування: рівно N rerun, потім escalate. Не має бути нескінченного циклу.',
-    'Плутати orchestrator retry з harness tool retry без лімітів.',
-  ),
-];
-
-export const ORCHESTRATION_INTERVIEW_DECK: StudyInterviewDeck = {
-  deckId: 'concept-02-orchestration-interview',
-  headingUk: 'Перевір себе перед співбесідою',
-  leadUk: 'Відповідайте вголос коротко, потім розгорніть деталі. Позначки — локально в браузері.',
-  pitchUk:
-    'Без диригента CI, investigation і coding agent можуть стартувати в хаосі. Orchestration — детермінований граф і політики переходів.',
-  pitchEn:
-    'Without a conductor, CI, investigation, and coding agents start in chaos. Orchestration is a deterministic graph and transition policies.',
-  questions: ORCHESTRATION_QUESTIONS,
-  nextLinks: [
-    { to: '/topic/concept-16/study', label: 'Agentic Workflows', hintUk: '— складніші workflow.' },
-    { to: '/topic/concept-04/study', label: 'Agent Harness', hintUk: '— виконання одного run.' },
-  ],
-};
+import { ORCHESTRATION_INTERVIEW_DECK } from './orchestration-interview-self-check';
 
 const HARNESS_QUESTIONS: StudyInterviewQuestion[] = [
   q(

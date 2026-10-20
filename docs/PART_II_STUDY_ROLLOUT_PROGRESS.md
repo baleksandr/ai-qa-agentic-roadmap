@@ -33,7 +33,7 @@
 | concept-04 | Agent Harness | 8§, hero, deck | UI не перевірено | build | ні |
 | concept-05 | Evals | 8§, hero, deck | UI не перевірено; deck 2Q (розширити за бажанням) | build | ні |
 | concept-06 | MCP | 8§ Study UI, hero, deck | UI — людина | build, verify:study-standards | **так** |
-| concept-07 | Skills | 8§, hero, deck | UI не перевірено | build | ні |
+| concept-07 | Skills | hero S/G/C, outcomes, §1–§7 login_spec, deck 5Q, progress sidebar | UI — людина | build, verify:study-standards | **так** |
 | concept-08 | A2A | 8§, hero, deck | UI не перевірено | build | ні |
 | concept-09 | Multi-agent | 8§, hero, deck | UI не перевірено | build | ні |
 | concept-10 | Tool Calling | еталон | oneStoryFlow flag у registry | verify:tool-calling (раніше) | **так** |

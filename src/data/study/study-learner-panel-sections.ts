@@ -258,6 +258,23 @@ export type StudyLearnerPanelCollapsibleTraceSampleSection = {
   calloutUk: string;
 };
 
+/** Навчальний handoff JSON Agent A → Agent B (concept-16 §4). */
+export type StudyAgentHandoffFixtureBlock = {
+  titleUk: string;
+  introUk: string;
+  jsonExample: string;
+  fieldsDropdownSummaryUk: string;
+  fields: StudyLabeledPair[];
+  agentBLabelUk: string;
+  agentBBodyUk: string;
+  footnoteUk?: string;
+};
+
+export type StudyLearnerPanelHandoffFixtureSection = {
+  type: 'handoffFixture';
+  block: StudyAgentHandoffFixtureBlock;
+};
+
 /** Короткий вступ панелі інтерактивної картки («Що я зрозумію з цієї картки?»). */
 export type StudyLearnerPanelCardIntentSection = {
   type: 'cardIntent';
@@ -282,5 +299,6 @@ export type StudyLearnerPanelSection =
   | StudyLearnerPanelProcessStepPickSection
   | StudyLearnerPanelModelResponseExampleSection
   | StudyLearnerPanelCollapsibleTraceSampleSection
+  | StudyLearnerPanelHandoffFixtureSection
   | StudyLearnerPanelCourseLessonLinkSection
   | StudyLearnerPanelCardIntentSection;

@@ -45,6 +45,4 @@
 Повний зміст розділу — у блоці «Запам’ятати», п’яти питаннях самоперевірки та цільній відповіді для співбесіди в Study Mode.
 
 :::study-sources
-- *AI Engineering*, 2025 — embeddings, vector search (inventory).
-- V10 Concept 15; узгоджено з concept-03 RAG.
 :::study-sources-end

@@ -23,7 +23,7 @@
 .progress-picker__options {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.55rem;
   width: 100%;
   min-width: 0;
 }

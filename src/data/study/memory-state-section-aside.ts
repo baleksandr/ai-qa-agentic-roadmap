@@ -79,7 +79,7 @@ export function getMemoryStateSectionAside(navTitle: string): StudySectionAside 
   if (exact) return exact;
   const hit = Object.entries(BY_SECTION).find(([key]) => navTitle.startsWith(key));
   if (hit) return hit[1];
-  return { sectionNoteUk: 'Повний зміст розділу — у центральному блоці уроку.' };
+  return { suppressSectionContext: true };
 }
 
 export const MEMORY_STATE_ASIDE_META = {

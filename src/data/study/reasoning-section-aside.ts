@@ -46,7 +46,7 @@ export function getReasoningSectionAside(navTitle: string): StudySectionAside {
   if (exact) return exact;
   const hit = Object.entries(BY_SECTION).find(([key]) => navTitle.startsWith(key));
   if (hit) return hit[1];
-  return { sectionNoteUk: 'Повний зміст розділу — у центральному блоці уроку.' };
+  return { suppressSectionContext: true };
 }
 
 export const REASONING_ASIDE_META = {

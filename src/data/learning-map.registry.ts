@@ -2,7 +2,9 @@
  * Навчальна карта для UI: етапи українською, **назва на картці** — `shortTitle` з topics.registry (EN).
  * topicId лишаються незмінними — уроки й прогрес прив’язані до них.
  */
+import { isMapProgressTopic } from '../lib/mapProgressExcluded';
 import { TOPIC_BY_ID } from './topics.registry';
+import type { TopicMeta } from '../types/topic';
 export type LearningMapNode = {
   topicId: string;
   label: string;
@@ -254,6 +256,20 @@ export function getMapHint(topicId: string): string | undefined {
 /** Усі topicId на карті (для прогресу та пошуку) */
 export function getAllMapTopicIds(): string[] {
   return LEARNING_MAP_STAGES.flatMap((s) => s.nodes.map((n) => n.topicId));
+}
+
+/**
+ * Лінійний порядок навчального маршруту (етапи карти + STAGE_BRIDGE між етапами).
+ * Єдине джерело для «Наступна тема» / «Попередня тема» в Study Mode.
+ */
+export function getLearningMapRouteTopicIds(): string[] {
+  return getAllMapTopicIds().filter(isMapProgressTopic);
+}
+
+export function getLearningMapRoute(): TopicMeta[] {
+  return getLearningMapRouteTopicIds()
+    .map((id) => TOPIC_BY_ID[id])
+    .filter((t): t is TopicMeta => Boolean(t));
 }
 
 /** Фільтр карти: ті самі topicId, інший спосіб перегляду (без дублікатів уроків). */

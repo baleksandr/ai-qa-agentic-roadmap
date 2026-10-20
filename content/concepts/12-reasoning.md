@@ -31,7 +31,4 @@
 ### Запам’ятати та співбесіда
 
 :::study-sources
-- *AI Engineering*, 2025 — reasoning / agents (inventory).
-- V10 Concept 12.
-- Навчальний сценарій: login_spec, timeout на #login-btn, grounding через tool results.
 :::study-sources-end

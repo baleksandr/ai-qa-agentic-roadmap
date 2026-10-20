@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { StructuredStudyView } from '../components/lesson/StructuredStudyView';
 import { StudyModeSections } from '../components/StudyModeSections';
@@ -6,7 +6,7 @@ import { SiteNav } from '../components/SiteNav';
 import { ProgressPicker } from '../components/ProgressPicker';
 import { getMapLabel } from '../data/learning-map.registry';
 import { TOPIC_BY_ID } from '../data/topics.registry';
-import { getStudyNextTopic } from '../lib/studyTopicNavigation';
+import { StudyTopicRouteNav } from '../components/StudyTopicRouteNav';
 import { loadMarkdownByPath, parseLessonMarkdown } from '../lib/content';
 import { loadStructuredStudy } from '../lib/structuredStudy';
 import { buildStudyLearningOutcomes } from '../data/study/study-lesson-intros';
@@ -27,7 +27,9 @@ import { StudyMcpLearningOutcomes } from '../components/lesson/StudyMcpLearningO
 import { StudyVectorDatabaseLearningOutcomes } from '../components/lesson/StudyVectorDatabaseLearningOutcomes';
 import { StudyFineTuningLearningOutcomes } from '../components/lesson/StudyFineTuningLearningOutcomes';
 import { studyNeonHudHeroZoneClassName } from '../lib/studyNeonHudTheme';
-import { isStudyReadyForLearning } from '../data/study/study-ready-for-learning';
+import { usesStudyNeonHudTheme } from '../lib/studyNeonHudTheme';
+import { StudySourcesCollapsible } from '../components/lesson/StudySourcesCollapsible';
+import { hasStudyLessonSources } from '../data/study/study-lesson-sources';
 export function TopicStudyPage() {
   const { topicId } = useParams<{ topicId: string }>();
   const topic = topicId ? TOPIC_BY_ID[topicId] : undefined;
@@ -50,7 +52,9 @@ export function TopicStudyPage() {
     };
   }, [topic, structured]);
 
-  const next = topic ? getStudyNextTopic(topic.id) : null;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [topicId]);
 
   if (!topic) {
     return (
@@ -76,7 +80,7 @@ export function TopicStudyPage() {
       ? buildStudyLearningOutcomes(topic.id, '')
       : '';
   const outcomesLessonHint = structured ? getStudyOutcomesLessonHint(topic.id) : null;
-  const neonHudTheme = isStudyReadyForLearning(topic.id);
+  const neonHudTheme = usesStudyNeonHudTheme(topic.id);
   const heroHudZone = studyNeonHudHeroZoneClassName(topic.id);
 
   return (
@@ -171,6 +175,9 @@ export function TopicStudyPage() {
             learning={learning}
             onLearningChange={(s) => setProgress(topic.id, s)}
           />
+          {hasStudyLessonSources(topic.id) ? (
+            <StudySourcesCollapsible topicId={topic.id} />
+          ) : null}
         </>
       ) : (
         <div className="topic-study-legacy-wrap">
@@ -190,15 +197,7 @@ export function TopicStudyPage() {
         {!structured && !hasStudyProgressSidebar(topic.id) && (
           <ProgressPicker value={learning} onChange={(s) => setProgress(topic.id, s)} />
         )}
-        <nav className="topic-nav study-next-nav">
-          {next ? (
-            <Link className="study-next-link" to={`/topic/${next.id}/study`}>
-              Наступна тема: {getMapLabel(next.id)} →
-            </Link>
-          ) : (
-            <Link to="/">Завершити маршрут на карті</Link>
-          )}
-        </nav>
+        <StudyTopicRouteNav topicId={topic.id} />
       </footer>
     </div>
   );

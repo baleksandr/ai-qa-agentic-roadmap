@@ -226,7 +226,4 @@ Confidential chunk у hits через помилку ACL на індексаці
 | **Retrieval ≠ правда** | Успішний пошук не гарантує правильну відповідь — перевіряйте citations, свіжість індексу й права |
 
 :::study-sources
-- *AI Engineering*, 2025 Edition (Pachaar & Chawla) — RAG: «What is RAG?», друк. с. 106; «Workflow of a RAG system», друк. с. 113–115.
-- *AI for QA / Agentic Engineering — Deep Study Guide v10*, Concept 3 — компоненти, failure modes, testing, observability (архів курсу).
-- Навчальний сценарій: QA Regression Investigation Agent, умовні `INC-*`, `login_spec` — для закріплення механізму.
 :::study-sources-end

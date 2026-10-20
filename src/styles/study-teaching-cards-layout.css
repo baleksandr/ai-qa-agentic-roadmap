@@ -968,6 +968,13 @@
   align-self: start;
 }
 
+.study-teaching-section-aside-note--after-cards {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0.85rem;
+  box-sizing: border-box;
+}
+
 .study-teaching-intro-mini-grid .study-teaching-section-aside-note {
   height: 100%;
   box-sizing: border-box;

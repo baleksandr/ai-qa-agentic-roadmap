@@ -49,7 +49,4 @@
 Три тези «Запам’ятати» і блок «Перевір себе перед співбесідою» — у Study UI.
 
 :::study-sources
-- *AI Engineering*, 2025 — prompting / instructions (inventory).
-- *Deep Study Guide v10*, Concept 14.
-- Навчальний: system prompt investigation agent, `login_spec`.
 :::study-sources-end

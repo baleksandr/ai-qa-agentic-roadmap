@@ -13,9 +13,7 @@ router → skill bundle → harness loop`,
   'concept-08': `**A2A** — структуровані повідомлення між агентами на різних сервісах.
 
 investigation → delegate TaskSpec → coding agent`,
-  'concept-09': `**Multi-agent** — різні ролі й policies; координує orchestration.
-
-investigation agent → artifact → coding agent`,
+  'concept-09': '',
   'concept-11': `**Planning** — явний план кроків investigation до хаотичних tools.
 
 plan JSON → validate steps → execute / replan`,
@@ -25,9 +23,7 @@ symptom → гіпотези → tools → оновлений висновок`,
   'concept-14': `**Prompt engineering** — role, constraints, format у messages[].
 
 system + context → LLM → schema validate`,
-  'concept-16': `**Agentic workflows** — сценарій з handoff між агентами.
-
-triage → investigate → fix proposal → CI`,
+  'concept-16': '',
   'concept-18': `**Observability** — trace spans model/tool/policy з correlation id.
 
 run → spans → on-call debug`,
@@ -42,15 +38,19 @@ alert → workflow → investigation → incident learnings`,
 const PART_II_BLURBS: Record<string, string> = {
   'concept-05': 'Як ловити регресію investigation агента набором кейсів і метрик.',
   'concept-06': 'Стандарт MCP для підключення CI/Jira tools до harness.',
-  'concept-07': 'Модульні skills і менший allow-list tools для investigation.',
+  'concept-07':
+    'Повторювані інструкції для розбору login_spec: skill, модель і код перевірки доступу.',
   'concept-08': 'Протокол A2A між агентами на різних сервісах.',
-  'concept-09': 'Кілька агентів з різними ролями після nightly failure.',
-  'concept-11': 'План кроків investigation і replan після нових facts.',
+  'concept-09':
+    'Ролі Investigation і Coding, handoff із доказами та окремі межі доступу після падіння login_spec для ABC-123.',
+  'concept-11':
+    'План перевірок під час розслідування login_spec: мета, наступні кроки, виконання та перегляд після нових фактів.',
   'concept-12': 'Міркування моделі з прив’язкою до evidence з tools.',
   'concept-13': 'Коли fine-tune, а коли prompt і RAG для фактів.',
   'concept-14': 'Дизайн system prompt і format для надійнішої поведінки.',
   'concept-15': 'Векторний індекс у ланцюгу RAG після login_spec.',
-  'concept-16': 'End-to-end workflow з handoff між агентами.',
+  'concept-16':
+    'Задачі, handoff і гілки після timeout login_spec: що передають між етапами і коли виправлення коду справді готують.',
   'concept-18': 'Traces і метрики для QA розбору run у prod.',
   'concept-19': 'Benchmarks vs ваші golden evals для investigation.',
   'concept-20': 'Експлуатація investigation агента в production.',
@@ -76,9 +76,13 @@ export function buildStudyLearningOutcomes(topicId: string, quickViewRaw: string
     return '';
   }
   if (topicId === 'concept-02') {
-    return `Кілька агентів і CI без спільного **оркестратора** дають хаос порядку. Orchestration — код workflow: ready tasks, routing, retries, **human gates** — не заміна harness всередині одного run.
-
-CI artifacts ready → investigation task → гілка fix / retry / escalate → approve?`;
+    return '';
+  }
+  if (topicId === 'concept-16') {
+    return '';
+  }
+  if (topicId === 'concept-09') {
+    return '';
   }
   if (topicId === 'concept-04') {
     return '';
@@ -113,7 +117,9 @@ ${trimmed ? `\nКоротке формулювання курсу: ${trimmed}` :
     topicId === 'concept-14' ||
     topicId === 'concept-12' ||
     topicId === 'concept-15' ||
-    topicId === 'concept-13'
+    topicId === 'concept-13' ||
+    topicId === 'concept-07' ||
+    topicId === 'concept-11'
   ) {
     return '';
   }
@@ -133,7 +139,10 @@ export function getLessonNavBlurb(topicId: string): string | null {
     return 'Чому run investigation не «забувається» між кроками: state, memory і хто формує контекст для LLM.';
   }
   if (topicId === 'concept-02') {
-    return 'Хто визначає порядок після nightly failure: workflow, черги, retries і approvals між агентами.';
+    return 'Хто координує кроки після timeout на #login-btn: порядок задач, вибір гілки за результатом, повтори та зупинки перед ризиковою дією.';
+  }
+  if (topicId === 'concept-16') {
+    return 'Як workflow з’єднує задачі після падіння login_spec: handoff фактів, гілка за доказом і перевірка конкретної revision, а не «виправ усе» після кожного збою.';
   }
   if (topicId === 'concept-04') {
     return 'Як звичайний код перетворює LLM на агента з tools, loop і tracing після login_spec.';

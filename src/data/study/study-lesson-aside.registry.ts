@@ -15,6 +15,20 @@ import {
   VECTOR_DATABASE_ASIDE_META,
 } from './vector-database-section-aside';
 import { getMcpSectionAside, MCP_ASIDE_META } from './mcp-section-aside';
+import {
+  getOrchestrationSectionAside,
+  ORCHESTRATION_ASIDE_META,
+} from './orchestration-section-aside';
+import {
+  getAgenticWorkflowsSectionAside,
+  AGENTIC_WORKFLOWS_ASIDE_META,
+} from './agentic-workflows-section-aside';
+import {
+  getMultiAgentSectionAside,
+  MULTI_AGENT_ASIDE_META,
+} from './multi-agent-section-aside';
+import { getA2aSectionAside, A2A_ASIDE_META } from './a2a-section-aside';
+import { isStudyReadyForLearning } from './study-ready-for-learning';
 
 const RAG_META: StudyLessonAsideMeta = {
   sectionCount: 8,
@@ -33,10 +47,19 @@ const ASIDE_TOPIC_IDS = new Set([
   'concept-12',
   'concept-15',
   'concept-06',
+  'concept-02',
+  'concept-16',
+  'concept-09',
+  'concept-08',
 ]);
 
-/** Уроки з правою колонкою прогресу без повного контекстного aside (атлас, підказки розділу). */
-const PROGRESS_SIDEBAR_ONLY_TOPIC_IDS = new Set(['concept-13', 'concept-14', 'concept-17']);
+/**
+ * Теми з прогресом у правій колонці без повного `StudyLessonAside` (наприклад Guardrails).
+ * Інші «готові для навчання» уроки підключаються через `isStudyReadyForLearning`.
+ */
+export const STUDY_PROGRESS_SIDEBAR_ONLY_TOPIC_IDS: readonly string[] = ['concept-17'];
+
+const PROGRESS_SIDEBAR_ONLY_TOPIC_IDS = new Set(STUDY_PROGRESS_SIDEBAR_ONLY_TOPIC_IDS);
 
 const ASIDE_COMPACT_TOPIC_IDS = new Set([
   'concept-01',
@@ -45,6 +68,10 @@ const ASIDE_COMPACT_TOPIC_IDS = new Set([
   'concept-10',
   'concept-12',
   'concept-15',
+  'concept-02',
+  'concept-16',
+  'concept-09',
+  'concept-08',
 ]);
 
 export function hasStudyLessonAside(topicId: string): boolean {
@@ -53,12 +80,21 @@ export function hasStudyLessonAside(topicId: string): boolean {
 
 /** Компактна права панель «Мій прогрес вивчення» (десктоп) + слот під контентом (мобільний). */
 export function hasStudyProgressSidebar(topicId: string): boolean {
-  return hasStudyLessonAside(topicId) || PROGRESS_SIDEBAR_ONLY_TOPIC_IDS.has(topicId);
+  return (
+    hasStudyLessonAside(topicId) ||
+    isStudyReadyForLearning(topicId) ||
+    PROGRESS_SIDEBAR_ONLY_TOPIC_IDS.has(topicId)
+  );
 }
 
 export function isStudyProgressSidebarCompact(topicId: string): boolean {
-  if (PROGRESS_SIDEBAR_ONLY_TOPIC_IDS.has(topicId)) return true;
-  return ASIDE_COMPACT_TOPIC_IDS.has(topicId);
+  if (hasStudyLessonAside(topicId)) {
+    return ASIDE_COMPACT_TOPIC_IDS.has(topicId);
+  }
+  if (isStudyReadyForLearning(topicId) || PROGRESS_SIDEBAR_ONLY_TOPIC_IDS.has(topicId)) {
+    return true;
+  }
+  return false;
 }
 
 export function getStudyLessonAsideMeta(topicId: string): StudyLessonAsideMeta | null {
@@ -69,6 +105,10 @@ export function getStudyLessonAsideMeta(topicId: string): StudyLessonAsideMeta |
   if (topicId === 'concept-12') return { ...REASONING_ASIDE_META };
   if (topicId === 'concept-15') return { ...VECTOR_DATABASE_ASIDE_META };
   if (topicId === 'concept-06') return { ...MCP_ASIDE_META };
+  if (topicId === 'concept-02') return { ...ORCHESTRATION_ASIDE_META };
+  if (topicId === 'concept-16') return { ...AGENTIC_WORKFLOWS_ASIDE_META };
+  if (topicId === 'concept-09') return { ...MULTI_AGENT_ASIDE_META };
+  if (topicId === 'concept-08') return { ...A2A_ASIDE_META };
   return null;
 }
 
@@ -80,6 +120,10 @@ export function getStudySectionAside(topicId: string, navTitle: string): StudySe
   if (topicId === 'concept-12') return getReasoningSectionAside(navTitle);
   if (topicId === 'concept-15') return getVectorDatabaseSectionAside(navTitle);
   if (topicId === 'concept-06') return getMcpSectionAside(navTitle);
+  if (topicId === 'concept-02') return getOrchestrationSectionAside(navTitle);
+  if (topicId === 'concept-16') return getAgenticWorkflowsSectionAside(navTitle);
+  if (topicId === 'concept-09') return getMultiAgentSectionAside(navTitle);
+  if (topicId === 'concept-08') return getA2aSectionAside(navTitle);
   return {
     focus: 'Контекст для цього розділу ще не налаштований.',
     example: 'Оберіть розділ у змісті уроку.',

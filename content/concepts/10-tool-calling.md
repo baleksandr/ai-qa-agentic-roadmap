@@ -31,7 +31,4 @@
 ### Запам’ятати та співбесіда
 
 :::study-sources
-- Deep Study Guide v10 — Concept 10 Tool Calling (архів курсу).
-- Навчальний сценарій: `readPlaywrightReport`, `login_spec` — для закріплення механізму (не live run).
-- Атлас: `/agent-architecture?tab=tool-calling` — покрокова схема з панелями.
 :::study-sources-end
