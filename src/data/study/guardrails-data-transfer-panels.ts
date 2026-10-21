@@ -1,5 +1,8 @@
 import type { FundamentalsCardPanel } from './fundamentals-card-panels';
 import type { StudyLearnerPanelSection } from './study-learner-panel-sections';
+import { GUARDRAILS_POLICY_JOURNAL_SECTION } from './guardrails-section4-transfer-panels';
+import { GUARDRAILS_VERIFIED_OUTPUT_CHECKS_PICK } from './guardrails-verified-output-checks';
+import { qaBulletBody } from './guardrails-panel-helpers';
 
 function panel(
   sections: StudyLearnerPanelSection[],
@@ -39,169 +42,19 @@ function qaPick(labelUk: string, pickAriaLabel: string, items: QaPickItem[]): St
   };
 }
 
-function qaCheckBullets(items: string[]): string {
-  return items.map((item) => `- ${item}`).join('\n');
-}
-
-function proposedMessageFieldsPick(): StudyLearnerPanelSection {
-  return {
-    type: 'processStepPick',
-    labelUk: 'Що містить повідомлення',
-    pickAriaLabel: 'Поля повідомлення пропонованої дії',
-    presentation: 'concepts',
-    showActorInPanel: false,
-    showStepIndexInPanel: false,
-    showNestedCardNumberInPanel: true,
-    pickPanelDetailVariant: 'outcome',
-    navLayout: 'sidebar',
-    navCompactTitleOnly: true,
-    leadUk:
-      'Точний формат payload залежить від реалізації harness. Аргументи перевіряються за схемою відповідного інструмента. Навіть валідні аргументи ще не означають, що дія дозволена.',
-    steps: [
-      {
-        key: 'gr-dt-msg-tool-name',
-        titleUk: 'tool_name',
-        teaserUk: 'Назва запропонованого інструмента',
-        actorUk: '',
-        detailSections: [
-          {
-            labelUk: 'Що це',
-            bodyUk:
-              'Назва інструмента, який модель пропонує викликати. Harness використовує її, щоб визначити відповідний інструмент у реєстрі доступних інструментів.',
-          },
-          {
-            labelUk: 'Приклад login_spec',
-            bodyUk:
-              'Модель пропонує `readPlaywrightReport`, щоб отримати звіт про падіння тесту. Наявність цієї назви в пропозиції не означає, що інструмент зареєстрований, доступний цьому користувачу або дозволений для конкретного ресурсу.',
-          },
-          {
-            labelUk: 'Що перевіряє QA',
-            bodyUk: qaCheckBullets([
-              'Невідома назва інструмента не запускає виконання.',
-              'Зареєстрований інструмент проходить наступні перевірки.',
-              'Назва інструмента в trace відповідає фактично запропонованому виклику.',
-            ]),
-          },
-          {
-            labelUk: 'Термінологія',
-            labeledPairs: [
-              { termUk: 'tool_name', explanationUk: 'поле з назвою запропонованого інструмента.' },
-              {
-                termUk: 'Tool registry',
-                explanationUk:
-                  'реєстр інструментів, які застосунок дозволяє викликати через визначений інтерфейс.',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        key: 'gr-dt-msg-arguments',
-        titleUk: 'arguments',
-        teaserUk: 'Параметри, з якими модель пропонує виклик',
-        actorUk: '',
-        detailSections: [
-          {
-            labelUk: 'Що це',
-            bodyUk:
-              'Аргументи — параметри виклику інструмента. Вони визначають, із якими даними має працювати інструмент, наприклад який файл прочитати або який ресурс перевірити.',
-          },
-          {
-            labelUk: 'Приклад login_spec',
-            bodyUk:
-              'Модель пропонує `readPlaywrightReport` з параметром `path: "./playwright-report/index.html"`. Застосунок перевіряє структуру аргументів за схемою, а потім окремо перевіряє, чи дозволено читати цей шлях. Коректний формат параметра не гарантує доступу до файлу.',
-          },
-          {
-            labelUk: 'Що перевіряє QA',
-            bodyUk: qaCheckBullets([
-              'Відсутні обов’язкові поля блокують виклик.',
-              'Неправильні типи та параметри відхиляються.',
-              'Шлях перевіряється за правилами доступу, а не лише за схемою.',
-              'Некоректні або заборонені аргументи не спричиняють побічних ефектів.',
-            ]),
-          },
-          {
-            labelUk: 'Термінологія',
-            labeledPairs: [
-              {
-                termUk: 'arguments',
-                explanationUk: 'параметри, передані разом із пропозицією виклику інструмента.',
-              },
-              {
-                termUk: 'Schema validation',
-                explanationUk: 'перевірка структури, типів і допустимих параметрів виклику.',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        key: 'gr-dt-msg-run-id',
-        titleUk: 'run_id та ідентифікатори повідомлень',
-        teaserUk: 'Зв’язок пропозиції з конкретним запуском і trace',
-        actorUk: '',
-        detailSections: [
-          {
-            labelUk: 'Що це',
-            bodyUk:
-              'Ідентифікатори допомагають пов’язати пропозицію інструмента з конкретним запуском агента та відповідними повідомленнями. Набір полів залежить від реалізації harness.',
-          },
-          {
-            labelUk: 'Приклад login_spec',
-            bodyUk:
-              'У trace потрібно встановити, до якого запуску належить пропозиція `readPlaywrightReport`, яке повідомлення її містило та яке рішення policy було ухвалено після цього.',
-          },
-          {
-            labelUk: 'Що перевіряє QA',
-            bodyUk: qaCheckBullets([
-              'Пропозицію можна пов’язати з правильним запуском.',
-              'Рішення policy та результат виконання не приписуються іншому виклику.',
-              'У журналі можна відновити послідовність подій і причину відмови.',
-            ]),
-          },
-          {
-            labelUk: 'Термінологія',
-            labeledPairs: [
-              {
-                termUk: 'run_id',
-                explanationUk: 'ідентифікатор конкретного запуску workflow або агента.',
-              },
-              {
-                termUk: 'Trace',
-                explanationUk: 'послідовність пов’язаних подій, яка допомагає відновити перебіг виконання.',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-}
-
 function terminology(items: Array<{ termUk: string; bodyUk: string }>): StudyLearnerPanelSection {
   return { type: 'taxonomy', labelUk: 'Термінологія', items };
 }
 
 export const GUARDRAILS_DATA_TRANSFER_PROPOSED_PANEL: FundamentalsCardPanel = panel([
-  courseBadge('Proposed action + arguments'),
   framed(
-    'Що це',
-    'Після відповіді LLM harness отримує структуровану пропозицію виклику інструмента. Вона містить ім’я інструмента та аргументи, а також може містити ідентифікатори запуску й повідомлення для трасування.\n\nЦе лише пропозиція. Вона ще не означає, що файл відкрито, HTTP-запит відправлено, Jira issue створено або запис у базі змінено.',
+    'Що відбувається',
+    'Після відповіді LLM harness отримує структуровану пропозицію виклику інструмента. Вона містить назву інструмента й аргументи, а також може містити ідентифікатори запуску та повідомлення для трасування.\n\nЦе лише пропозиція. Вона ще не означає, що файл відкрито, HTTP-запит відправлено, Jira issue створено або запис у базі змінено.',
   ),
-  proposedMessageFieldsPick(),
-  {
-    type: 'miniCards',
-    labelUk: 'Приклад login_spec',
-    layout: 'titledStack',
-    items: [
-      {
-        titleUk: 'Trace',
-        tone: 'neutral',
-        bodyUk:
-          'Після падіння login_spec модель пропонує виклик readPlaywrightReport із параметром path: "./playwright-report/index.html".\n\nУ trace це має бути видно як запропонований виклик інструмента. Сам факт появи пропозиції не доводить, що файл уже прочитано. Фактичне читання можливе лише після перевірок і допуску до executor.\n\nНе кожна система обов’язково використовує саме такі поля чи формат trace.',
-      },
-    ],
-  },
+  framed(
+    'Приклад login_spec',
+    'Після падіння login_spec модель пропонує виклик `readPlaywrightReport` із параметром `path: "./playwright-report/index.html"`.\n\nУ trace це має бути видно як запропонований виклик інструмента. Сам факт появи пропозиції не доводить, що файл уже прочитано. Фактичне читання можливе лише після перевірок і допуску до executor.',
+  ),
   qaPick('Що перевіряє QA', 'Перевірки пропонованої дії', [
     {
       key: 'gr-dt-prop-not-exec',
@@ -239,10 +92,6 @@ export const GUARDRAILS_DATA_TRANSFER_PROPOSED_PANEL: FundamentalsCardPanel = pa
     {
       termUk: 'Harness',
       bodyUk: 'код застосунку, який керує взаємодією з моделлю, перевірками та виконанням інструментів.',
-    },
-    {
-      termUk: 'Side effect',
-      bodyUk: 'зміна поза моделлю, наприклад створення Jira issue, запис у базу або читання файлу.',
     },
   ]),
 ]);
@@ -308,65 +157,21 @@ export const GUARDRAILS_DATA_TRANSFER_POLICY_PANEL: FundamentalsCardPanel = pane
     pickConclusionUk:
       'Рішення залежить не лише від назви інструмента, а й від ресурсу та контексту. Назви reports-read-sandbox і deny-prod-secrets можна показувати як приклади rule ID, а не як гарантовані назви правил у кожній реалізації.',
   },
-  {
-    type: 'miniCards',
-    labelUk: 'Що потрапляє в журнал',
-    layout: 'titledStack',
-    captionUk:
-      'Журнал має допомогти відновити, чому конкретний виклик отримав певне рішення. Не записуй секрети або повні чутливі аргументи лише заради аудиту.',
-    items: [
-      {
-        titleUk: 'Рішення',
-        tone: 'neutral',
-        bodyUk: 'allow, deny або needs_approval.',
-      },
-      {
-        titleUk: 'Правило',
-        tone: 'neutral',
-        bodyUk: 'ідентифікатор правила, якщо його підтримує реалізація.',
-      },
-      {
-        titleUk: 'Контекст',
-        tone: 'neutral',
-        bodyUk: 'actor, інструмент і ресурс у межах дозволеного журналювання.',
-      },
-      {
-        titleUk: 'Причина',
-        tone: 'neutral',
-        bodyUk: 'пояснення, чому дію дозволено, відхилено або зупинено до погодження.',
-      },
-    ],
-  },
-  qaPick('Що перевіряє QA', 'Перевірки policy engine', [
-    {
-      key: 'gr-dt-pol-resources',
-      titleUk: 'Один інструмент, різні ресурси',
-      teaserUk: 'Дозволений і заборонений шлях отримують різні рішення',
-      detailUk:
-        'Однаковий tool call із дозволеним і забороненим шляхом отримує відповідні рішення згідно з policy.',
-    },
-    {
-      key: 'gr-dt-pol-deny-stop',
-      titleUk: 'DENY зупиняє виконання',
-      teaserUk: 'Після відмови немає побічних ефектів',
-      detailUk:
-        'Після відмови немає фактичного читання, запису чи іншого побічного ефекту.',
-    },
-    {
-      key: 'gr-dt-pol-approval',
-      titleUk: 'Погодження є окремим етапом',
-      teaserUk: 'NEEDS_APPROVAL не запускає дію одразу',
-      detailUk:
-        'NEEDS_APPROVAL не запускає дію до отримання та перевірки необхідного підтвердження.',
-    },
-    {
-      key: 'gr-dt-pol-reason',
-      titleUk: 'Причина доступна для перевірки',
-      teaserUk: 'Рішення та причина без секретів',
-      detailUk:
-        'За trace або audit можна встановити рішення та причину, не розкриваючи секретів.',
-    },
-  ]),
+  GUARDRAILS_POLICY_JOURNAL_SECTION,
+  framed(
+    'Приклад login_spec',
+    'Після падіння `login_spec` агент пропонує прочитати Playwright-звіт. Policy engine перевіряє запропонований інструмент, ресурс і відповідні правила.\n\nУ журналі можна побачити рішення та доступний контекст, щоб зрозуміти, чому виклик дозволили або відхилили. Якщо читання дозволено, це ще не означає, що звіт успішно прочитано. Для цього потрібен окремий результат виконання інструмента.',
+  ),
+  framed(
+    'Що перевіряє QA',
+    qaBulletBody([
+      'Рішення в журналі відповідає фактичному результату перевірки policy.',
+      'Якщо система підтримує ідентифікатор правила, його можна використати для пошуку відповідного правила.',
+      'Контекст достатній, щоб розрізнити різні ресурси й виклики, але не розкриває заборонені чутливі дані.',
+      'Причина не суперечить рішенню policy.',
+      'ALLOW, DENY і NEEDS_APPROVAL можна відрізнити від фактичного результату виконання інструмента.',
+    ]),
+  ),
   terminology([
     { termUk: 'Policy engine', bodyUk: 'компонент коду, який перевіряє дію за правилами доступу.' },
     {
@@ -387,34 +192,12 @@ export const GUARDRAILS_DATA_TRANSFER_POLICY_PANEL: FundamentalsCardPanel = pane
 ]);
 
 export const GUARDRAILS_DATA_TRANSFER_SANITIZED_PANEL: FundamentalsCardPanel = panel([
-  courseBadge('Sanitized input/output'),
+  courseBadge('Verified result'),
   framed(
     'Що відбувається після виконання',
     'Після дозволеного виклику executor повертає результат інструмента. Перед додаванням цього результату до повідомлень наступного запиту LLM застосунок може перевірити формат і розмір, прибрати або замаскувати секрети та відкинути недозволені поля.\n\nКонкретні перевірки залежать від реалізації. Не стверджуй, що всі harness обов’язково мають однакові фільтри.',
   ),
-  {
-    type: 'miniCards',
-    labelUk: 'Що перевіряється',
-    layout: 'titledStack',
-    items: [
-      {
-        titleUk: 'Формат і розмір',
-        tone: 'neutral',
-        bodyUk: 'Результат відповідає очікуваному формату та встановленим обмеженням розміру.',
-      },
-      {
-        titleUk: 'Секрети й чутливі дані',
-        tone: 'neutral',
-        bodyUk:
-          'Токени, ключі та інші чутливі значення не потрапляють у контекст моделі, якщо правила вимагають їх видалення або маскування.',
-      },
-      {
-        titleUk: 'Вміст для наступного запиту',
-        tone: 'neutral',
-        bodyUk: 'У повідомлення LLM потрапляє лише той результат, який дозволено передавати далі.',
-      },
-    ],
-  },
+  GUARDRAILS_VERIFIED_OUTPUT_CHECKS_PICK,
   framed(
     'Вхідні дані теж потребують перевірки',
     'Дані користувача та фрагменти з RAG можуть містити персональні дані, надмірний обсяг тексту або інструкції prompt injection. Застосунок має застосовувати відповідні перевірки та обмеження перед передаванням таких даних моделі. Сам факт очищення не означає, що будь-який prompt injection гарантовано виявлено.',

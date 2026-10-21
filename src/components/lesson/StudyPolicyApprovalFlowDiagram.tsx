@@ -7,7 +7,7 @@ import {
   POLICY_FLOW_HINT_BY_ID,
   POLICY_FLOW_NODE_HINTS,
 } from '../../data/study/policy-flow-node-hints';
-import { parseLessonBold } from './lessonRichText';
+import { LessonRichParagraphs, parseLessonBold } from './lessonRichText';
 
 /** Візуальна схема policy → approval → executor (Guardrails observability) */
 
@@ -114,7 +114,7 @@ function PolicyFlowDetailPanel({
           </div>
           {selected.termEn && (
             <p className="study-policy-term muted small" lang="en">
-              Термін у курсі: <em>{selected.termEn}</em>
+              Терміни: <em>{selected.termEn}</em>
             </p>
           )}
           <p className="policy-flow-detail-teaser">{parseLessonBold(selected.teaserUk)}</p>
@@ -129,9 +129,9 @@ function PolicyFlowDetailPanel({
                         <li key={item}>{parseLessonBold(item)}</li>
                       ))}
                     </ol>
-                  ) : (
-                    parseLessonBold(sec.bodyUk)
-                  )}
+                  ) : sec.bodyUk ? (
+                    <LessonRichParagraphs className="study-learner-explanation" text={sec.bodyUk} />
+                  ) : null}
                 </dd>
               </div>
             ))}
@@ -201,6 +201,10 @@ export function StudyPolicyApprovalFlowDiagram() {
         >
           <div className="policy-flow-main">
             <div className="policy-flow">
+              <p className="policy-flow-prelude muted small" lang="en">
+                run_started → model_request → tool_call_proposal → validate_arguments → policy_decision
+              </p>
+              <FlowArrow />
               <FlowNode
                 nodeId="llm-propose"
                 variant="llm"
@@ -336,10 +340,10 @@ export function StudyPolicyApprovalFlowDiagram() {
                       <FlowArrow />
                       <div className="policy-flow-mini-fork">
                         <FlowNode
-                          nodeId="policy-deny"
+                          nodeId="policy-deny-recheck"
                           variant="deny"
                           small
-                          isActive={isActive('policy-deny')}
+                          isActive={isActive('policy-deny-recheck')}
                           onSelect={selectNode}
                         >
                           deny (stop)

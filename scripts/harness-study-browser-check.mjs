@@ -16,16 +16,44 @@ async function main() {
   await page.getByRole('heading', { name: 'Навіщо ця тема' }).waitFor({ timeout: 12000 });
   await page.getByText('Початок запуску', { exact: false }).first().waitFor();
 
+  await page.setViewportSize({ width: 1100, height: 900 });
   await page.goto(`${BASE}#/topic/concept-04/study`, { waitUntil: 'networkidle' });
   await page.getByRole('heading', { name: /Agent Harness|Harness/i }).first().waitFor({ timeout: 15000 });
 
-  const qaSectionHeader = page.locator('.study-section-header').filter({ hasText: 'Як QA це тестує' });
-  await qaSectionHeader.click();
-  const qaSection = page.locator('section.study-section.open', { has: page.locator('.study-harness-qa') });
+  await page.getByRole('button', { name: 'Розгорнути всі' }).click();
+  await page.waitForTimeout(400);
+  const prodHeader = page.locator('button.study-section-header').filter({ hasText: 'Production і observability' });
+  await prodHeader.scrollIntoViewIfNeeded();
+  if ((await prodHeader.getAttribute('aria-expanded')) !== 'true') {
+    await prodHeader.click();
+  }
+  const runFlow = page.locator('.study-harness-run-flow');
+  await runFlow.scrollIntoViewIfNeeded();
+  await runFlow.waitFor({ state: 'visible', timeout: 15000 });
+  await runFlow.getByRole('button', { name: /Пропозиція моделі/i }).click();
+  const detailPanel = runFlow.locator('.policy-flow-detail');
+  await detailPanel.getByText('Що перевірити в trace', { exact: true }).waitFor({ state: 'visible' });
+  const panelScroll = await detailPanel.evaluate((el) => ({
+    sh: el.scrollHeight,
+    ch: el.clientHeight,
+    oy: getComputedStyle(el).overflowY,
+  }));
+  if (panelScroll.oy === 'auto' || panelScroll.oy === 'scroll') {
+    if (panelScroll.sh > panelScroll.ch + 2) {
+      throw new Error('policy-flow-detail still scrolls internally with overflow');
+    }
+  }
+
+  const qaSectionHeader = page.locator('button.study-section-header').filter({ hasText: 'Як QA це тестує' });
+  await qaSectionHeader.scrollIntoViewIfNeeded();
+  if ((await qaSectionHeader.getAttribute('aria-expanded')) !== 'true') {
+    await qaSectionHeader.click({ force: true });
+  }
+  const qaSection = page.locator('section.study-section', { has: page.locator('.study-harness-qa') });
   await qaSection.waitFor({ timeout: 10000 });
   await qaSection.locator('.study-harness-qa').scrollIntoViewIfNeeded();
   await qaSection.getByText('Чи правильно працює код агента', { exact: true }).waitFor({ state: 'attached' });
-  await qaSection.getByText('Для цього перевіряють:', { exact: false }).waitFor({ state: 'visible' });
+  await qaSection.getByText('Для цього перевіряють:', { exact: false }).waitFor({ state: 'attached' });
   const focusListItems = qaSection.locator('.study-after-interactive-summary-card-list-item');
   if ((await focusListItems.count()) !== 4) {
     throw new Error('§7 focus card: expected 4 list items');

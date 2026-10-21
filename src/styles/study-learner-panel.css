@@ -150,6 +150,33 @@
   margin: 0;
 }
 
+.study-learner-bullet-list {
+  margin: 0.35rem 0 0;
+  padding: 0 0 0 1.15rem;
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.study-learner-panel-prose .study-learner-bullet-list:first-child,
+.study-learner-explanation .study-learner-bullet-list:first-child {
+  margin-top: 0;
+}
+
+.lesson-p-stack .study-learner-bullet-list + .lesson-p,
+.lesson-p-stack .lesson-p + .study-learner-bullet-list {
+  margin-top: 0.45rem;
+}
+
+.study-learner-bullet-list > li {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
 @container (max-width: 22rem) {
   .study-learner-panel-mini-card .study-learner-labeled-line {
     display: flex;
@@ -2149,6 +2176,60 @@
 @media (min-width: 769px) {
   .study-learner-panel-step-pick-layout .study-step-detail-layout {
     grid-template-columns: minmax(200px, 42%) minmax(0, 1fr);
+  }
+}
+
+/* §4 Guardrails — компактний payload (усі поля в одному блоці) */
+.study-compact-payload {
+  margin-top: 0.65rem;
+  padding: 0.62rem 0.72rem 0.68rem;
+  border-radius: 9px;
+  border: 1px solid rgba(100, 120, 200, 0.28);
+  background: rgba(14, 20, 36, 0.88);
+  min-width: 0;
+}
+
+.study-compact-payload__rows {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.study-compact-payload__row {
+  display: grid;
+  grid-template-columns: minmax(5.25rem, 7.5rem) minmax(0, 1fr);
+  gap: 0.35rem 0.75rem;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.study-compact-payload__key {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.study-compact-payload__value {
+  margin: 0;
+  font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: rgba(220, 228, 245, 0.92);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.study-compact-payload__footnote {
+  margin: 0.65rem 0 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(100, 120, 200, 0.18);
+}
+
+@media (max-width: 420px) {
+  .study-compact-payload__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
   }
 }
 

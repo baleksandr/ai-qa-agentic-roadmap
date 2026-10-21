@@ -82,6 +82,8 @@ export function StudyTeachingCardsSection({
     Boolean(bundle.sectionAsideNoteUk?.trim()) && sectionAsidePlacement === 'after-cards';
   const sectionAsideInIntroGrid =
     Boolean(bundle.sectionAsideNoteUk?.trim()) && sectionAsidePlacement === 'intro-grid';
+  const sectionAsideBelowTopicIntro =
+    Boolean(bundle.sectionAsideNoteUk?.trim()) && sectionAsidePlacement === 'below-topic-intro';
 
   return (
     <section
@@ -179,7 +181,20 @@ export function StudyTeachingCardsSection({
           compactSectionIntroUk?.trim() || bundle.compactSectionIntroUk?.trim() || '';
         return (
           <>
-            {topicIntro ? <StudyTeachingSectionTopicIntro topicIntroUk={topicIntro} /> : null}
+            {topicIntro ? (
+              <StudyTeachingSectionTopicIntro
+                topicIntroUk={topicIntro}
+                cardsHowUk={bundle.sectionCardsHowUk}
+              />
+            ) : null}
+            {sectionAsideBelowTopicIntro ? (
+              <StudySectionAsideNote
+                variant="inline"
+                className="study-teaching-section-aside-note study-teaching-section-aside-note--below-topic"
+                titleUk={bundle.sectionAsideNoteTitleUk?.trim() || 'Важливо'}
+                bodyUk={bundle.sectionAsideNoteUk}
+              />
+            ) : null}
             {compactIntro ? (
               <div className="study-teaching-compact-section-intro">
                 {bundle.compactSectionIntroLabelUk?.trim() ? (

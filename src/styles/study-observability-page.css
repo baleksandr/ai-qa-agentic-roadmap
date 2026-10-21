@@ -1,0 +1,54 @@
+/* concept-18 Observability — ширина хедера та «Що я зрозумію» на всю колонку контенту */
+
+.topic-study-page--concept-18 .study-header-compact .study-rag-page-h1 {
+  width: 100%;
+  max-width: none;
+}
+
+.topic-study-page--concept-18 .study-rag-acronym-hero {
+  width: 100%;
+  max-width: none;
+}
+
+.topic-study-page--concept-18 .study-rag-acronym-hero .study-lesson-hero-framed-explanation {
+  width: 100%;
+  max-width: none;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.topic-study-page--concept-18 .structured-study-layout.study-mode-layout .study-col-main .study-learning-outcomes {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  box-sizing: border-box;
+}
+
+.topic-study-page--concept-18 .structured-study-layout .study-col-main .study-outcomes-body,
+.topic-study-page--concept-18 .structured-study-layout .study-col-main .study-outcomes-with-flows {
+  width: 100%;
+  max-width: none;
+}
+
+.topic-study-page--concept-18 .study-observability-outcomes-block,
+.topic-study-page--concept-18 .study-skills-outcomes-triple-grid {
+  width: 100%;
+  max-width: none;
+}
+
+.topic-study-page--concept-18 .study-skills-outcomes-lead {
+  max-width: none;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.topic-study-page--concept-18 .study-cyber-hud-hero-grid {
+  width: 100%;
+  max-width: none;
+  gap: 0.65rem 0.8rem;
+}
+
+.topic-study-page--concept-18 .study-cyber-hud-card--hero {
+  min-height: 5rem;
+  padding: 0.72rem 0.85rem 0.9rem;
+}

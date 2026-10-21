@@ -1,110 +1,165 @@
 import type { StudyHintItem } from './study-hint-types';
 
-/** Підказки для блоків схеми policy → approval → executor */
+/**
+ * Підказки до інтерактивної схеми policy → approval → executor.
+ * Назви подій узгоджені з навчальними прикладами trace курсу (guardrails-observability-lesson.ts), не з окремим production runtime у цьому репозиторії.
+ */
 export const POLICY_FLOW_NODE_HINTS: StudyHintItem[] = [
   {
     id: 'llm-propose',
     titleUk: 'Пропозиція моделі (propose)',
     termEn: 'tool call proposal',
-    teaserUk: 'LLM лише пропонує виклик — ще без рішення політики.',
+    teaserUk: 'Модель формує пропозицію виклику інструмента — ще без рішення політики й без запиту до Jira.',
     sections: [
       {
         labelUk: 'Що відбувається',
         bodyUk:
-          'Модель повертає структуровану пропозицію: який tool викликати (наприклад createJiraIssue) і з якими аргументами. Це **не** виконання в Jira і **не** вердикт allow/deny.',
+          'Модель повертає структуровану пропозицію: який інструмент викликати, наприклад `createJiraIssue`, і з якими аргументами. Це ще не рішення політики і не фактичний виклик API.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk:
-          'Шукайте подію propose або span з іменем tool до policy_decision. Якщо далі немає policy — run зламався раніше (валідація схеми, harness).',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Подія `tool_call_proposal` (або еквівалент у вашій реалізації) перед `validate_arguments` і `policy_decision`.',
+          'Назву інструмента та аргументи окремо від подій виконання.',
+          'Відсутність `tool_execution_result` на цьому етапі.',
+        ],
       },
       {
         labelUk: 'Типова помилка',
-        bodyUk: 'Вважати, що «модель створила тікет» — до executor і успішної відповіді API тікета ще немає.',
+        bodyUk:
+          'Стверджувати, що модель уже створила тікет. До підтвердженого успішного результату API тікет не можна вважати створеним.',
       },
     ],
-    exampleUk: 'propose createJiraIssue(project=QA, summary=…) → наступний крок validate + policy.',
+    exampleUk: '`tool_call_proposal` → перевірка аргументів → рішення політики.',
   },
   {
     id: 'validate-policy',
     titleUk: 'Валідація і політика в коді',
     termEn: 'validate + policy engine',
-    teaserUk: 'TypeScript перевіряє аргументи й застосовує правила.',
+    teaserUk: 'Код перевіряє аргументи й застосовує правила доступу — окремо від відповіді моделі.',
     sections: [
       {
         labelUk: 'Що відбувається',
+        listItemsUk: [
+          'Валідація перевіряє, чи аргументи відповідають схемі інструмента.',
+          'Policy engine оцінює, чи дозволена дія за правилами продукту (вердикт `deny`, `allow` або `needs_approval`, якщо такі результати підтримує реалізація).',
+          'Валідні аргументи ще не означають дозволу на виконання.',
+        ],
+      },
+      {
+        labelUk: 'Чому це не рішення LLM',
         bodyUk:
-          'Harness нормалізує аргументи, перевіряє схему tool, потім policy engine порівнює **actor**, **tool**, **resource** і **action** з матрицею правил. Результат — один вердикт: deny, allow або needs_approval.',
+          'Якщо політика реалізована в коді harness, вердикт можна тестувати окремо від формулювань моделі. Детермінованість залежить від правил і стану системи, а не від «інтуїції» LLM.',
       },
       {
-        labelUk: 'Чому це не LLM',
-        bodyUk: 'Вердикт детермінований і тестований у CI. Модель не «вирішує», чи можна в prod писати в Jira.',
-      },
-      {
-        labelUk: 'У trace / логах',
-        bodyUk: 'Подія policy_decision з полями policy_decision, rule_id, run_id. Кожна гілка схеми починається тут.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Подія `policy_decision` з фактичним вердиктом.',
+          'Поле `rule_id`, якщо реалізація його записує (у навчальному прикладі — так).',
+          '`run_id` або інший кореляційний ідентифікатор, якщо він є в подіях run.',
+        ],
       },
     ],
-    qaUk: 'Golden trace у CI: для одного входу очікуваний rule_id і вердикт.',
+    qaUk:
+      'Якщо є golden trace або інтеграційний тест: для фіксованого входу порівняйте очікуваний `rule_id` і вердикт з фактичним `policy_decision`.',
   },
   {
     id: 'policy-deny',
-    titleUk: 'Вердикт deny',
+    titleUk: 'Вердикт deny (перша перевірка)',
     termEn: 'policy decision: deny',
-    teaserUk: 'Заборонено — executor не викликається.',
+    teaserUk: 'Політика заборонила дію до виклику executor.',
     sections: [
       {
         labelUk: 'Що означає',
         bodyUk:
-          'Код заборонив дію за правилом (наприклад global-deny-prod-write). Run зупиняється **до** Jira API. Це стосується і першої перевірки, і re-check після approval, якщо умови вже не виконуються.',
+          'Код заборонив дію за правилом політики. Для цієї гілки executor не повинен викликатися, а запит на створення issue не повинен надходити до Jira.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'policy_decision: deny, rule_id, audit. Немає executor span, немає tool_execution_result success.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          '`policy_decision: deny` на першій перевірці після пропозиції.',
+          '`rule_id`, якщо записується (навчальний приклад: `guest-no-jira-write`).',
+          'Відсутність фактичного виконання інструмента після заборони.',
+          'Опційно: `note: executor_not_invoked` або audit-подія — лише якщо так налаштовано в продукті.',
+        ],
       },
       {
         labelUk: 'Метрики',
-        bodyUk: 'deny_rate, group by rule_id — щоб знайти правило, яке «ріже» найбільше.',
+        bodyUk:
+          'Показники на кшталт `deny_rate` і групування за `rule_id` корисні для observability, якщо їх збирає продукт. У цьому навчальному репозиторії вони описані як орієнтир, а не як наявний сервіс.',
       },
     ],
-    exampleUk: 'guest-demo + create Jira → deny, rule global-deny-guest.',
+    exampleUk: 'Пропозиція `createJiraIssue` → `policy_decision: deny` → executor не викликається.',
+  },
+  {
+    id: 'policy-deny-recheck',
+    titleUk: 'Вердикт deny після схвалення',
+    termEn: 'policy decision: deny (re-check)',
+    teaserUk: 'Відмова на повторній перевірці — інший етап, ніж deny на першій перевірці.',
+    sections: [
+      {
+        labelUk: 'Що означає',
+        bodyUk:
+          'Людина могла схвалити дію (`approval_granted`), але код при повторній перевірці політики знову повернув `deny`. Executor для цього запиту не викликається.',
+      },
+      {
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Є `approval_granted` для цього run.',
+          'Другий `policy_decision: deny` після схвалення, а не замість першого `needs_approval`.',
+          'Немає виклику executor і немає успішного `tool_execution_result`.',
+        ],
+      },
+      {
+        labelUk: 'Типова помилка',
+        bodyUk: 'Плутати цей deny з відмовою людини (`approval_denied`) або з першим deny до approval.',
+      },
+    ],
+    qaUk:
+      'Якщо середовище дозволяє: схваліть запит, змініть політику або строк дії схвалення — очікуйте deny на re-check без виклику Jira mock.',
   },
   {
     id: 'audit-deny',
     titleUk: 'Audit при deny',
     termEn: 'audit event',
-    teaserUk: 'Запис для розслідування без виклику executor.',
+    teaserUk: 'Додатковий запис для розслідування — не обов’язковий у кожній реалізації.',
     sections: [
       {
         labelUk: 'Що фіксується',
         bodyUk:
-          'Хто просив (actor), який tool, яке rule_id спрацювало, що саме заборонено. Це доказ для security і QA: «дія не виконалась навмисно».',
+          'У продуктах часто зберігають actor, tool, `rule_id` і причину відмови, щоб пояснити, чому дія навмисно не виконалась. Формат залежить від audit pipeline.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'Може бути note executor_not_invoked або окрема audit-подія поруч із policy_decision deny.',
+        labelUk: 'Що перевірити в trace',
+        bodyUk:
+          'У навчальному JSON для deny може бути `note: executor_not_invoked`. Якщо в вашому trace такого поля немає, орієнтуйтесь на `policy_decision: deny` і відсутність executor.',
       },
     ],
-    qaUk: 'У тесті після deny перевірте відсутність HTTP до Jira (mock не викликався).',
+    qaUk: 'Після deny перевірте mock або spy зовнішнього API: викликів не було.',
   },
   {
     id: 'policy-allow',
     titleUk: 'Вердикт allow (перша перевірка)',
     termEn: 'policy decision: allow',
-    teaserUk: 'Дозвіл спробувати виконати — не успіх API.',
+    teaserUk: 'Політика дозволила перейти до виконання без очікування на людину.',
     sections: [
       {
         labelUk: 'Що означає',
         bodyUk:
-          'Політика дозволила перейти до executor без людини. **allow** = «код не блокує спробу», а не «тікет створено».',
+          'Код не блокує спробу виконання. Це ще не означає, що Jira API успішно створив issue.',
       },
       {
         labelUk: 'Зв’язок із схемою',
-        bodyUk: 'Гілка allow зливається з allow execute після approval: обидві ведуть до executor → Jira API.',
+        bodyUk:
+          'Гілка першого `allow` зливається з дозволом після re-check (`allow execute`) в спільний executor → Jira API, якщо архітектура продукту так влаштована.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'policy_decision allow → далі executor span. Успіх/помилка — в tool_execution_result.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          '`policy_decision: allow` перед викликом executor.',
+          'Фактичний перехід до виконання (подія executor або `tool_execution_result`).',
+          'Результат API окремо від вердикту allow.',
+        ],
       },
     ],
   },
@@ -112,37 +167,42 @@ export const POLICY_FLOW_NODE_HINTS: StudyHintItem[] = [
     id: 'needs-approval',
     titleUk: 'Вердикт needs_approval',
     termEn: 'policy decision: needs_approval',
-    teaserUk: 'Run чекає на людину — issue ще не створюється.',
+    teaserUk: 'Дія потребує схвалення людини — executor ще не запускається.',
     sections: [
       {
         labelUk: 'Що означає',
         bodyUk:
-          'Дія не заборонена назавжди, але потребує схвалення (наприклад create Jira для QA-агента). Run «пауза» до approval_granted або approval_denied.',
+          'Політика не заборонила дію назавжди, але вимагає рішення уповноваженої людини. До `approval_granted` або `approval_denied` виконання інструмента не починається.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'policy_decision needs_approval, rule_id (часто jira-create-needs-approval). Немає executor до схвалення.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          '`policy_decision: needs_approval` і відсутність executor до рішення людини.',
+          '`rule_id`, якщо записується (навчальний приклад: `jira-create-needs-approval`).',
+          'Стан очікування без `tool_execution_result`.',
+        ],
       },
       {
         labelUk: 'Метрики',
-        bodyUk: 'approval_latency — від needs_approval до granted/denied, без часу Jira API.',
+        bodyUk:
+          '`approval_latency` (час від `needs_approval` до рішення людини) — корисна метрика для продукту, якщо її збирають. Не плутайте з часом виклику Jira API після схвалення.',
       },
     ],
-    exampleUk: '«Чому run висить?» — перевірте чергу approval, чи людина ще не натиснула.',
   },
   {
     id: 'human-reject',
-    titleUk: 'Людина відхилила',
+    titleUk: 'Людина відхилила дію',
     termEn: 'human rejection',
-    teaserUk: 'Рішення оператора — не вердикт моделі.',
+    teaserUk: 'Рішення оператора в UI — не вердикт моделі й не policy deny.',
     sections: [
       {
         labelUk: 'Що відбувається',
-        bodyUk: 'У UI approval людина натискає «відхилити». Система записує approval_denied і **не** переходить до re-check execute.',
+        bodyUk:
+          'Оператор відхиляє запит у інтерфейсі погодження. Система не повинна переходити до виконання інструмента для цього запиту.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'Після needs_approval з’являється approval_denied з approval_id. Executor span відсутній.',
+        labelUk: 'Типова помилка',
+        bodyUk: 'Шукати причину в policy deny, хоча початковий вердикт був `needs_approval`.',
       },
     ],
   },
@@ -150,32 +210,40 @@ export const POLICY_FLOW_NODE_HINTS: StudyHintItem[] = [
     id: 'approval-denied',
     titleUk: 'Подія approval_denied',
     termEn: 'approval_denied',
-    teaserUk: 'Схвалення не дано — executor не викликається.',
+    teaserUk: 'Зафіксована відмова людини — не те саме, що `policy decision: deny`.',
     sections: [
       {
         labelUk: 'Що означає',
-        bodyUk: 'Фінал гілки approval для відмови. Issue в Jira не з’являється. Це окрема подія від policy deny — тут політика могла б дозволити після людини, але людина сказала «ні».',
+        listItemsUk: [
+          '`deny` — заборона політики на етапі перевірки правил.',
+          '`approval_denied` — людина не надала схвалення після `needs_approval`.',
+        ],
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'approval_denied, approval_id, run_id. Немає approval_granted, немає executor.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Подія `approval_denied` після `needs_approval`.',
+          'Відсутність `approval_granted` і executor для цього запиту.',
+          'Поля `approval_id` і `run_id`, якщо реалізація їх записує.',
+        ],
       },
     ],
-    qaUk: 'Сценарій: needs_approval → reject → переконайтесь, що Jira mock = 0 викликів.',
+    qaUk: 'Сценарій needs_approval → відхилення людиною: mock Jira не отримує викликів.',
   },
   {
     id: 'human-approve',
-    titleUk: 'Людина схвалила',
+    titleUk: 'Людина схвалила дію',
     termEn: 'human approval',
-    teaserUk: 'Дозвіл людини — ще не виконання в Jira.',
+    teaserUk: 'Клік «схвалити» сам по собі не створює issue.',
     sections: [
       {
         labelUk: 'Що відбувається',
-        bodyUk: 'Оператор підтверджує дію в UI. Далі код **обов’язково** робить re-check — схвалення не скасовує політику й не гарантує, що запит ще актуальний.',
+        bodyUk:
+          'Оператор підтверджує дію в UI. Далі harness виконує наступний крок, передбачений реалізацією (часто запис `approval_granted` і повторна перевірка політики).',
       },
       {
         labelUk: 'Типова помилка',
-        bodyUk: 'Думати, що після кліку «Approve» тікет уже в Jira — спочатку approval_granted, потім код, потім API.',
+        bodyUk: 'Вважати схвалення людиною доказом створення тікета в Jira.',
       },
     ],
   },
@@ -183,55 +251,68 @@ export const POLICY_FLOW_NODE_HINTS: StudyHintItem[] = [
     id: 'approval-granted',
     titleUk: 'Подія approval_granted',
     termEn: 'approval_granted',
-    teaserUk: 'Схвалено людиною — issue ще не створено.',
+    teaserUk: 'Фіксація схвалення — не підтвердження успіху Jira API.',
     sections: [
       {
         labelUk: 'Що означає',
         bodyUk:
-          'Фіксація факту схвалення (approval_id, час). **Не** означає createIssue success. Наступний крок — re-check policy і актуальність аргументів того ж run.',
+          'Записано факт, що людина дозволила продовжити обробку запиту. Issue ще не створено, поки немає успішного результату виконання інструмента.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'approval_granted між needs_approval і другим policy_decision (allow execute або deny).',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Зв’язок `approval_granted` з тим самим `run_id`, що й пропозиція.',
+          'Наступний етап після схвалення (re-check або executor — залежно від продукту).',
+          'Поля `approval_id` і час події, якщо вони є в схемі події.',
+        ],
       },
       {
         labelUk: 'Метрики',
-        bodyUk: 'Рахуйте approval_granted окремо від jira_issue_created / tool success.',
+        bodyUk:
+          'Рекомендація для продукту: рахувати `approval_granted` окремо від успішно створених issue (`tool_execution_result: success`).',
       },
     ],
-    exampleUk: 'Є approval_granted, але deny на re-check — executor знову не викликається (наприклад прострочений approval).',
   },
   {
     id: 'recheck-policy',
-    titleUk: 'Re-check після схвалення',
+    titleUk: 'Повторна перевірка після схвалення',
     termEn: 'post-approval policy re-check',
-    teaserUk: 'Код знову перевіряє політику й чи той самий запит.',
+    teaserUk: 'Код перевіряє політику й актуальність запиту після `approval_granted`, якщо цей крок реалізовано.',
     sections: [
       {
         labelUk: 'Що перевіряється',
         bodyUk:
-          'Той самий run і tool, чи не змінились права actor, чи не прострочено approval, чи аргументи не змінились після паузи. Людина схвалила — але код може відмовити.',
+          'Можуть перевірятися права actor, незмінність аргументів, строк дії схвалення або відповідність тому самому run. Конкретний набір залежить від коду harness, не від моделі.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'Другий policy_decision після approval_granted: allow (execute) або deny (stop).',
+        labelUk: 'Можливі результати',
+        listItemsUk: [
+          '`deny` — виконання зупиняється (див. блок deny після схвалення на схемі).',
+          'Дозвіл на виконання — перехід до `allow execute` і executor.',
+        ],
       },
     ],
-    qaUk: 'Тест: approve, потім змінити політику в staging — очікуйте deny на re-check.',
+    qaUk:
+      'Тест зміни політики під час очікування на схвалення має сенс лише там, де re-check і політика дійсно налаштовані в середовищі.',
   },
   {
     id: 'allow-execute',
     titleUk: 'allow execute',
     termEn: 'allow execute',
-    teaserUk: 'Після re-check — дозвіл викликати executor.',
+    teaserUk: 'Навчальне позначення дозволу перейти до executor після re-check.',
     sections: [
       {
         labelUk: 'Що означає',
-        bodyUk: 'Політика дозволила фактичний виклик Jira API для цього run. Далі лише технічний ризик: мережа, 503, валідація на стороні Jira.',
+        bodyUk:
+          'Політика дозволила фактичний виклик інструмента для цього run. Це не гарантує успіх зовнішнього API.',
       },
       {
-        labelUk: 'Відмінність від allow',
-        bodyUk: 'Перший allow — без людини. allow execute — після needs_approval і approval_granted. Обидва ведуть до одного executor.',
+        labelUk: 'Відмінність від першого allow',
+        listItemsUk: [
+          'Перший `allow` — без очікування на людину після першої `policy_decision`.',
+          '`allow execute` — після `needs_approval`, `approval_granted` і повторної перевірки.',
+          'Обидва шляхи можуть зійтися в один executor, якщо так зроблено в коді.',
+        ],
       },
     ],
   },
@@ -239,32 +320,42 @@ export const POLICY_FLOW_NODE_HINTS: StudyHintItem[] = [
     id: 'executor-jira',
     titleUk: 'Executor → Jira API',
     termEn: 'tool executor',
-    teaserUk: 'Єдине місце реального HTTP до Jira.',
+    teaserUk: 'Шар коду, який виконує дозволений зовнішній виклик.',
     sections: [
       {
         labelUk: 'Що відбувається',
-        bodyUk: 'Ізольований шар викликає API з service account, таймаутами, retry політикою. LLM до HTTP не підключається.',
+        bodyUk:
+          'Executor викликає Jira API (або mock у тестах) після дозволу політики. LLM не виконує HTTP-запити напряму.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'Executor span, request id, latency. Результат — окрема подія success або error.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Факт спроби виконання після дозволу.',
+          'Технічні деталі без секретів: latency, коди помилок, correlation id.',
+          'Окрема подія результату (`tool_execution_result` у навчальних прикладах).',
+        ],
       },
     ],
-    qaUk: 'Contract test executor + mock Jira для success і 503.',
+    qaUk: 'Якщо є тестовий executor або mock Jira: перевірте успішну відповідь і помилку зовнішнього сервісу.',
   },
   {
     id: 'executor-success',
     titleUk: 'Успіх API (success)',
     termEn: 'tool_execution_result: success',
-    teaserUk: 'Тікет реально створено — наприклад QA-1234.',
+    teaserUk: 'Успіх підтверджує фактичний результат виконання, не лише allow.',
     sections: [
       {
         labelUk: 'Що означає',
-        bodyUk: 'Jira повернула успіх, ключ issue записано в результат tool. Це кінець «щасливої» гілки після allow.',
+        bodyUk:
+          'Зовнішній сервіс повернув успіх, і результат виконання містить підтвердження (наприклад ключ issue). Ключ на кшталт `QA-1234` на схемі — умовний приклад.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'tool_execution_result status success, issue key QA-1234, correlation з run_id.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          '`tool_execution_result` зі статусом success.',
+          'Зв’язок із `run_id` того самого розслідування.',
+          'Ключ issue або інше поле відповіді API, якщо воно записується.',
+        ],
       },
     ],
   },
@@ -272,19 +363,24 @@ export const POLICY_FLOW_NODE_HINTS: StudyHintItem[] = [
     id: 'executor-error',
     titleUk: 'Помилка API (error)',
     termEn: 'tool_execution_result: error',
-    teaserUk: 'Політика пройдена — впала Jira, наприклад JIRA_503.',
+    teaserUk: 'Помилка API — не відмова політики.',
     sections: [
       {
         labelUk: 'Що означає',
-        bodyUk: 'Guardrails спрацювали, але зовнішній сервіс недоступний або відхилив запит. Це **не** deny політики — окрема подія для on-call і ретраїв.',
+        bodyUk:
+          'Політика могла дозволити дію, але зовнішній сервіс не виконав її успішно. Код `JIRA_503` на схемі — умовний приклад недоступності Jira.',
       },
       {
-        labelUk: 'У trace / логах',
-        bodyUk: 'tool_execution_result status error, code JIRA_503. Є executor span, немає issue key.',
+        labelUk: 'Що перевірити в trace',
+        listItemsUk: [
+          'Факт спроби виконання (executor або `tool_execution_result`).',
+          'Код або повідомлення помилки без витоку секретів.',
+          'Відсутність підтвердженого успішного ключа issue.',
+        ],
       },
       {
         labelUk: 'Для QA',
-        bodyUk: 'Перевіряйте, що алерт на 503 не плутають із deny_rate spike.',
+        bodyUk: 'Помилка API не повинна обліковуватись як `policy_decision: deny`.',
       },
     ],
   },

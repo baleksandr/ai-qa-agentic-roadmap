@@ -20,22 +20,35 @@ import {
   GUARDRAILS_FULL_EXAMPLE_REGISTRY_PANEL,
 } from './guardrails-full-example-panels';
 import {
+  GUARDRAILS_SECTION4_POLICY_PANEL,
+  GUARDRAILS_SECTION4_PROPOSED_PANEL,
+  GUARDRAILS_SECTION4_SANITIZED_PANEL,
+} from './guardrails-section4-transfer-panels';
+import {
+  GUARDRAILS_DATA_TRANSFER_CARDS_HOW_UK,
   GUARDRAILS_TOPIC_INTRO_COMPONENTS,
   GUARDRAILS_TOPIC_INTRO_DATA_TRANSFER,
   GUARDRAILS_TOPIC_INTRO_FULL_EXAMPLE,
-  GUARDRAILS_LLM_CODE_PRINCIPLE_UK,
+  GUARDRAILS_LLM_CODE_CARDS_HOW_UK,
+  GUARDRAILS_SECURITY_CARDS_HOW_UK,
+  GUARDRAILS_SECURITY_COMPACT_INTRO_UK,
+  GUARDRAILS_SEQUENCE_CARDS_HOW_UK,
+  GUARDRAILS_FAILURE_CARDS_HOW_UK,
+  GUARDRAILS_FAILURE_SECTION_ASIDE_UK,
+  GUARDRAILS_TOPIC_INTRO_FAILURES,
   GUARDRAILS_TOPIC_INTRO_LLM_CODE,
+  GUARDRAILS_TOPIC_INTRO_PRODUCTION,
+  GUARDRAILS_TOPIC_INTRO_QA_TESTS,
+  GUARDRAILS_TOPIC_INTRO_SECURITY,
   GUARDRAILS_TOPIC_INTRO_SEQUENCE,
   GUARDRAILS_TOPIC_INTRO_WHY,
 } from './guardrails-section-topic-intros';
-import {
-  GUARDRAILS_LLM_CODE_EXECUTOR_PANEL,
-  GUARDRAILS_LLM_CODE_HUMAN_PANEL,
-  GUARDRAILS_LLM_CODE_LLM_ROLE_PANEL,
-  GUARDRAILS_LLM_CODE_OUTPUT_PANEL,
-  GUARDRAILS_LLM_CODE_POLICY_PANEL,
-  GUARDRAILS_LLM_CODE_SCHEMA_PANEL,
-} from './guardrails-llm-code-panels';
+import { GUARDRAILS_PRODUCTION_STEPS } from './guardrails-production-panels';
+import { GUARDRAILS_QA_TEST_STEPS } from './guardrails-qa-tests-panels';
+import { GUARDRAILS_OBSERVABILITY_CARD_STEPS } from './guardrails-observability-card-panels';
+import { GUARDRAILS_FAILURE_MODE_PANELS } from './guardrails-failure-panels';
+import { GUARDRAILS_LLM_CODE_PIPELINE_STEPS } from './guardrails-llm-code-panels';
+import { GUARDRAILS_SECURITY_STEPS } from './guardrails-security-panels';
 import {
   GUARDRAILS_UNDER_HOOD_STEP_EXECUTOR_PANEL,
   GUARDRAILS_UNDER_HOOD_STEP_HUMAN_PANEL,
@@ -105,30 +118,31 @@ export const GUARDRAILS_FULL_EXAMPLE_BUNDLE: StudyTeachingCardsBundle = {
   ],
 };
 
-export const GUARDRAILS_DATA_TRANSFER_BUNDLE: StudyTeachingCardsBundle = {
-  ariaLabel: 'Послідовність етапів і передача даних',
+/** §5 «Послідовність» — три етапи tool call (вертикальні картки, як Approval UI). */
+export const GUARDRAILS_SEQUENCE_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Послідовність guardrails для одного tool call',
   presentation: 'concepts',
   hideFlowOverview: true,
-  hidePanelMainCardLabel: true,
-  hidePanelStepTitle: false,
-  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_DATA_TRANSFER,
+  ...GUARDRAILS_PANEL_UI,
+  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_SEQUENCE,
+  sectionCardsHowUk: GUARDRAILS_SEQUENCE_CARDS_HOW_UK,
   steps: [
     fundamentalsConceptStep(
-      'gr-dt-proposed',
+      'gr-seq-proposed',
       'Пропонована дія та аргументи',
       'Модель формує виклик інструмента, але дія ще не виконана',
       GUARDRAILS_DATA_TRANSFER_PROPOSED_PANEL,
       'Proposed action',
     ),
     fundamentalsConceptStep(
-      'gr-dt-policy',
+      'gr-seq-policy',
       'Рішення policy engine',
-      'Код визначає, чи дозволено дію, чи її потрібно відхилити або погодити',
+      'Код перевіряє запропоновану дію, її ресурс і контекст, щоб визначити, чи можна продовжити виконання, потрібно відхилити виклик або дочекатися погодження людини',
       GUARDRAILS_DATA_TRANSFER_POLICY_PANEL,
       'Policy decision',
     ),
     fundamentalsConceptStep(
-      'gr-dt-sanitized',
+      'gr-seq-verified',
       'Перевірений результат',
       'Результат дозволеної дії проходить перевірки перед передаванням моделі',
       GUARDRAILS_DATA_TRANSFER_SANITIZED_PANEL,
@@ -137,72 +151,135 @@ export const GUARDRAILS_DATA_TRANSFER_BUNDLE: StudyTeachingCardsBundle = {
   ],
 };
 
+/** §4 «Що передається між компонентами?» — три етапи передачі даних (вертикальні картки). */
+export const GUARDRAILS_DATA_TRANSFER_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Що передається між компонентами guardrails',
+  presentation: 'concepts',
+  hideFlowOverview: true,
+  ...GUARDRAILS_PANEL_UI,
+  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_DATA_TRANSFER,
+  sectionCardsHowUk: GUARDRAILS_DATA_TRANSFER_CARDS_HOW_UK,
+  steps: [
+    fundamentalsConceptStep(
+      'gr-s4-proposed',
+      'Пропонована дія та аргументи',
+      'Модель пропонує інструмент і параметри виклику. Фактичного виконання ще немає',
+      GUARDRAILS_SECTION4_PROPOSED_PANEL,
+      'Proposed action + arguments',
+    ),
+    fundamentalsConceptStep(
+      'gr-s4-policy',
+      'Рішення policy engine',
+      'Код перевіряє запропоновану дію, її ресурс і контекст, щоб визначити, чи можна продовжити виконання, потрібно відхилити виклик або дочекатися погодження людини',
+      GUARDRAILS_SECTION4_POLICY_PANEL,
+      'Policy decision',
+    ),
+    fundamentalsConceptStep(
+      'gr-s4-sanitized',
+      'Перевірений результат',
+      'Результат проходить перевірки перед передаванням у наступний контекст LLM',
+      GUARDRAILS_SECTION4_SANITIZED_PANEL,
+      'Sanitized input/output',
+    ),
+  ],
+};
+
 export const GUARDRAILS_LLM_CODE_BUNDLE: StudyTeachingCardsBundle = {
-  ariaLabel: 'Де код, а де LLM у guardrails',
+  ariaLabel: 'Де код, а де LLM — шлях виклику інструмента',
   presentation: 'process',
   hideFlowOverview: true,
   ...GUARDRAILS_PANEL_UI,
   sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_LLM_CODE,
-  compactSectionIntroLabelUk: 'Головний принцип',
-  compactSectionIntroUk: GUARDRAILS_LLM_CODE_PRINCIPLE_UK,
-  sectionCardsInteractionHintUk:
-    'Оберіть картку ліворуч, щоб побачити пояснення. На телефоні панель з’явиться під картками.',
-  steps: [
-    fundamentalsConceptStep(
-      'gr-llm-role',
-      'Роль LLM',
-      'Пропонує інструмент і формує аргументи, але не визначає власні права доступу',
-      GUARDRAILS_LLM_CODE_LLM_ROLE_PANEL,
-      undefined,
-      'LLM',
-    ),
-    fundamentalsConceptStep(
-      'gr-llm-schema',
-      'Schema validation',
-      'Код перевіряє обов’язкові поля, типи даних і допустимі параметри',
-      GUARDRAILS_LLM_CODE_SCHEMA_PANEL,
-      undefined,
-      'Код',
-    ),
-    fundamentalsConceptStep(
-      'gr-llm-policy',
-      'Policy engine',
-      'Код визначає, чи дозволена дія для конкретного користувача, ресурсу та середовища',
-      GUARDRAILS_LLM_CODE_POLICY_PANEL,
-      undefined,
-      'Код',
-    ),
-    fundamentalsConceptStep(
-      'gr-llm-human',
-      'Human approval',
-      'Людина підтверджує дію, якщо цього вимагає політика',
-      GUARDRAILS_LLM_CODE_HUMAN_PANEL,
-      undefined,
-      'Людина',
-    ),
-    fundamentalsConceptStep(
-      'gr-llm-executor',
-      'Executor',
-      'Код виконує дію лише після проходження всіх необхідних перевірок',
-      GUARDRAILS_LLM_CODE_EXECUTOR_PANEL,
-      undefined,
-      'Код',
-    ),
-    fundamentalsConceptStep(
-      'gr-llm-output',
-      'Перевірка результату',
-      'Код перевіряє результат інструмента перед передаванням його моделі',
-      GUARDRAILS_LLM_CODE_OUTPUT_PANEL,
-      undefined,
-      'Код',
-    ),
-  ],
+  sectionCardsHowUk: GUARDRAILS_LLM_CODE_CARDS_HOW_UK,
+  steps: GUARDRAILS_LLM_CODE_PIPELINE_STEPS.map((step) =>
+    fundamentalsConceptStep(step.key, step.titleUk, step.teaserUk, step.panel, step.termEn),
+  ),
+};
+
+export const GUARDRAILS_SECURITY_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Принципи security guardrails',
+  presentation: 'concepts',
+  hideFlowOverview: true,
+  ...GUARDRAILS_PANEL_UI,
+  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_SECURITY,
+  sectionCardsHowUk: GUARDRAILS_SECURITY_CARDS_HOW_UK,
+  compactSectionIntroUk: GUARDRAILS_SECURITY_COMPACT_INTRO_UK,
+  steps: GUARDRAILS_SECURITY_STEPS.map((step) =>
+    fundamentalsConceptStep(step.key, step.titleUk, step.teaserUk, step.panel, step.termEn),
+  ),
+};
+
+export const GUARDRAILS_QA_TESTS_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Як тестувати guardrails як QA/SDET',
+  presentation: 'concepts',
+  hideFlowOverview: true,
+  hideSectionCardsInteractionHint: true,
+  ...GUARDRAILS_PANEL_UI,
+  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_QA_TESTS,
+  steps: GUARDRAILS_QA_TEST_STEPS.map((step) =>
+    fundamentalsConceptStep(step.key, step.titleUk, step.teaserUk, step.panel, step.termEn),
+  ),
   afterInteractiveSummary: {
-    sectionTitleUk: 'Підсумок розділу',
-    cards: [],
+    sectionTitleUk: 'Що має довести тест',
     footnoteUk:
-      'LLM пропонує → код перевіряє → людина погоджує за потреби → executor виконує → код перевіряє результат.\n\nТочний порядок окремих технічних перевірок залежить від реалізації. Незмінний принцип полягає в тому, що пропозиція моделі не є дозволом на виконання, а заборонена дія не повинна створювати побічних ефектів.',
+      'Надійний тест Guardrails перевіряє не тільки повідомлення у відповіді агента. Він має підтвердити фактичний вердикт, відсутність забороненого виконання та коректну поведінку після блокування.\n\nЦі назви є очікуваними категоріями результатів у навчальному прикладі. Перед прив’язкою тестів до конкретних enum або статусів звір точні назви з реалізацією проєкту.',
+    cards: [
+      {
+        titleUk: 'ALLOW',
+        bodyUk:
+          'Дозволена дія проходить перевірки, виконується в межах прав і повертає очікуваний результат.',
+      },
+      {
+        titleUk: 'DENY',
+        bodyUk: 'Заборонена дія відхиляється, а фактичний виклик або побічна зміна не відбуваються.',
+      },
+      {
+        titleUk: 'NEEDS_APPROVAL',
+        bodyUk:
+          'Дія залишається невиконаною, поки не отримано погодження, передбачене правилами.',
+      },
+    ],
   },
+};
+
+export const GUARDRAILS_OBSERVABILITY_CARDS_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Події observability для одного run',
+  presentation: 'concepts',
+  hideFlowOverview: true,
+  hideSectionCardsInteractionHint: true,
+  ...GUARDRAILS_PANEL_UI,
+  sectionCardsHowUk:
+    'Виберіть картку, щоб побачити, яку подію перевіряти, що вона означає та як QA підтверджує фактичну поведінку системи.',
+  steps: GUARDRAILS_OBSERVABILITY_CARD_STEPS.map((step) =>
+    fundamentalsConceptStep(step.key, step.titleUk, step.teaserUk, step.panel, step.termEn),
+  ),
+};
+
+export const GUARDRAILS_PRODUCTION_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Production considerations для guardrails',
+  presentation: 'concepts',
+  hideFlowOverview: true,
+  ...GUARDRAILS_PANEL_UI,
+  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_PRODUCTION,
+  sectionCardsHowUk: 'Оберіть тему, щоб побачити пояснення, приклад і принцип для production.',
+  steps: GUARDRAILS_PRODUCTION_STEPS.map((step) =>
+    fundamentalsConceptStep(step.key, step.titleUk, step.teaserUk, step.panel, step.termEn),
+  ),
+};
+
+export const GUARDRAILS_FAILURE_BUNDLE: StudyTeachingCardsBundle = {
+  ariaLabel: 'Де guardrails можуть впасти — типові збої',
+  presentation: 'concepts',
+  hideFlowOverview: true,
+  ...GUARDRAILS_PANEL_UI,
+  sectionTopicIntroUk: GUARDRAILS_TOPIC_INTRO_FAILURES,
+  sectionCardsHowUk: GUARDRAILS_FAILURE_CARDS_HOW_UK,
+  sectionAsideNoteUk: GUARDRAILS_FAILURE_SECTION_ASIDE_UK,
+  sectionAsideNoteTitleUk: 'Важливо',
+  sectionAsideNotePlacement: 'below-topic-intro',
+  steps: GUARDRAILS_FAILURE_MODE_PANELS.map((item) =>
+    fundamentalsConceptStep(item.key, item.titleUk, item.teaserUk, item.panel, item.termEn),
+  ),
 };
 
 export const GUARDRAILS_UNDER_HOOD_SEQUENCE_BUNDLE: StudyTeachingCardsBundle = {

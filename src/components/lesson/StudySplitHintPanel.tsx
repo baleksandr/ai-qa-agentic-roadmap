@@ -74,7 +74,7 @@ export function StudySplitHintPanel({
                           ))}
                         </ol>
                       ) : (
-                        parseLessonBold(sec.bodyUk)
+                        parseLessonBold(sec.bodyUk ?? '')
                       )}
                     </dd>
                   </div>

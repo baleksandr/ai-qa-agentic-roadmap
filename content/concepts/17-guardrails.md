@@ -38,7 +38,7 @@ Proposed action + arguments → policy decision (allow / deny / needs_approval) 
 
 LLM пропонує; **verdict allow/deny/approve** — код. Людина — risky writes.
 
-### Де це може впасти? — failure modes
+### 7. Де це може впасти? — типові збої Guardrails
 
 Permissive policy; inconsistent rules across MCP/local tools; false positive blocks work.
 

@@ -72,6 +72,69 @@ export function parseLessonBold(
   return nodes;
 }
 
+type LessonRichBlock = { type: 'prose'; text: string } | { type: 'ul'; items: string[] };
+
+const MARKDOWN_BULLET_LINE_RE = /^-\s+(.+)$/;
+
+/** Розбиває абзац на прозу та підрядки «- …» (GFM-маркери в одному блоці). */
+function expandParagraphWithBulletLists(paragraph: string): LessonRichBlock[] {
+  const lines = paragraph.split('\n');
+  const blocks: LessonRichBlock[] = [];
+  let proseLines: string[] = [];
+  let bulletItems: string[] = [];
+
+  const flushProse = () => {
+    const text = proseLines.join('\n').trim();
+    if (text) blocks.push({ type: 'prose', text });
+    proseLines = [];
+  };
+  const flushBullets = () => {
+    if (bulletItems.length) blocks.push({ type: 'ul', items: [...bulletItems] });
+    bulletItems = [];
+  };
+
+  for (const line of lines) {
+    const bullet = line.match(MARKDOWN_BULLET_LINE_RE);
+    if (bullet) {
+      flushProse();
+      bulletItems.push(bullet[1].trim());
+      continue;
+    }
+    if (!line.trim() && bulletItems.length > 0) continue;
+    if (bulletItems.length > 0) flushBullets();
+    proseLines.push(line);
+  }
+  flushProse();
+  flushBullets();
+
+  return blocks.length ? blocks : [{ type: 'prose', text: paragraph.trim() }];
+}
+
+function renderLessonRichBlocks(
+  blocks: LessonRichBlock[],
+  className: string,
+  inlineOpts?: { suppressTermAccent?: string[]; maxTermAccents?: number },
+): ReactNode {
+  return blocks.map((block, i) => {
+    if (block.type === 'ul') {
+      return (
+        <ul key={`ul-${i}`} className="study-learner-bullet-list">
+          {block.items.map((item, j) => (
+            <li key={j} className={className}>
+              {parseLessonBold(item, inlineOpts)}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    return (
+      <p key={`p-${i}`} className={className}>
+        {parseLessonBold(block.text, inlineOpts)}
+      </p>
+    );
+  });
+}
+
 export function LessonRichParagraphs({
   text,
   className = 'lesson-p',
@@ -91,16 +154,13 @@ export function LessonRichParagraphs({
     suppressTermAccent?.length || maxTermAccents !== undefined
       ? { suppressTermAccent, maxTermAccents }
       : undefined;
-  if (paragraphs.length === 1) {
-    return <p className={className}>{parseLessonBold(paragraphs[0], inlineOpts)}</p>;
+  const blocks = paragraphs.flatMap((para) => expandParagraphWithBulletLists(para));
+  if (blocks.length === 1 && blocks[0].type === 'prose') {
+    return <p className={className}>{parseLessonBold(blocks[0].text, inlineOpts)}</p>;
   }
   return (
     <div className="lesson-p-stack">
-      {paragraphs.map((para, i) => (
-        <p key={i} className={className}>
-          {parseLessonBold(para, inlineOpts)}
-        </p>
-      ))}
+      {renderLessonRichBlocks(blocks, className, inlineOpts)}
     </div>
   );
 }

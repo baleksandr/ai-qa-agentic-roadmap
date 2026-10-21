@@ -329,7 +329,8 @@
 .topic-study-page--concept-07 .study-cyber-hud-hero-grid,
 .topic-study-page--concept-11 .study-cyber-hud-hero-grid,
 .topic-study-page--concept-13 .study-cyber-hud-hero-grid,
-.topic-study-page--concept-15 .study-cyber-hud-hero-grid {
+.topic-study-page--concept-15 .study-cyber-hud-hero-grid,
+.topic-study-page--concept-18 .study-cyber-hud-hero-grid {
   width: 100%;
   max-width: 100%;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -341,9 +342,29 @@
 .topic-study-page--concept-07 .study-cyber-hud-card--hero,
 .topic-study-page--concept-11 .study-cyber-hud-card--hero,
 .topic-study-page--concept-13 .study-cyber-hud-card--hero,
-.topic-study-page--concept-15 .study-cyber-hud-card--hero {
+.topic-study-page--concept-15 .study-cyber-hud-card--hero,
+.topic-study-page--concept-18 .study-cyber-hud-card--hero {
   min-height: 4.85rem;
+  height: auto;
   padding: 0.62rem 0.65rem 0.68rem;
+}
+
+.topic-study-page--concept-18 .study-cyber-hud-card__copy {
+  min-width: 0;
+  gap: 0.34rem;
+}
+
+.topic-study-page--concept-18 .study-cyber-hud-card__title,
+.topic-study-page--concept-18 .study-cyber-hud-card__sub {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 900px) {
+  .topic-study-page--concept-18 .study-cyber-hud-card--hero .study-cyber-hud-card__title,
+  .topic-study-page--concept-18 .study-cyber-hud-card--hero .study-cyber-hud-card__sub {
+    white-space: normal;
+  }
 }
 
 @media (max-width: 899px) {
@@ -352,7 +373,8 @@
   .topic-study-page--concept-07 .study-cyber-hud-hero-grid,
   .topic-study-page--concept-11 .study-cyber-hud-hero-grid,
   .topic-study-page--concept-13 .study-cyber-hud-hero-grid,
-  .topic-study-page--concept-15 .study-cyber-hud-hero-grid {
+  .topic-study-page--concept-15 .study-cyber-hud-hero-grid,
+  .topic-study-page--concept-18 .study-cyber-hud-hero-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -360,7 +382,8 @@
 /* Довший підзаголовок Vector DB — перенос усередині картки, без наїзду на сусідів */
 @media (min-width: 900px) {
   .topic-study-page--concept-13 .study-cyber-hud-card__sub,
-  .topic-study-page--concept-15 .study-cyber-hud-card__sub {
+  .topic-study-page--concept-15 .study-cyber-hud-card__sub,
+  .topic-study-page--concept-18 .study-cyber-hud-card__sub {
     white-space: normal;
   }
 }

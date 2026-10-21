@@ -1,6 +1,6 @@
 export type StudyHintSection = {
   labelUk: string;
-  bodyUk: string;
+  bodyUk?: string;
   /** Пункти списку (рендеряться стовпчиком, не в один рядок) */
   listItemsUk?: string[];
 };

@@ -22,6 +22,8 @@ import './styles/study-role-colors.css';
 import './styles/study-term-accent.css';
 import './styles/study-cyber-hud.css';
 import './styles/study-neon-hud-theme.css';
+import './styles/study-observability-page.css';
+import './styles/study-tool-calling-page.css';
 
 function App() {
   return (

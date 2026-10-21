@@ -1,0 +1,100 @@
+/* concept-10 Tool Calling — ширина hero, перенос у HUD intro-картках (1–3) */
+
+.topic-study-page--concept-10 .study-header-compact .study-rag-page-h1 {
+  width: 100%;
+  max-width: none;
+}
+
+.topic-study-page--concept-10 .study-rag-acronym-hero {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.topic-study-page--concept-10 .study-rag-acronym-topic {
+  max-width: none;
+  width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.topic-study-page--concept-10 .study-rag-acronym-hero .study-lesson-hero-framed-explanation {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 900px) {
+  .topic-study-page--concept-10 .study-rag-acronym-hero .study-lesson-hero-framed-explanation {
+    white-space: normal;
+  }
+}
+
+.topic-study-page--concept-10 .study-cyber-hud-hero-grid {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem 0.62rem;
+  align-items: stretch;
+}
+
+.topic-study-page--concept-10 .study-cyber-hud-card--hero {
+  min-height: 5.1rem;
+  height: auto;
+  padding: 0.72rem 0.84rem 0.92rem;
+  overflow: hidden;
+}
+
+.topic-study-page--concept-10 .study-cyber-hud-card__copy {
+  gap: 0.34rem;
+  min-width: 0;
+}
+
+.topic-study-page--concept-10 .study-cyber-hud-card__title,
+.topic-study-page--concept-10 .study-cyber-hud-card__sub {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 900px) {
+  .topic-study-page--concept-10 .study-cyber-hud-card--hero .study-cyber-hud-card__title,
+  .topic-study-page--concept-10 .study-cyber-hud-card--hero .study-cyber-hud-card__sub {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 899px) {
+  .topic-study-page--concept-10 .study-cyber-hud-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-study-page--concept-10 .study-cyber-hud-card--hero {
+    min-height: 0;
+  }
+}
+
+/* Fallback, якщо intro-картки без Neon HUD */
+.topic-study-page--concept-10 .study-tc-hero-intro-cards,
+.topic-study-page--concept-10 .study-tc-hero-intro-cards .study-after-interactive-summary,
+.topic-study-page--concept-10 .study-tc-hero-intro-cards .study-after-interactive-summary-grid {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.topic-study-page--concept-10 .study-harness-outcomes-cards .study-after-interactive-summary-card {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.topic-study-page--concept-10 .study-harness-outcomes-cards .study-after-interactive-summary-card-title,
+.topic-study-page--concept-10 .study-harness-outcomes-cards .study-after-interactive-summary-card-body {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  max-width: 100%;
+}

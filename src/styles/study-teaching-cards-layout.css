@@ -968,6 +968,17 @@
   align-self: start;
 }
 
+.study-teaching-section-aside-note--below-topic {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 0.75rem;
+  box-sizing: border-box;
+}
+
+.study-guardrails-failure-modes .study-teaching-section-topic-intro {
+  margin-bottom: 0.5rem;
+}
+
 .study-teaching-section-aside-note--after-cards {
   width: 100%;
   max-width: 100%;
@@ -1889,6 +1900,8 @@
 }
 
 /* Guardrails §5–§6 — teaching cards (послідовність, код vs LLM) */
+.study-guardrails-sequence .study-learner-panel-block--framed,
+.study-guardrails-data-transfer .study-learner-panel-block--framed,
 .study-guardrails-under-hood-sequence .study-learner-panel-block--framed,
 .study-guardrails-llm-code .study-learner-panel-block--framed {
   display: block;
@@ -1901,11 +1914,15 @@
   min-width: 0;
 }
 
+.study-guardrails-sequence .study-learner-panel-block--framed:last-of-type,
+.study-guardrails-data-transfer .study-learner-panel-block--framed:last-of-type,
 .study-guardrails-under-hood-sequence .study-learner-panel-block--framed:last-of-type,
 .study-guardrails-llm-code .study-learner-panel-block--framed:last-of-type {
   margin-bottom: 0.65rem;
 }
 
+.study-guardrails-sequence .study-learner-panel-block--framed .study-learner-panel-label,
+.study-guardrails-data-transfer .study-learner-panel-block--framed .study-learner-panel-label,
 .study-guardrails-under-hood-sequence .study-learner-panel-block--framed .study-learner-panel-label,
 .study-guardrails-llm-code .study-learner-panel-block--framed .study-learner-panel-label {
   margin: 0 0 0.35rem;
@@ -1915,6 +1932,8 @@
   color: var(--study-heading-accent, #6ee4d4);
 }
 
+.study-guardrails-sequence .study-learner-panel-block--framed .study-learner-panel-value,
+.study-guardrails-data-transfer .study-learner-panel-block--framed .study-learner-panel-value,
 .study-guardrails-under-hood-sequence .study-learner-panel-block--framed .study-learner-panel-value,
 .study-guardrails-llm-code .study-learner-panel-block--framed .study-learner-panel-value {
   margin: 0;
@@ -1924,6 +1943,14 @@
   overflow-wrap: anywhere;
 }
 
+.study-guardrails-sequence .study-step-detail-layout,
+.study-guardrails-sequence .study-step-detail-nav,
+.study-guardrails-sequence .study-step-detail-panel,
+.study-guardrails-sequence .study-rag-pipeline-steps-col > li,
+.study-guardrails-data-transfer .study-step-detail-layout,
+.study-guardrails-data-transfer .study-step-detail-nav,
+.study-guardrails-data-transfer .study-step-detail-panel,
+.study-guardrails-data-transfer .study-rag-pipeline-steps-col > li,
 .study-guardrails-under-hood-sequence .study-step-detail-layout,
 .study-guardrails-under-hood-sequence .study-step-detail-nav,
 .study-guardrails-under-hood-sequence .study-step-detail-panel,

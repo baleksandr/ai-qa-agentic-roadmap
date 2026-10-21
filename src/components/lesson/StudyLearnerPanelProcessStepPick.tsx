@@ -13,6 +13,7 @@ import { STUDY_EMPTY_PANEL_UK } from '../../lib/studyLearnerCopy';
 import { shouldShowNestedProcessStepPickHint } from '../../lib/studyPageInteractive';
 import { parseLessonBold } from './lessonRichText';
 import { StudyPanelTerms } from './StudyPanelTerms';
+import { StudyLearnerPanelCompactPayload } from './StudyLearnerPanelCompactPayload';
 
 export type StudyLearnerPanelProcessStep = {
   key: string;
@@ -170,6 +171,12 @@ export function StudyLearnerPanelProcessStepPick({
                             <StudyLearnerExplanationBlocks
                               bodyUk={sec.bodyUk ?? ''}
                               labeledPairs={sec.labeledPairs}
+                            />
+                          ) : null}
+                          {sec.compactPayload?.length ? (
+                            <StudyLearnerPanelCompactPayload
+                              rows={sec.compactPayload}
+                              footnoteUk={sec.compactPayloadFootnoteUk}
                             />
                           ) : null}
                         </dd>

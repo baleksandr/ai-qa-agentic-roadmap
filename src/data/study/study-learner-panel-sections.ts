@@ -214,6 +214,9 @@ export type StudyLearnerPanelProcessStepPickSection = {
       bodyUk?: string;
       labeledLead?: StudyLabeledPair;
       labeledPairs?: StudyLabeledPair[];
+      /** Компактний payload: усі поля в одному блоці (поле → значення). */
+      compactPayload?: Array<{ keyUk: string; valueUk: string }>;
+      compactPayloadFootnoteUk?: string;
     }>;
     exampleUk?: string;
     qaCheckUk?: string;

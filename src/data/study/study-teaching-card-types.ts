@@ -85,7 +85,7 @@ export type StudyTeachingCardsBundle = {
   /** Заголовок нотатки (за замовчуванням — «Нотатка до розділу»). */
   sectionAsideNoteTitleUk?: string;
   /** `after-cards` — Neon HUD нотатка під split-panel (не footnote під картками). */
-  sectionAsideNotePlacement?: 'intro-grid' | 'after-cards';
+  sectionAsideNotePlacement?: 'intro-grid' | 'after-cards' | 'below-topic-intro';
   leadUk?: string;
   /** Компактний вступ над картками (без callout-рамки). */
   compactSectionIntroUk?: string;
@@ -93,6 +93,8 @@ export type StudyTeachingCardsBundle = {
   compactSectionIntroLabelUk?: string;
   /** Змістовний вступ «Про що цей розділ» перед картками (окремо від інструкції UI). */
   sectionTopicIntroUk?: string;
+  /** Текст блоку «Як працювати з картками» під вступом (за замовчуванням — стандарт курсу). */
+  sectionCardsHowUk?: string;
   /** Короткий рядок кроків для компактної схеми зверху (лише presentation `process`). */
   flowArrowLine?: string;
   /** `vertical` — один стовпчик кроків зверху вниз (наприклад §4 tool calling). */

@@ -1,138 +1,103 @@
 import { Link } from 'react-router-dom';
 import { getMapLabel } from '../../data/learning-map.registry';
 import {
-  GUARDRAILS_FAILURE_MODES_LIST,
   GUARDRAILS_INTERVIEW_ANSWER_EN,
   GUARDRAILS_INTERVIEW_ANSWER_UK,
   GUARDRAILS_INTERVIEW_QUESTION_EN,
   GUARDRAILS_INTERVIEW_QUESTION_UK,
-  GUARDRAILS_PRODUCTION_TOPICS,
-  GUARDRAILS_QA_TESTS_HINTS,
   GUARDRAILS_REMEMBER_UK,
-  GUARDRAILS_SECURITY_HINTS,
 } from '../../data/study/guardrails-extra-sections';
+import { GUARDRAILS_PRODUCTION_CLOSING_UK } from '../../data/study/guardrails-production-panels';
 import {
   GUARDRAILS_DATA_TRANSFER_BUNDLE,
+  GUARDRAILS_FAILURE_BUNDLE,
   GUARDRAILS_LLM_CODE_BUNDLE,
-  GUARDRAILS_UNDER_HOOD_SEQUENCE_BUNDLE,
+  GUARDRAILS_PRODUCTION_BUNDLE,
+  GUARDRAILS_QA_TESTS_BUNDLE,
+  GUARDRAILS_SECURITY_BUNDLE,
+  GUARDRAILS_SEQUENCE_BUNDLE,
 } from '../../data/study/guardrails-study-bundles';
-import { StudyEnrichedCardList } from './StudyEnrichedCardList';
 import { StudyGuardrailsObservability } from './StudyGuardrailsObservability';
-import { StudySplitHintPanel } from './StudySplitHintPanel';
 import { StudyGuardrailsSectionTopicIntro } from './StudyGuardrailsSectionTopicIntro';
 import { StudyTeachingCardsSection } from './StudyTeachingCardsSection';
 import { LessonRichParagraphs } from './lessonRichText';
 
 export { StudyGuardrailsObservability };
 
-const GUARDRAILS_DATA_TRANSFER_CLASS =
-  'study-guardrails-teaching-cards study-guardrails-data-transfer study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards';
+const GUARDRAILS_TEACHING_CLASS =
+  'study-guardrails-teaching-cards study-guardrails-sequence study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards';
 
-/** §6 «Де код, а де LLM?» — ролі моделі, коду та людини на прикладі login_spec. */
+/** §6 «Де код, а де LLM?» — шість етапів pipeline (картки + панель). */
 export function StudyGuardrailsLlmCode() {
   return (
     <StudyTeachingCardsSection
       bundle={GUARDRAILS_LLM_CODE_BUNDLE}
-      className="study-guardrails-teaching-cards study-guardrails-llm-code study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards"
+      className={`${GUARDRAILS_TEACHING_CLASS} study-guardrails-llm-code`}
     />
   );
 }
 
-/** §5 «Послідовність» — шість етапів від input checks до executor. */
+/** §5 «Послідовність» — три етапи tool call (вертикальні картки + панель, як Approval UI). */
+export function StudyGuardrailsSequence() {
+  return <StudyTeachingCardsSection bundle={GUARDRAILS_SEQUENCE_BUNDLE} className={GUARDRAILS_TEACHING_CLASS} />;
+}
+
+/** @deprecated Використовуйте StudyGuardrailsSequence */
 export function StudyGuardrailsUnderHoodSequence() {
-  return (
-    <StudyTeachingCardsSection
-      bundle={GUARDRAILS_UNDER_HOOD_SEQUENCE_BUNDLE}
-      className="study-guardrails-teaching-cards study-guardrails-under-hood-sequence study-memory-state-teaching-cards study-multi-agent-teaching-cards study-agentic-workflows-teaching-cards"
-    />
-  );
+  return <StudyGuardrailsSequence />;
 }
 
-/** §4 «Що передається між компонентами?» — одна послідовність із трьох карток. */
+/** §4 «Що передається між компонентами?» — три етапи передачі даних. */
 export function StudyGuardrailsDataTransfer() {
   return (
     <StudyTeachingCardsSection
       bundle={GUARDRAILS_DATA_TRANSFER_BUNDLE}
-      className={`${GUARDRAILS_DATA_TRANSFER_CLASS} study-guardrails-sequence-stages`}
+      className={`${GUARDRAILS_TEACHING_CLASS} study-guardrails-data-transfer`}
     />
   );
 }
 
 export function StudyGuardrailsFailureModes() {
   return (
-    <>
-      <StudyGuardrailsSectionTopicIntro sectionTitle="failure modes" showCardsHow={false} />
-      <StudyGuardrailsFailureModesBody />
-    </>
-  );
-}
-
-function StudyGuardrailsFailureModesBody() {
-  const cards = GUARDRAILS_FAILURE_MODES_LIST.map((mode) => ({
-    id: mode.termEn,
-    titleUk: mode.titleUk,
-    termEn: mode.termEn,
-    sections: [
-      { labelUk: 'Що це', bodyUk: mode.whatUk },
-      { labelUk: 'Як проявляється', bodyUk: mode.symptomUk },
-      { labelUk: 'Що зробити в дизайні', bodyUk: mode.mitigationUk },
-    ],
-    qaUk: mode.qaUk,
-  }));
-
-  return (
-    <StudyEnrichedCardList
-      leadUk="Тут не «баг LLM», а збої шару політик — коду permissions, validators і policy engine."
-      introUk="Шар політик — це все, що приймає рішення allow/deny/needs_approval детерміновано, до executor. Він може бути занадто м’яким (небезпечні allow), занадто жорстким (false deny), обходитися через текст у RAG/логах або роз’їжджатися між різними tools. Далі — чотири типові збої з уроку."
-      cards={cards}
-      listAriaLabel="Failure modes"
+    <StudyTeachingCardsSection
+      bundle={GUARDRAILS_FAILURE_BUNDLE}
+      className={`${GUARDRAILS_TEACHING_CLASS} study-guardrails-failure-modes`}
     />
   );
 }
 
 export function StudyGuardrailsQaTests() {
   return (
-    <>
-      <StudyGuardrailsSectionTopicIntro sectionTitle="Як це тестувати" />
-      <StudySplitHintPanel
-      leadUk="Як SDET перевіряє guardrails: не лише happy path, а **навмисні зловживання** і крайові випадки."
-      introUk="Для кожного сценарію — що перевіряти, як запускати й що шукати в trace. Англійська назва внизу — термін курсу."
-      items={GUARDRAILS_QA_TESTS_HINTS}
-      listAriaLabel="Сценарії тестування guardrails"
+    <StudyTeachingCardsSection
+      bundle={GUARDRAILS_QA_TESTS_BUNDLE}
+      className={`${GUARDRAILS_TEACHING_CLASS} study-guardrails-qa-tests`}
     />
-    </>
   );
 }
 
 export function StudyGuardrailsSecurity() {
   return (
-    <>
-      <StudyGuardrailsSectionTopicIntro sectionTitle="Security" />
-      <StudySplitHintPanel
-      leadUk="Guardrails — **основний security-шар** агента: не фраза в промпті, а код і інфраструктура навколо кожного tool call."
-      introUk="Чотири принципи з уроку — пояснення для дизайну й перевірок QA."
-      items={GUARDRAILS_SECURITY_HINTS}
-      listAriaLabel="Принципи security"
+    <StudyTeachingCardsSection
+      bundle={GUARDRAILS_SECURITY_BUNDLE}
+      className={`${GUARDRAILS_TEACHING_CLASS} study-guardrails-security`}
     />
-    </>
   );
 }
 
 export function StudyGuardrailsProduction() {
   return (
     <>
-      <StudyGuardrailsSectionTopicIntro sectionTitle="Production considerations" showCardsHow={false} />
-    <div className="study-production-block">
-      <LessonRichParagraphs
-        text="Guardrails живуть у реальному deploy: політики версіонуються, сервіси падають, навантаження росте — поведінка має залишатися **передбачуваною**."
-        className="lesson-p study-boundary-lead"
+      <StudyTeachingCardsSection
+        bundle={GUARDRAILS_PRODUCTION_BUNDLE}
+        className={`${GUARDRAILS_TEACHING_CLASS} study-guardrails-production study-memory-state-production`}
       />
-      <ul className="study-production-list">
-        {GUARDRAILS_PRODUCTION_TOPICS.map((t) => (
-          <li key={t}>{t}</li>
-        ))}
-      </ul>
-    </div>
+      <aside className="lesson-callout lesson-key-idea study-guardrails-production-closing">
+        <span className="lesson-callout-label">Підсумок</span>
+        <LessonRichParagraphs
+          text={GUARDRAILS_PRODUCTION_CLOSING_UK}
+          className="lesson-p study-learner-explanation"
+        />
+      </aside>
     </>
   );
 }

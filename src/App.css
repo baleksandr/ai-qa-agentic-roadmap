@@ -2843,13 +2843,33 @@ h1 {
 .study-tc-hero-intro-cards .study-after-interactive-summary-grid {
   width: 100%;
   max-width: none;
+  min-width: 0;
   grid-template-columns: minmax(0, 1fr);
+}
+
+.study-tc-hero-intro-cards .study-after-interactive-summary-card {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.study-tc-hero-intro-cards .study-after-interactive-summary-card-title,
+.study-tc-hero-intro-cards .study-after-interactive-summary-card-body {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 @media (min-width: 768px) {
   .study-tc-hero-intro-cards .study-after-interactive-summary-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .study-tc-hero-intro-cards .study-after-interactive-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -3380,6 +3400,14 @@ h1 {
 .study-teaching-intro-run-note {
   margin: 0.75rem 0 0;
   max-width: 62ch;
+}
+
+.study-harness-run-flow-intro .study-harness-run-flow-sequence-label {
+  margin-top: 1rem;
+}
+
+.study-harness-run-flow-intro .study-rag-story-intro-text {
+  max-width: none;
 }
 
 .study-teaching-course-continue {
@@ -4535,10 +4563,47 @@ h1 {
 }
 
 .study-policy-verdict {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
+  padding: 0.12rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.verdict-deny .study-policy-verdict {
+  color: #ff9a9a;
+  border: 1px solid rgba(255, 107, 107, 0.45);
+}
+
+.verdict-allow .study-policy-verdict {
+  color: #7ee8b8;
+  border: 1px solid rgba(94, 224, 168, 0.45);
+}
+
+.verdict-approval .study-policy-verdict {
+  color: #f0c96a;
+  border: 1px solid rgba(232, 184, 74, 0.45);
+}
+
+.study-policy-verdict-status-rows {
+  margin: 1rem 0 1.15rem;
+}
+
+.study-policy-verdict-status-rows .study-policy-explain {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.study-policy-verdict-status-rows .study-policy-qa {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: inherit;
+}
+
+.study-policy-verdict-status-rows .study-learner-bullet-list {
+  margin: 0.35rem 0 0;
 }
 
 .study-policy-term {
@@ -4609,6 +4674,34 @@ h1 {
   margin: 0 0 0.75rem;
 }
 
+.study-obs-logging-callout .study-obs-logging-list {
+  margin: 0.5rem 0 0.65rem;
+  padding-left: 1.15rem;
+}
+
+.study-obs-logging-callout .study-obs-logging-outro {
+  margin: 0;
+}
+
+.study-obs-glossary-footnote {
+  margin-top: 0.65rem;
+}
+
+.study-observability-why-flow {
+  margin-top: 1.1rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.study-observability-why-flow-caption {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  max-width: 38rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .study-obs-callout {
   margin-top: 0.75rem;
 }
@@ -4667,9 +4760,9 @@ h1 {
 }
 
 .policy-flow-detail {
-  min-height: 14rem;
-  max-height: min(70vh, 36rem);
-  overflow-y: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
 }
 
 .policy-flow-detail-head {
@@ -4733,6 +4826,15 @@ h1 {
 .policy-flow-detail-pick:hover {
   border-color: var(--accent-2);
   color: var(--accent-2);
+}
+
+.policy-flow-prelude {
+  margin: 0 0 0.25rem;
+  padding: 0.35rem 0.5rem;
+  text-align: center;
+  line-height: 1.45;
+  max-width: 100%;
+  word-break: break-word;
 }
 
 .policy-flow {

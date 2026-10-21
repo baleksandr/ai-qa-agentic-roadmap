@@ -24,9 +24,8 @@ symptom → гіпотези → tools → оновлений висновок`,
 
 system + context → LLM → schema validate`,
   'concept-16': '',
-  'concept-18': `**Observability** — trace spans model/tool/policy з correlation id.
-
-run → spans → on-call debug`,
+  'concept-18':
+    'Після уроку ви зможете пояснити, як trace і метрики допомагають відновити перебіг run агента, пов’язати події одного запуску та знайти причину затримки або помилки за записами системи, а не лише за текстом відповіді.',
   'concept-19': `**Benchmarks** допомагають вибрати base model; domain evals — gate релізу.
 
 public bench + internal login_spec set`,
@@ -107,7 +106,8 @@ export function buildStudyLearningOutcomes(topicId: string, quickViewRaw: string
     topicId === 'concept-13' ||
     topicId === 'concept-07' ||
     topicId === 'concept-11' ||
-    topicId === 'concept-17'
+    topicId === 'concept-17' ||
+    topicId === 'concept-18'
   ) {
     return '';
   }

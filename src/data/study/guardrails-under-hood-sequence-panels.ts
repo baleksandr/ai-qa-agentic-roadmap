@@ -3,6 +3,7 @@ import {
   framed,
   guardrailsNestedPick,
   guardrailsPanel,
+  guardrailsPolicyVerdictsIntroBody,
   terminology,
 } from './guardrails-panel-helpers';
 import {
@@ -71,7 +72,9 @@ export const GUARDRAILS_UNDER_HOOD_STEP_POLICY_PANEL: FundamentalsCardPanel = gu
   ),
   framed(
     'Можливі рішення',
-    '- `ALLOW` — дія може перейти до наступних обов’язкових перевірок.\n- `DENY` — виконання заборонене.\n- `NEEDS_APPROVAL` — потрібне погодження перед виконанням.',
+    guardrailsPolicyVerdictsIntroBody(
+      'Policy engine повертає одне з трьох рішень відповідно до правил доступу.',
+    ),
   ),
   framed(
     'Приклад login_spec',

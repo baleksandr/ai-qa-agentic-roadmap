@@ -113,6 +113,23 @@ const PLANNING_HERO: StudyLessonHero = {
   ],
 };
 
+const OBSERVABILITY_HERO: StudyLessonHero = {
+  topicId: 'concept-18',
+  topicLabel: 'Observability',
+  abbrEn: 'Traces і метрики для run у production',
+  abbrTitle: 'Observability — traces and metrics',
+  taglineUk:
+    'Observability показує, що відбулося в run агента: виклики моделі та інструментів, рішення політики, помилки й затримки. Це допомагає QA розслідувати проблеми, коли однієї відповіді недостатньо.',
+  pageTitleUk: 'Observability — traces and metrics',
+  outcomesFlowAriaLabel: 'Trace investigation run',
+  letterPresentation: 'cyber-hud',
+  letters: [
+    { char: 'O', en: 'Observe', uk: 'Spans моделі, tool і policy в run' },
+    { char: 'B', en: 'Bridge', uk: 'Зв’язати події через correlation id' },
+    { char: 'S', en: 'Signals', uk: 'Latency, errors і метрики' },
+  ],
+};
+
 const SKILLS_HERO: StudyLessonHero = {
   topicId: 'concept-07',
   topicLabel: 'Skills',
@@ -355,11 +372,7 @@ const HERO_BY_TOPIC: Record<string, StudyLessonHero> = {
   'concept-15': VECTOR_DATABASE_HERO,
   'concept-16': AGENTIC_WORKFLOWS_HERO,
   'concept-17': GUARDRAILS_HERO,
-  'concept-18': partIiHero('concept-18', 'Observability', 'Traces and metrics', 'видимість run у prod', 'Observability — traces', 'Trace investigation run', [
-    { char: 'O', en: 'Observe', uk: 'spans model/tool' },
-    { char: 'B', en: 'Bridge', uk: 'correlation id' },
-    { char: 'S', en: 'Signals', uk: 'latency, errors' },
-  ]),
+  'concept-18': OBSERVABILITY_HERO,
   'concept-19': partIiHero('concept-19', 'Benchmarks', 'Standard model tests', 'порівняння моделей', 'Benchmarks — еталонні тести', 'Benchmark vs domain eval', [
     { char: 'B', en: 'Bench', uk: 'public sets' },
     { char: 'M', en: 'Measure', uk: 'агрегатні метрики' },

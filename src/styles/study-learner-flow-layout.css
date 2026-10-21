@@ -26,7 +26,8 @@
 .study-learning-outcomes .study-outcomes-body:has(.study-planning-outcomes-block),
 .study-learning-outcomes .study-outcomes-body:has(.study-orchestration-outcomes-block),
 .study-learning-outcomes .study-outcomes-body:has(.study-agentic-workflows-outcomes-block),
-.study-learning-outcomes .study-outcomes-body:has(.study-guardrails-outcomes-block) {
+.study-learning-outcomes .study-outcomes-body:has(.study-guardrails-outcomes-block),
+.study-learning-outcomes .study-outcomes-body:has(.study-observability-outcomes-block) {
   max-width: none;
   width: 100%;
 }
@@ -43,7 +44,8 @@
 .study-outcomes-with-flows .study-orchestration-outcomes-block,
 .study-outcomes-with-flows .study-agentic-workflows-outcomes-block,
 .study-outcomes-with-flows .study-guardrails-outcomes-block,
-.study-outcomes-with-flows .study-multi-agent-outcomes-block {
+.study-outcomes-with-flows .study-multi-agent-outcomes-block,
+.study-outcomes-with-flows .study-observability-outcomes-block {
   max-width: none;
   width: 100%;
 }

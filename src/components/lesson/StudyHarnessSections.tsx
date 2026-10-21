@@ -10,6 +10,7 @@ import {
   HARNESS_PRODUCTION_BUNDLE,
   HARNESS_REMEMBER_SUMMARY,
 } from '../../data/study/harness-study-bundles';
+import { StudyHarnessRunFlowSection } from './StudyHarnessRunFlowSection';
 
 export function StudyHarnessOneRun() {
   return <StudyTeachingCardsSection bundle={HARNESS_ONE_RUN_BUNDLE} />;
@@ -34,6 +35,7 @@ export function StudyHarnessQaTestingSection() {
 export function StudyHarnessProduction() {
   return (
     <div className="study-harness-production">
+      <StudyHarnessRunFlowSection />
       <StudyTeachingCardsSection bundle={HARNESS_PRODUCTION_BUNDLE} />
     </div>
   );

@@ -160,32 +160,71 @@ export const GUARDRAILS_OBS_APPROVAL_DENIED_JSON = `{
   "note": "executor_not_invoked"
 }`;
 
-export const GUARDRAILS_OBS_SCENARIO_OUTCOMES = [
+export type ObservabilityScenarioOutcome = {
+  id: string;
+  titleUk: string;
+  teaserUk: string;
+  outcomeUk: string;
+  traceUk: string;
+  qaCheckUk: string;
+  exampleJsonLabel: string;
+  exampleJson: string;
+};
+
+export const GUARDRAILS_OBS_SCENARIO_OUTCOMES: ObservabilityScenarioOutcome[] = [
   {
     id: 'deny',
     titleUk: 'deny — політика заборонила',
-    bodyUk:
+    teaserUk: 'Є policy_decision: deny, issue в Jira не з’являється',
+    outcomeUk:
+      'Policy engine заборонив дію ще до погодження або виконання. Модель могла запропонувати createJiraIssue, але код не передає виклик далі.',
+    traceUk:
       'Є policy_decision: deny. Немає approval_granted, немає executor span, issue в Jira не з’являється.',
+    qaCheckUk:
+      'У eval або інтеграційному тесті перевірте подію deny, відсутність executor span і що mock Jira не отримав create.',
+    exampleJsonLabel: 'policy_decision: deny',
+    exampleJson: GUARDRAILS_OBS_DENY_JSON,
   },
   {
     id: 'approval-reject',
     titleUk: 'needs_approval → людина відхилила',
-    bodyUk:
+    teaserUk: 'Після approval_denied executor не викликається',
+    outcomeUk:
+      'Run зупинився на human gate: людина відхилила операцію. Це не deny політики на propose, а окреме рішення після перегляду.',
+    traceUk:
       'Є needs_approval, потім approval_denied. Повторна перевірка до executor не доходить. Issue не створено.',
+    qaCheckUk:
+      'Переконайтеся, що після approval_denied немає policy re-check на execute і немає tool_execution_result.',
+    exampleJsonLabel: 'approval_denied',
+    exampleJson: GUARDRAILS_OBS_APPROVAL_DENIED_JSON,
   },
   {
     id: 'approval-success',
     titleUk: 'Схвалено → re-check → API успіх',
-    bodyUk:
+    teaserUk: 'tool_execution_result success, наприклад QA-1234',
+    outcomeUk:
+      'Ланцюг: очікування погодження → approval_granted → повторна перевірка policy → executor → успішний виклик Jira API.',
+    traceUk:
       'needs_approval → approval_granted → policy re-check allow → executor → tool_execution_result success з QA-1234. approval_granted сам по собі issue не створює.',
+    qaCheckUk:
+      'Окремо перевірте подію approval_granted (issue ще немає) і наступний success з jira_issue_key. Обидві прив’язані до одного run_id.',
+    exampleJsonLabel: 'Після re-check: успіх API',
+    exampleJson: GUARDRAILS_OBS_EXECUTOR_SUCCESS_JSON,
   },
   {
     id: 'approval-jira-error',
     titleUk: 'Схвалено → allow execute → помилка Jira API',
-    bodyUk:
+    teaserUk: 'status error, наприклад JIRA_503',
+    outcomeUk:
+      'Політика й погодження пройдені, executor спробував виклик, але зовнішній сервіс повернув помилку. Це не «тихий deny» і не відмова людини.',
+    traceUk:
       'Після approval_granted і allow на execute є tool_execution_result з status error (наприклад JIRA_503). Політика спрацювала, API впало — це окрема подія для on-call.',
+    qaCheckUk:
+      'У trace має бути allow на execute та error подія executor. Issue не створено, хоча policy не блокувала спробу.',
+    exampleJsonLabel: 'allow execute, але помилка Jira API',
+    exampleJson: GUARDRAILS_OBS_EXECUTOR_ERROR_JSON,
   },
-] as const;
+];
 
 export const GUARDRAILS_OBS_REMEMBER = [
   'LLM пропонує — код вирішує, записує події й лише потім викликає executor.',

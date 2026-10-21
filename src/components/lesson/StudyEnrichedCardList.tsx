@@ -43,7 +43,7 @@ export function StudyEnrichedCardList({ leadUk, introUk, cards, listAriaLabel }:
                         ))}
                       </ol>
                     ) : (
-                      parseLessonBold(sec.bodyUk)
+                      parseLessonBold(sec.bodyUk ?? '')
                     )}
                   </dd>
                 </div>

@@ -15,7 +15,7 @@ import {
   StudyGuardrailsConnections,
   StudyGuardrailsDataTransfer,
   StudyGuardrailsLlmCode,
-  StudyGuardrailsUnderHoodSequence,
+  StudyGuardrailsSequence,
   StudyGuardrailsFailureModes,
   StudyGuardrailsInterview,
   StudyGuardrailsObservability,
@@ -168,6 +168,8 @@ import {
   StudySkillsRememberInterview,
   StudySkillsWhy,
 } from './lesson/StudySkillsSections';
+import { StudyObservabilityLearningOutcomes } from './lesson/StudyObservabilityLearningOutcomes';
+import { StudyObservabilityWhy } from './lesson/StudyObservabilityWhy';
 import {
   StudyFineTuningComponents,
   StudyFineTuningFailures,
@@ -338,6 +340,7 @@ export function StudyModeSections({
           topicId === 'concept-16' ||
           topicId === 'concept-09' ||
           topicId === 'concept-17' ||
+          topicId === 'concept-18' ||
           topicId === 'concept-08') && (
           <aside
             className={`study-learning-outcomes${topicId === 'concept-12' ? ' study-learning-outcomes--reasoning-compact' : ''}`}
@@ -371,6 +374,8 @@ export function StudyModeSections({
                 <StudyMultiAgentLearningOutcomes />
               ) : topicId === 'concept-17' ? (
                 <StudyGuardrailsLearningOutcomes />
+              ) : topicId === 'concept-18' ? (
+                <StudyObservabilityLearningOutcomes />
               ) : (
                 <StudyMarkdownWithFlows
                   markdown={introMarkdown}
@@ -739,6 +744,14 @@ function renderConcept11StudySection(sectionTitle?: string) {
   return null;
 }
 
+function renderConcept18StudySection(sectionTitle?: string) {
+  const t = (sectionTitle ?? '').toLowerCase();
+  if (t.includes('навіщо')) {
+    return <StudyObservabilityWhy />;
+  }
+  return null;
+}
+
 function renderConcept07StudySection(sectionTitle?: string) {
   const t = (sectionTitle ?? '').toLowerCase();
   if (t.includes('навіщо')) {
@@ -954,6 +967,11 @@ function StudyMarkdownSegment({
   if (topicId === 'concept-07') {
     const skillsSection = renderConcept07StudySection(sectionTitle);
     if (skillsSection) return skillsSection;
+  }
+
+  if (topicId === 'concept-18') {
+    const observabilitySection = renderConcept18StudySection(sectionTitle);
+    if (observabilitySection) return observabilitySection;
   }
 
   if (topicId === 'concept-11') {
@@ -1269,6 +1287,7 @@ const BRANCH_PREFIX = /^[├└│]/;
 
 function isLlmVsCodeSection(sectionTitle?: string, text?: string): boolean {
   const t = (sectionTitle ?? '').toLowerCase();
+  if (/де код.*llm/i.test(t) || (t.includes('код') && t.includes('llm'))) return true;
   if (t.includes('llm') && t.includes('deterministic')) return true;
   return /mental models/i.test(text ?? '') && /probabilistic interpretation/i.test(text ?? '');
 }
@@ -1292,7 +1311,7 @@ function renderGuardrailsBySection(sectionTitle?: string, text?: string) {
   if (t.includes('навіщо') && t.includes('guardrail')) return <StudyGuardrailsWhy />;
   if (t.includes('передається між')) return <StudyGuardrailsDataTransfer />;
   if (t.trim() === 'послідовність' || t.startsWith('послідовність ')) {
-    return <StudyGuardrailsUnderHoodSequence />;
+    return <StudyGuardrailsSequence />;
   }
   if (t.includes('впасти') || t.includes('failure') || t.includes('злам')) {
     return <StudyGuardrailsFailureModes />;
